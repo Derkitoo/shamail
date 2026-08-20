@@ -7,10 +7,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Shamâ'il">
-    <link rel="apple-touch-icon" href="/pwa-192x192.svg">
+    <link rel="apple-touch-icon" href="pwa-192x192.svg">
+    <link rel="manifest" href="manifest.json">
     <title>Shamâ'il - Le Prophète ﷺ</title>
     
-    <!-- Tailwind CSS & Fonts -->
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -28,16 +29,1435 @@
                         gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' },
                         sepia: { 50: '#fbf8f3', 100: '#f5efe6', 200: '#e8dcce', 800: '#5c4538', 900: '#3d2b21' },
                         oled: '#000000'
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'fade-in': 'fadeIn 0.25s ease-out forwards',
+                        'bounce-short': 'bounceShort 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(12px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        bounceShort: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        }
                     }
                 }
             }
         }
     </script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800&family=Inter:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Base Styles & Typography Scale */
+        :root {
+            --arabic-scale: 1.05;
+        }
+
+        html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+        body { margin: 0; padding: 0; }
+        
+        /* Proportional Font Scaling Utilities */
+        .font-scaled-title { font-size: calc(1.35rem * var(--arabic-scale)); line-height: 1.4; }
+        .font-scaled-body { font-size: calc(1.05rem * var(--arabic-scale)); line-height: 1.7; }
+        .font-scaled-dalil { font-size: calc(0.95rem * var(--arabic-scale)); line-height: 1.7; }
+        .font-scaled-sharh { font-size: calc(0.9rem * var(--arabic-scale)); line-height: 1.7; }
+        
+        /* Hide Scrollbars everywhere for compact horizontal menus */
+        .no-scrollbar::-webkit-scrollbar { display: none; width: 0; height: 0; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Custom Scrollbar for Main App */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+
+        /* Background Arabesque Pattern */
+        .bg-arabesque {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2310b981' fill-opacity='0.03'%3E%3Cpath d='M30 30L15 0H0v15l30 30L0 45v15h15l30-30 15 30h15V45L30 30zM30 30l15 30h15V45L30 15 45 0H30L15 30l15 15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .dark .bg-arabesque {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2334d399' fill-opacity='0.02'%3E%3Cpath d='M30 30L15 0H0v15l30 30L0 45v15h15l30-30 15 30h15V45L30 30zM30 30l15 30h15V45L30 15 45 0H30L15 30l15 15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Premium UI Elements */
+        .glass-panel { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .dark .glass-panel { background: rgba(30, 41, 59, 0.9); }
+        
+        .premium-shadow { box-shadow: 0 6px 25px -5px rgba(0,0,0,0.07); }
+        .dark .premium-shadow { box-shadow: 0 6px 25px -5px rgba(0,0,0,0.35); }
+
+        .card-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; opacity: 0.9; }
+
+        /* Accordion Sharh */
+        .sharh-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease-out;
+            opacity: 0;
+        }
+        .sharh-content.open { 
+            max-height: 1000px;
+            opacity: 1; 
+            transition: max-height 0.5s ease-in-out, opacity 0.4s ease-in;
+        }
+
+        /* Quiz Flip Card */
+        .perspective-1000 { perspective: 1000px; -webkit-perspective: 1000px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; -webkit-transform-style: preserve-3d; }
+        .flip-card-inner.flipped { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; inset: 0; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 1.75rem; }
+        .flip-card-back { transform: rotateY(180deg); -webkit-transform: rotateY(180deg); }
+
+        /* Dictionnaire Gharib & Tooltips */
+        .gharib-word { 
+            position: relative; 
+            display: inline-block; 
+            border-bottom: 2px dashed #10b981; 
+            cursor: pointer; 
+            transition: all 0.2s;
+            padding: 0 2px;
+        }
+        .gharib-word:hover, .gharib-word:focus { color: #10b981; background-color: rgba(16, 185, 129, 0.1); border-radius: 4px; }
+        
+        .tooltip {
+            visibility: hidden;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 10px;
+            padding: 7px 11px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            font-size: 0.85rem;
+            line-height: 1.35;
+            width: max-content;
+            max-width: 220px;
+            box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+        }
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+        .gharib-word:hover .tooltip, .gharib-word.active .tooltip { visibility: visible; opacity: 1; }
+        .dark .gharib-word .tooltip { background-color: #334155; }
+        .dark .gharib-word .tooltip::after { border-color: #334155 transparent transparent transparent; }
+
+        /* Menu Settings Modal */
+        #settings-modal, #card-modal {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: opacity 0.2s ease-out;
+        }
+        .modal-open { opacity: 1; pointer-events: auto; }
+        .modal-closed { opacity: 0; pointer-events: none; }
+        
+        /* Sepia Theme */
+        body.theme-sepia { background-color: #fbf8f3 !important; color: #43302b !important; }
+        body.theme-sepia .glass-panel { background: rgba(251, 248, 243, 0.92) !important; border-color: rgba(215, 195, 168, 0.5); }
+        body.theme-sepia .bg-white\/90, body.theme-sepia .bg-white\/80, body.theme-sepia .bg-white\/40 { background-color: rgba(245, 239, 230, 0.95) !important; }
+        body.theme-sepia .text-slate-800 { color: #36241e !important; }
+        body.theme-sepia .text-slate-700 { color: #4a372f !important; }
+        body.theme-sepia .text-slate-600, body.theme-sepia .text-slate-500 { color: #6a5246 !important; }
+        body.theme-sepia .bg-slate-50, body.theme-sepia .bg-slate-100 { background-color: #f1e6d6 !important; }
+        body.theme-sepia .border-slate-100, body.theme-sepia .border-slate-200 { border-color: #e3d5c3 !important; }
+
+        /* OLED Mode */
+        body.theme-oled { background-color: #000000 !important; color: #e2e8f0; }
+        body.theme-oled .glass-panel { background: rgba(0, 0, 0, 0.92) !important; border-color: rgba(255,255,255,0.08); }
+        body.theme-oled .bg-white\/90, body.theme-oled .bg-white\/80, body.theme-oled .bg-white\/30 { background-color: rgba(12, 12, 12, 0.95) !important; }
+        body.theme-oled .dark\:bg-slate-800, body.theme-oled .dark\:bg-slate-900 { background-color: #050505 !important; }
+        body.theme-oled .dark\:bg-slate-800\/90, body.theme-oled .dark\:bg-slate-800\/95 { background-color: #080808 !important; }
+        body.theme-oled .dark\:border-slate-700 { border-color: #1f2937 !important; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200 min-h-screen transition-colors duration-300 antialiased font-sans flex flex-col relative overflow-x-hidden">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200 min-h-screen transition-colors duration-300 antialiased font-sans flex flex-col relative overflow-x-hidden bg-arabesque">
+    
+    <div class="max-w-lg mx-auto w-full min-h-screen flex flex-col relative bg-white/40 dark:bg-slate-900/40 shadow-2xl">
+        
+        <!-- HEADER -->
+        <header class="px-4 py-3 flex items-center justify-between sticky top-0 glass-panel z-50 border-b border-white/50 dark:border-slate-700/50 rounded-t-none">
+            <div id="header-left" class="flex items-center gap-2.5"></div>
+            
+            <div class="flex items-center gap-1.5">
+                <!-- ZOOM CONTROLS -->
+                <div class="flex items-center bg-white/90 dark:bg-slate-800/90 p-0.5 rounded-full shadow-sm border border-slate-200/70 dark:border-slate-700/70">
+                    <button onclick="zoomText(-0.08)" title="Réduire le texte" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 active:scale-95 transition-all text-xs font-black">A-</button>
+                    <button onclick="zoomText(0.08)" title="Agrandir le texte" class="w-7 h-7 rounded-full flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 active:scale-95 transition-all text-xs font-black">A+</button>
+                </div>
+
+                <button onclick="cycleTheme()" title="Changer de thème" class="w-9 h-9 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-sm flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all border border-slate-200/70 dark:border-slate-700/70">
+                    <span id="theme-icon-container" class="flex items-center justify-center"><i data-lucide="moon" class="w-4 h-4"></i></span>
+                </button>
+
+                <button onclick="toggleLang()" id="lang-btn" title="Langue" class="flex items-center gap-1 bg-white/90 dark:bg-slate-800/90 px-2.5 py-1.5 rounded-full shadow-sm text-xs font-bold text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all border border-slate-200/70 dark:border-slate-700/70">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 text-madinah-500"></i>
+                    <span>عربي</span>
+                </button>
+
+                <button onclick="toggleSettings()" title="Préférences" class="w-9 h-9 rounded-full bg-white/90 dark:bg-slate-800/90 shadow-sm flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all border border-slate-200/70 dark:border-slate-700/70">
+                    <i data-lucide="sliders" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main id="app-content" class="flex-1 p-4 overflow-y-auto pb-24 scroll-smooth"></main>
+
+        <!-- TOAST NOTIFICATION -->
+        <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-slate-800 dark:bg-madinah-600 text-white px-4 py-2.5 rounded-full shadow-2xl text-xs font-bold transition-all duration-300 opacity-0 pointer-events-none translate-y-4 z-50 flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-4 h-4 text-madinah-400 dark:text-white"></i>
+            <span id="toast-msg">Succès</span>
+        </div>
+
+        <!-- IMAGE GENERATOR CARD MODAL -->
+        <div id="card-modal" class="fixed inset-0 z-[100] modal-closed flex items-center justify-center p-4 bg-slate-900/60">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-700 transform transition-all scale-95 duration-200 text-center" id="card-modal-content">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="font-bold text-base dark:text-white flex items-center gap-2"><i data-lucide="image" class="w-4 h-4 text-madinah-500"></i> Carte Hadith (Story/WhatsApp)</h3>
+                    <button onclick="closeCardModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+                
+                <div class="mb-4 rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700 bg-slate-950 flex items-center justify-center min-h-[260px]">
+                    <img id="card-preview-img" src="" alt="Carte Hadith" class="w-full h-auto object-contain max-h-[360px]">
+                </div>
+
+                <div class="flex gap-2">
+                    <a id="card-download-btn" href="#" download="hadith-shamail.png" class="flex-1 py-2.5 rounded-xl bg-madinah-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all">
+                        <i data-lucide="download" class="w-4 h-4"></i> Télécharger
+                    </a>
+                    <button onclick="shareCardImage()" class="flex-1 py-2.5 rounded-xl bg-violet-600 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-all">
+                        <i data-lucide="share-2" class="w-4 h-4"></i> Partager
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS MODAL -->
+        <div id="settings-modal" class="fixed inset-0 z-[100] modal-closed flex items-center justify-center p-4 bg-slate-900/50">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-5 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-700 transform transition-all scale-95 duration-200" id="settings-content">
+                <div class="flex justify-between items-center mb-5">
+                    <h3 class="font-bold text-lg dark:text-white flex items-center gap-2"><i data-lucide="settings" class="w-4 h-4 text-madinah-500"></i> Préférences</h3>
+                    <button onclick="toggleSettings()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+                </div>
+                
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 dark:text-slate-400 mb-2.5 uppercase tracking-wider">Thème d'affichage</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="setThemeMode('light')" id="theme-btn-light" class="py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
+                                <i data-lucide="sun" class="w-3.5 h-3.5 text-amber-500"></i> Jour
+                            </button>
+                            <button onclick="setThemeMode('dark')" id="theme-btn-dark" class="py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
+                                <i data-lucide="moon" class="w-3.5 h-3.5 text-indigo-400"></i> Nuit
+                            </button>
+                            <button onclick="setThemeMode('sepia')" id="theme-btn-sepia" class="py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
+                                <i data-lucide="book-open" class="w-3.5 h-3.5 text-amber-700"></i> Sépia
+                            </button>
+                            <button onclick="setThemeMode('oled')" id="theme-btn-oled" class="py-2 px-3 rounded-xl border text-xs font-bold flex items-center justify-center gap-1.5 transition-all">
+                                <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i> OLED
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold text-slate-400 dark:text-slate-400 mb-2.5 uppercase tracking-wider">Police d'écriture arabe</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="setFont('Cairo')" id="btn-font-Cairo" class="py-2.5 border-2 border-madinah-500 bg-madinah-50 dark:bg-madinah-900/30 rounded-xl font-arabic font-bold text-base transition-all">كايرو</button>
+                            <button onclick="setFont('Amiri')" id="btn-font-Amiri" class="py-2.5 border-2 border-transparent bg-slate-50 dark:bg-slate-700 rounded-xl font-arabicTitle font-bold text-base transition-all">أميري</button>
+                            <button onclick="setFont('Noto Naskh Arabic')" id="btn-font-Noto" class="py-2.5 border-2 border-transparent bg-slate-50 dark:bg-slate-700 rounded-xl font-arabicNaskh font-bold text-base transition-all col-span-2">نسخ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const appData = {
+            ui: {
+                title: { fr: "Shamâ'il", ar: "الشمائل المحمدية" },
+                subtitle: { fr: "Le Prophète comme si tu le voyais", ar: "كأنك تراه ﷺ" },
+                favorites: { fr: "Favoris", ar: "المفضلة" },
+                noFavorites: { fr: "Aucun chapitre sauvegardé.", ar: "لا توجد مفضلة حتى الآن." },
+                copied: { fr: "Copié dans le presse-papier !", ar: "تم النسخ بنجاح!" },
+                saved: { fr: "Ajouté aux favoris", ar: "تمت الإضافة للمفضلة" },
+                removed: { fr: "Retiré des favoris", ar: "تمت الإزالة من المفضلة" },
+                proof: { fr: "Hadith", ar: "الحديث" },
+                searchPlaceholder: { fr: "Rechercher un terme, un hadith...", ar: "ابحث (السواك، الخاتم...)" },
+                progress: { fr: "Progression", ar: "مستوى القراءة" },
+                markRead: { fr: "Lu", ar: "مقروء" },
+                noResults: { fr: "Aucun résultat trouvé.", ar: "لم يتم العثور على نتائج." },
+                sharhBtn: { fr: "Explication savante (Sharh)", ar: "قراءة الشرح (الباجوري والقاري)" },
+                quizTitle: { fr: "Quiz Shamâ'il", ar: "اختبر حفظك" },
+                flipBtn: { fr: "Voir la réponse", ar: "الجواب" },
+                nextBtn: { fr: "Suivant", ar: "التالي" },
+                sunnahAction: { fr: "Sunnah Pratique", ar: "سنة عملية" }
+            },
+            groups: [
+                { id: 'apparence', icon: 'user', gradient: 'from-emerald-400 to-teal-500', title: { fr: "Apparence Physique", ar: "الخِلقة والصفات" }, desc: { fr: "Ses traits, ses cheveux, le sceau.", ar: "أوصافه الجسدية، شعره، وخاتم النبوة." } },
+                { id: 'vetements', icon: 'shirt', gradient: 'from-amber-400 to-orange-500', title: { fr: "Vêtements & Parures", ar: "اللباس والزينة" }, desc: { fr: "Sa façon de s'habiller et ses affaires.", ar: "لباسه، خاتمه، وسلاحه." } },
+                { id: 'attitude', icon: 'footprints', gradient: 'from-blue-400 to-indigo-500', title: { fr: "Attitude & Posture", ar: "الهيئة والجلسة" }, desc: { fr: "Sa démarche, sa façon de s'asseoir.", ar: "مشيته وجلوسه وتكأته." } },
+                { id: 'nourriture', icon: 'utensils', gradient: 'from-rose-400 to-pink-500', title: { fr: "Nourriture & Boisson", ar: "الطعام والشراب" }, desc: { fr: "Ce qu'il mangeait et comment il buvait.", ar: "صفة أكله، خبزه، وشرابه." } },
+                { id: 'parole', icon: 'message-circle', gradient: 'from-violet-400 to-purple-500', title: { fr: "Parole & Sourire", ar: "الكلام والتواصل" }, desc: { fr: "Sa façon de parler, de rire et de plaisanter.", ar: "كلامه، ضحكه، ومزاحه." } },
+                { id: 'caractere', icon: 'heart', gradient: 'from-fuchsia-400 to-pink-600', title: { fr: "Noblesse d'Âme", ar: "الأخلاق والشمائل" }, desc: { fr: "Son humilité, sa pudeur, sa douceur.", ar: "تواضعه، حياؤه، وخلقه." } },
+                { id: 'adoration', icon: 'moon-star', gradient: 'from-cyan-400 to-blue-600', title: { fr: "Adoration & Quotidien", ar: "العبادة والعيش" }, desc: { fr: "Sa prière, son jeûne, son sommeil.", ar: "صلاته، صومه، ونومه." } },
+                { id: 'fin', icon: 'feather', gradient: 'from-slate-400 to-gray-600', title: { fr: "Noms & Fin de vie", ar: "الأسماء والوفاة" }, desc: { fr: "Ses noms, son âge et son décès.", ar: "أسماؤه، عمره، ووفاته." } }
+            ],
+            
+            chapters: [
+                { 
+                    group_id: 'apparence', bab: 1, 
+                    title: { fr: "Ses traits physiques", ar: "خلقه ﷺ" }, 
+                    content: { fr: "Il n'était ni trop grand ni trop petit. Il avait les épaules larges, un beau visage éclatant comme la pleine lune.", ar: "لم يكن بالطويل <span class='gharib-word'>الممغط<span class='tooltip'>الشديد الطول البائن</span></span> ولا بالقصير <span class='gharib-word'>المتردد<span class='tooltip'>المتناهي في القصر</span></span>. يتلألأ وجهه تلألؤ القمر ليلة البدر." },
+                    dalil: { fr: "D'après Al-Barâ' ibn 'Âzib : « Le Prophète ﷺ était de taille moyenne, avec des épaules larges et une chevelure abondante. »", ar: "عن البراء بن عازب قال: «كان رسول الله ﷺ مربوعاً، بعيد ما بين المنكبين، له شعر يبلغ شحمة أذنيه...»" },
+                    auth: 'sahih',
+                    sharh: { fr: "L'Imam Al-Bajuri explique que le terme 'Rab'a' (taille moyenne) dénote la perfection de ses proportions. La lumière de son visage est comparée à la pleine lune car c'est la lumière la plus douce pour les yeux.", ar: "قال الإمام الباجوري: (مربوعاً) أي وسطاً بين الطول والقصر. وشبه وجهه بالقمر ليلة البدر لجماله وكماله وضوء وجهه المبارك." },
+                    action: { fr: "Ayez une posture droite et digne aujourd'hui, reflétant la confiance et l'humilité.", ar: "حافظ على هيئة معتدلة ووقار في مشيتك وجلوسك اليوم." }
+                },
+                { 
+                    group_id: 'apparence', bab: 2, 
+                    title: { fr: "Le sceau de la prophétie", ar: "خاتم النبوة" }, 
+                    content: { fr: "Il portait entre les épaules une petite excroissance (le sceau), de la même couleur que sa peau.", ar: "كان بين كتفيه <span class='gharib-word'>غدة<span class='tooltip'>قطعة لحم بارزة</span></span> حمراء مثل بيضة الحمامة، وهي من علامات نبوته." },
+                    dalil: { fr: "D'après Jâbir ibn Samoura : « J'ai vu le Sceau entre ses épaules, il ressemblait à un œuf de pigeon. »", ar: "عن جابر بن سمرة قال: «رأيت الخاتم بين كتفي رسول الله ﷺ غدة حمراء مثل بيضة الحمامة...»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Ce sceau était une marque physique promise dans les anciens livres (Thora et Évangile) pour reconnaître le dernier Prophète.", ar: "هذا الخاتم من العلامات التي وردت في الكتب السابقة ليعرفه بها أهل الكتاب." },
+                    action: { fr: "Prenez conscience du privilège de suivre le dernier Messager d'Allah.", ar: "تذكر اليوم نعمة الإيمان باتباع خاتم الأنبياء والمرسلين." }
+                },
+                { 
+                    group_id: 'apparence', bab: 3, 
+                    title: { fr: "Ses cheveux", ar: "شعره ﷺ" }, 
+                    content: { fr: "Ses cheveux n'étaient ni complètement lisses ni crépus, ils étaient légèrement ondulés. Ils atteignaient le lobe de ses oreilles.", ar: "كان شعره ليس <span class='gharib-word'>بالسبط<span class='tooltip'>المسترسل شديد النعومة</span></span> ولا <span class='gharib-word'>بالجعد القطط<span class='tooltip'>شديد التلوي والالتواء</span></span>، يبلغ شحمة أذنيه." },
+                    dalil: { fr: "D'après Anas : « Les cheveux du Messager d'Allah étaient ondulés, atteignant mi-oreilles. »", ar: "عن أنس بن مالك رضي الله عنه قال: «كان شعر رسول الله ﷺ رجلاً، ليس بالسبط ولا الجعد، بين أذنيه وعاتقه»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Ses cheveux suivaient la juste mesure de la création, soignés et nettoyés régulièrement.", ar: "كان شعره ﷺ أوسط الصفات، وكان يدهنه ويرجله بالطيب والماء." },
+                    action: { fr: "Prenez soin de votre hygiène et coiffez-vous proprement selon la Sunnah.", ar: "اعتَنِ بنظافة شعرك وترجيله كيد السنّة." }
+                },
+                { 
+                    group_id: 'apparence', bab: 5, 
+                    title: { fr: "Ses cheveux blancs", ar: "شيبه ﷺ" }, 
+                    content: { fr: "Il n'avait que très peu de cheveux blancs (moins d'une vingtaine) répartis sur ses tempes et sa barbe.", ar: "لم يكن في رأسه ولحيته عشرون شعرة بيضاء." },
+                    dalil: { fr: "Anas ibn Malik rapporte : « Je n'ai compté dans la tête et la barbe du Messager d'Allah que quatorze cheveux blancs. »", ar: "عن أنس بن مالك قال: «ما عددت في رأس رسول الله ﷺ ولحيته إلا أربع عشرة شعرة بيضاء»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Le peu de cheveux blancs montre son endurance face aux épreuves et la beauté préservée de sa jeunesse.", ar: "قلة الشيب تدل على قوة بنيته وجمال هيئته ﷺ، وكان الشيب من أثر سور مثل هود وأخواتها." }
+                },
+
+                { 
+                    group_id: 'vetements', bab: 8, 
+                    title: { fr: "Ses vêtements préférés", ar: "لباسه ﷺ" }, 
+                    content: { fr: "Son vêtement préféré était le Qamis (longue chemise). Il aimait la propreté et la simplicité.", ar: "كان أحب الثياب إليه القميص، وكان يحب النظافة والبساطة." },
+                    dalil: { fr: "D'après Oum Salama : « Le vêtement que le Messager d'Allah préférait le plus porter était le Qamis. »", ar: "عن أم سلمة قالت: «كان أحب الثياب إلى رسول الله ﷺ القميص»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Le Qamis couvre mieux le corps et facilite les mouvements pour la prière et les actions quotidiennes.", ar: "القميص أستر للبدن وأخف على الجسم وأسهل في الحركة والعبادة." },
+                    action: { fr: "Portez aujourd'hui vos vêtements les plus propres pour honorer ceux que vous rencontrez.", ar: "البس أنظف ثيابك اليوم إكراماً لمن تقابلهم." }
+                },
+                { 
+                    group_id: 'vetements', bab: 11, 
+                    title: { fr: "Ses sandales", ar: "نعله ﷺ" }, 
+                    content: { fr: "Il portait des sandales simples à deux lanières passants entre les orteils.", ar: "كان لنعله قبالان (شسعان) يمران بين الأصابع." },
+                    dalil: { fr: "Qatâda demanda à Anas : « Comment étaient les sandales du Prophète ? » Il répondit : « Elles avaient deux lanières. »", ar: "عن قتادة قال: قلت لأنس بن مالك: كيف كان نعل رسول الله ﷺ؟ قال: «لهما قبالان»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Il mettait d'abord le pied droit en se chaussant et le gauche en se déchaussant.", ar: "كان ﷺ يبدأ باليمنى إذا انتعل، وباليسرى إذا خلع." },
+                    action: { fr: "Commencez par le pied droit en vous chaussant aujourd'hui.", ar: "ابدأ بيمينك عند انتعال حذائك اليوم." }
+                },
+                { 
+                    group_id: 'vetements', bab: 12, 
+                    title: { fr: "Sa bague", ar: "خاتمه ﷺ" }, 
+                    content: { fr: "Il portait une bague en argent utilisée comme sceau pour sceller les lettres envoyées aux rois. Il y était gravé 'Muhammad, Messager d'Allah'.", ar: "اتخذ خاتماً من <span class='gharib-word'>وَرِق<span class='tooltip'>فضة خالص</span></span> نقشه: محمد رسول الله، ليختم به الرسائل." },
+                    dalil: { fr: "Anas rapporte : « Lorsque le Prophète voulut écrire aux rois étrangers, il fit forger une bague en argent... »", ar: "عن أنس: «أن النبي ﷺ لما أراد أن يكتب إلى العجم صاغ خاتماً من فضة...»" },
+                    auth: 'sahih',
+                    sharh: { fr: "L'inscription était gravée sur 3 lignes : 'Allah' en haut, 'Messager' au milieu, et 'Muhammad' en bas, par respect envers le Nom d'Allah.", ar: "كان نقش الخاتم ثلاثة أسطر: محمد سطر، ورسول سطر، والله سطر، تعظيماً لاسم الله." }
+                },
+
+                { 
+                    group_id: 'attitude', bab: 19, 
+                    title: { fr: "Sa démarche", ar: "مشيته ﷺ" }, 
+                    content: { fr: "Il marchait avec énergie et sérénité. Il ne traînait pas les pieds, on aurait dit qu'il descendait une pente douce.", ar: "كان يمشي بقوة ونشاط، كأنما ينحدر من صبب." },
+                    dalil: { fr: "D'après Ali : « Quand le Prophète marchait, il s'avançait avec force, comme s'il descendait une pente. »", ar: "عن علي قال: «كان النبي ﷺ إذا مشى <span class='gharib-word'>تكفأ<span class='tooltip'>تمايل إلى الأمام بقوة وهيبة</span></span> تكفؤا كأنما ينحط من صبب»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Sa marche reflétait l'assurance et la modestie sans paresse ni arrogance.", ar: "مشية النبي ﷺ مشية أولي العزم: قوة بلا كبر، وسرعة بلا عجلة." },
+                    action: { fr: "Marchez avec dynamisme aujourd'hui, c'est le signe d'une personne active.", ar: "امش بنشاط وقوة اليوم، فهي من علامات الهمة." }
+                },
+                { 
+                    group_id: 'attitude', bab: 21, 
+                    title: { fr: "Sa façon de s'asseoir", ar: "جلسته ﷺ" }, 
+                    content: { fr: "Il s'asseyait souvent en tailleur ou en entourant ses genoux avec ses arms (Al-Qurfusa), marquant une grande humilité.", ar: "كان يجلس القرفصاء والمتربع تواضعاً." },
+                    dalil: { fr: "Qayla bint Makhrama rapporte : « J'ai vu le Messager d'Allah assis en Qurfusa (les bras entourant les genoux). En voyant son humilité, j'ai tremblé de respect. »", ar: "عن قيلة بنت مخرمة: «أنها رأت رسول الله ﷺ وهو قاعد القرفصاء...»" },
+                    auth: 'hasan',
+                    sharh: { fr: "Cette assise est celle des serviteurs humbles qui ne cherchent pas à s'imposer sur les autres.", ar: "جلسة القرفصاء هي جلسة المتواضعين لله تعالى المستعدين لخدمة الناس." }
+                },
+
+                { 
+                    group_id: 'nourriture', bab: 24, 
+                    title: { fr: "Sa façon de manger", ar: "أكله ﷺ" }, 
+                    content: { fr: "Il mangeait avec trois doigts (le pouce, l'index et le majeur) et léchait ses doigts après le repas. Il ne mangeait jamais adossé.", ar: "كان يأكل بثلاثة أصابع ويلعقها بعد الفراغ، ولا يأكل متكئاً." },
+                    dalil: { fr: "Ka'b ibn Malik rapporte : « Le Messager d'Allah mangeait avec trois doigts et les léchait avant de les essuyer. »", ar: "عن كعب بن مالك قال: «كان رسول الله ﷺ يأكل بثلاث أصابع، ويلعق يده قبل أن يمسحها»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Manger avec 3 doigts évite la gloutonnerie et enseigne la bénédiction dans les petites portions.", ar: "الأكل بثلاث أصابع يمنع الإسراف والشرَه، وفيه تعليم القناعة." }
+                },
+                { 
+                    group_id: 'nourriture', bab: 25, 
+                    title: { fr: "Le pain du Prophète", ar: "خبزه ﷺ" }, 
+                    content: { fr: "Sa famille et lui n'ont jamais mangé à leur faim du pain de blé fin durant trois jours consécutifs, jusqu'à son décès. Ils mangeaient du pain d'orge.", ar: "ما شبع من خبز بر ثلاثة أيام متوالية حتى مضى لسبيله، وكان غالب طعامه خبز الشعير." },
+                    dalil: { fr: "Aïcha rapporte : « La famille de Muhammad n'a jamais été rassasiée de pain de blé durant trois jours consécutifs... »", ar: "عن عائشة قالت: «ما شبع آل محمد ﷺ من خبز شعير يومين متتابعين حتى قبض»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Ce choix de vie modeste était volontaire de sa part, privilégiant la préparation à l'au-delà plutôt que les conforts mondains.", ar: "كان هذا اختياراً منه ﷺ للزهد في الدنيا وإيثاراً للآخرة رغم قدرته." },
+                    action: { fr: "Remerciez Allah pour la nourriture que vous mangez aujourd'hui.", ar: "احمد الله على النعم والأطعمة التي لديك اليوم." }
+                },
+                { 
+                    group_id: 'nourriture', bab: 32, 
+                    title: { fr: "Sa façon de boire", ar: "شربه ﷺ" }, 
+                    content: { fr: "Il buvait en trois fois (trois gorgées), en éloignant le récipient de sa bouche pour respirer entre chaque gorgée.", ar: "كان يتنفس في الشراب ثلاثا، ويبعد الإناء عن فمه." },
+                    dalil: { fr: "D'après Anas : « Le Prophète respirait trois fois en buvant. »", ar: "عن أنس: «أن النبي ﷺ كان يتنفس في الشراب ثلاثا»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Boire d'un trait fatigue l'estomac. Le Prophète éloignait le verre pour ne pas respirer dedans, par hygiène et respect pour le suivant.", ar: "النهي عن التنفس في الإناء لئلا يتقذر. والشرب على ثلاث دفعات أروى وأمرأ وأبرأ." },
+                    action: { fr: "Aujourd'hui, buvez votre eau en trois petites gorgées en respirant entre chaque.", ar: "اليوم، اشرب الماء على ثلاث دفعات وتأمل هذه السنة." }
+                },
+
+                { 
+                    group_id: 'parole', bab: 35, 
+                    title: { fr: "Sa façon de parler", ar: "كلامه ﷺ" }, 
+                    content: { fr: "Il ne parlait pas vite de façon ininterrompue. Il parlait de manière claire, de sorte que l'on aurait pu compter ses mots.", ar: "لم يكن يسرد الحديث سرداً، بل كان كلامه فصلاً، لو عده العاد لأحصاه." },
+                    dalil: { fr: "D'après Aïcha : « Le Messager d'Allah ne parlait pas rapidement comme vous le faites. Il parlait de façon distincte... »", ar: "عن عائشة رضي الله عنها قالت: «ما كان رسول الله ﷺ يسرد سردكم هذا، ولكنه كان يتكلم بكلام بين فصل...»" },
+                    auth: 'sahih',
+                    sharh: { fr: "La clarté dans l'élocution permettait à chacun d'assimiler le savoir sans confusion.", ar: "وضوح كلامه ﷺ كان يساعد المستمعين على فهم المقاصد وحفظ العلم." },
+                    action: { fr: "Prenez le temps d'articuler et de parler calmement avec vos proches aujourd'hui.", ar: "تحدث بتمهل ووضوح اليوم مع من حولك." }
+                },
+                { 
+                    group_id: 'parole', bab: 36, 
+                    title: { fr: "Son rire et son sourire", ar: "ضحكه ﷺ" }, 
+                    content: { fr: "Son rire n'était le plus souvent qu'un large sourire. Il n'éclatait jamais de rire de manière bruyante.", ar: "كان جل ضحكه التبسم، ولم يكن يقهقه بصوت مرتفع." },
+                    dalil: { fr: "Abdullah ibn Al-Harith rapporte : « Je n'ai vu personne sourire autant que le Messager d'Allah. »", ar: "عن عبد الله بن الحارث قال: «ما رأيت أحدا أكثر تبسما من رسول الله ﷺ»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Le sourire est une aumône et un baume pour le cœur de ceux qu'on rencontre.", ar: "التبسم صدقة ونور ونشر للمحبة والأنس بين المسلمين." },
+                    action: { fr: "Offrez un sourire sincère aux personnes que vous croisez aujourd'hui.", ar: "ابتسم في وجه كل من تقابله اليوم بنية الصدقة." }
+                },
+                { 
+                    group_id: 'parole', bab: 37, 
+                    title: { fr: "Son humour", ar: "مزاحه ﷺ" }, 
+                    content: { fr: "Il plaisantait avec ses compagnons, mais il ne disait que la vérité même en riant.", ar: "كان يمازح أصحابه، ولا يقول في مزاحه إلا حقاً وصدقاً." },
+                    dalil: { fr: "Abou Hurayra rapporte qu'on lui dit : « Ô Messager d'Allah, tu plaisantes avec nous ? » Il répondit : « Oui, mais je ne dis que la vérité. »", ar: "عن أبي هريرة قال: قالوا يا رسول الله إنك تداعبنا! قال: «إني لا أقول إلا حقا»" },
+                    auth: 'sahih',
+                    sharh: { fr: "L'humour prophétique apporte la joie sans mentir, tromper ni humilier quiconque.", ar: "مزاحه ﷺ فيه إدخال السرور على القلوب من غير كذب ولا إيذاء." }
+                },
+
+                { 
+                    group_id: 'caractere', bab: 48, 
+                    title: { fr: "Son humilité", ar: "تواضعه ﷺ" }, 
+                    content: { fr: "Il participait aux tâches ménagères, réparait lui-même ses affaires et s'asseyait avec les pauvres.", ar: "كان يخصف نعله ويرقع ثوبه ويجيب دعوة المملوك ويجلس مع المساكين." },
+                    dalil: { fr: "Anas rapporte : « Une femme en difficulté dit : 'Ô Messager, j'ai besoin de toi'. Il répondit : 'Choisis la rue que tu veux, je t'y accompagnerai pour t'aider'. »", ar: "عن أنس: أن امرأة كان في عقلها شيء فقالت: يا رسول الله إن لي إليك حاجة...»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Son humilité immense faisait qu'aucun besoin humain n'était trop petit à ses yeux.", ar: "من كمال تواضعه قضاء حوائج الضعفاء والصغار والكبار دون كبر." },
+                    action: { fr: "Rendez service spontanément à quelqu'un dans votre entourage aujourd'hui.", ar: "اقضِ حاجة شخص يطلب مساعدتك اليوم بقلب رحب." }
+                },
+                { 
+                    group_id: 'caractere', bab: 49, 
+                    title: { fr: "Son noble caractère", ar: "خلقه ﷺ" }, 
+                    content: { fr: "Il n'était pas grossier. Il ne rendait pas le mal pour le mal, mais pardonnait et excusait les fautes des autres.", ar: "لم يكن فاحشاً ولا متفحشاً، ولا يجزي بالسيئة السيئة، ولكن يعفو ويصفح." },
+                    dalil: { fr: "Aïcha rapporte : « Le Messager d'Allah n'a jamais frappé de sa main ni une femme ni un servant... »", ar: "عن عائشة قالت: «ما ضرب رسول الله ﷺ بيده شيئا قط، لا امرأة ولا خادما...»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Sa patience et sa bienveillance transformaient les ennemis en amis sincères.", ar: "العفو والتغاضي من شيم الأنبياء العظام، يورث المحبة والسلام." }
+                },
+
+                { 
+                    group_id: 'adoration', bab: 34, 
+                    title: { fr: "Son amour du parfum", ar: "تعطره ﷺ" }, 
+                    content: { fr: "Il aimait se parfumer et ne refusait jamais le parfum qu'on lui offrait. Son odeur naturelle était déjà plus agréable que le musc.", ar: "كان يحب الطيب ولا يرده، وكان ريحه أطيب من المسك." },
+                    dalil: { fr: "Anas rapporte : « Le Prophète (ﷺ) ne refusait jamais le parfum (Al-Tib). »", ar: "عن أنس بن مالك قال: «كان النبي ﷺ لا يرد الطيب»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Le parfum purifie l'air, soulage l'esprit et réjouit les anges.", ar: "الطيب يريح النفس ويسر الخاطر، وهو من أحب الأمور لرسول الله ﷺ." }
+                },
+                { 
+                    group_id: 'adoration', bab: 40, 
+                    title: { fr: "Son sommeil", ar: "نومه ﷺ" }, 
+                    content: { fr: "Il dormait sur le côté droit, posait sa main droite sous sa joue droite et lisait des invocations avant de s'endormir.", ar: "كان ينام على شقه الأيمن ويضع يده اليمنى تحت خده الأيمن." },
+                    dalil: { fr: "Hudhayfa rapporte : « Quand le Prophète s'allongeait dans son lit, il mettait sa hand sous sa joue et disait : 'En Ton nom Allah je vis et je meurs'. »", ar: "عن حذيفة قال: «كان النبي ﷺ إذا أوى إلى فراشه وضع يده تحت خده ثم قال: باسمك اللهم أموت وأحيا»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Dormir sur le côté droit facilite la respiration et la digestion selon la médecine sunnite.", ar: "النوم على الشق الأيمن أنفع للبدن وأسهل للاستيقاظ لصلاة الفجر." }
+                },
+                { 
+                    group_id: 'adoration', bab: 46, 
+                    title: { fr: "Ses pleurs", ar: "بكاؤه ﷺ" }, 
+                    content: { fr: "Ses pleurs n'étaient pas des cris bruyants. C'étaient des larmes qui coulaient par compassion, par crainte d'Allah ou lors de l'écoute du Coran.", ar: "لم يكن بكاؤه بصوت مرتفع، إنما كانت تدمع عيناه رحمة أو خشية من الله." },
+                    dalil: { fr: "Abdullah ibn ash-Shikhkhir rapporte : « J'ai vu le Prophète prier, sa poitrine émettait un bruit comme une marmite en ébullition tellement il pleurait. »", ar: "عن عبد الله بن الشخير قال: «أتيت رسول الله ﷺ وهو يصلي، ولجوفه أزيز كأزيز المرجل من البكاء»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Ses larmes reflétaient la profondeur de sa foi et sa connexion intime avec son Seigneur.", ar: "البكاء من خشية الله دليل حياة القلب وصفاء السريرة." }
+                },
+
+                { 
+                    group_id: 'fin', bab: 52, 
+                    title: { fr: "Ses noms", ar: "أسماؤه ﷺ" }, 
+                    content: { fr: "Il possédait plusieurs noms marquant ses rôles : Muhammad, Ahmad (le plus loué), Al-Mahi (celui par qui la mécréance est effacée).", ar: "له أسماء عدة منها: محمد، أحمد، الماحي، الحاشر، والعاقب." },
+                    dalil: { fr: "Jubayr ibn Mut'im rapporte : « Le Messager d'Allah a dit : 'J'ai plusieurs noms : Je suis Muhammad, je suis Ahmad, je suis Al-Mahi...' »", ar: "عن جبير بن مطعم قال: سمعت رسول الله ﷺ يقول: «إن لي أسماء: أنا محمد، وأنا أحمد، وأنا الماحي...»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Chaque nom illustre une facette glorieuse de sa mission universelle.", ar: "أسماؤه الشريفة تشير إلى صفات كماله وعظمة رسالته." }
+                },
+                { 
+                    group_id: 'fin', bab: 55, 
+                    title: { fr: "Son décès et son héritage", ar: "وفاته وما ترك ﷺ" }, 
+                    content: { fr: "Il a quitté ce monde à 63 ans. Les Prophètes ne laissent pas d'héritage matériel (dinar ou dirham), ce qu'ils laissent est le savoir et la guidée.", ar: "توفي وهو ابن ثلاث وستين سنة، ولم يترك ديناراً ولا درهماً بل ترك علماً وهدياً." },
+                    dalil: { fr: "Aïcha rapporte : « Le Messager d'Allah n'a laissé à sa mort ni dinar, ni dirham, ni esclave, ni servante... »", ar: "عن عائشة قالت: «ما ترك رسول الله ﷺ دينارا، ولا درهما، ولا عبدا، ولا أمة، ولا أوصى بشيء»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Le véritable héritage du Prophète est le Coran et la Sunnah transmis à l'humanité.", ar: "ميراث الأنبياء هو العلم والهدى، فمن أخذه فقد أخذ بحظ وافر." }
+                }
+            ],
+
+            dictionary: [
+                { word: "الممغط", type: "adjectif", def: { fr: "Le grand de taille, excessivement élancé.", ar: "الشديد الطول البائن." }, chapterKey: "apparence-1" },
+                { word: "المتردد", type: "adjectif", def: { fr: "Celui dont les membres sont ramassés par une brièveté excessive.", ar: "المتناهي في القصر." }, chapterKey: "apparence-1" },
+                { word: "غدة", type: "nom", def: { fr: "Petite excroissance de chair sous la peau (le Sceau).", ar: "قطعة لحم بارزة بين الكتفين." }, chapterKey: "apparence-2" },
+                { word: "بالسبط", type: "adjectif", def: { fr: "Cheveux raides et complètement lisses.", ar: "المسترسل شديد النعومة." }, chapterKey: "apparence-3" },
+                { word: "بالجعد القطط", type: "adjectif", def: { fr: "Cheveux très crépus ou très frisés.", ar: "شديد التلوي والالتواء." }, chapterKey: "apparence-3" },
+                { word: "وَرِق", type: "nom", def: { fr: "Argent pur (métal précieux).", ar: "فضة الخالصة." }, chapterKey: "vetements-12" },
+                { word: "تكفأ", type: "verbe", def: { fr: "S'avancer avec inclinaison et énergie comme en descente.", ar: "تمايل إلى الأمام بقوة وهيبة." }, chapterKey: "attitude-19" },
+                { word: "القرفصاء", type: "nom", def: { fr: "Posture assise en entourant ses genoux avec ses bras par humilité.", ar: "جلسة المتواضعين ضم الركبتين بالذراعين." }, chapterKey: "attitude-21" },
+                { word: "أزيز المرجل", type: "expression", def: { fr: "Le bouillonnement d'une marmite en ébullition (son des pleurs de crainte d'Allah).", ar: "صوت القدر تغلي من شدة الخشية." }, chapterKey: "adoration-46" },
+                { word: "الماحي", type: "nom prophétique", def: { fr: "Celui par qui Allah efface l'incrédulité.", ar: "الذي يمحو الله به الكفر." }, chapterKey: "fin-52" }
+            ],
+
+            quiz: [
+                { q: { fr: "Quelle était la taille physique du Prophète ﷺ ?", ar: "كيف كانت قامة النبي ﷺ؟" }, a: { fr: "De taille moyenne (ni trop grand ni trop petit), avec de larges épaules.", ar: "مربوعاً (ليس بالطويل ولا بالقصير)، بعيد ما بين المنكبين." } },
+                { q: { fr: "À quoi était comparée la lumière de son visage ?", ar: "بماذا شُبِّه ضياء وجهه ﷺ؟" }, a: { fr: "À la lumière douce de la pleine lune.", ar: "بالقمر ليلة البدر لجماله وضياء وجهه." } },
+                { q: { fr: "À quoi ressemblait le Sceau de la Prophétie entre ses épaules ?", ar: "ما شكل خاتم النبوة بين كتفيه ﷺ؟" }, a: { fr: "À une petite excroissance de la taille d'un œuf de pigeon.", ar: "غدة حمراء مثل بيضة الحمامة." } },
+                { q: { fr: "Comment étaient les cheveux du Prophète ﷺ ?", ar: "صفة شعر النبي ﷺ؟" }, a: { fr: "Légèrement ondulés, atteignant le lobe des oreilles.", ar: "رجلاً ليس بالسبط ولا الجعد، يبلغ شحمة أذنيه." } },
+                { q: { fr: "Combien de cheveux blancs avait-il environ dans sa barbe et sa tête ?", ar: "كم شعرة بيضاء كانت في رأسه ولحيته تقريباً؟" }, a: { fr: "Seulement une vingtaine (environ 14 à 20 cheveux).", ar: "أقل من عشرين (حوالي ١٤ إلى ٢٠ شعرة)." } },
+                { q: { fr: "Quel était son vêtement préféré ?", ar: "ما هو أحب الثياب إلى رسول الله ﷺ؟" }, a: { fr: "Le Qamis (longue chemise propre et simple).", ar: "القميص" } },
+                { q: { fr: "Combien de lanières avaient les sandales du Prophète ﷺ ?", ar: "كم قبالاً (شسعاً) كان لنعل النبي ﷺ؟" }, a: { fr: "Deux lanières (قبالان) passant entre les orteils.", ar: "قبالان (شسعان) يمران بين الأصابع." } },
+                { q: { fr: "Que contenait l'inscription gravée sur la bague du Prophète ﷺ ?", ar: "ماذا كان النقش على خاتم النبي ﷺ؟" }, a: { fr: "'Muhammad Messager d'Allah' gravé sur trois lignes.", ar: "محمد رسول الله (على ثلاثة أسطر)." } },
+                { q: { fr: "En quelle matière était faite sa bague ?", ar: "مما صُنِع خاتم النبي ﷺ؟" }, a: { fr: "En argent pur (Wariq / وَرِق).", ar: "من الفضة الخالصة." } },
+                { q: { fr: "Comment était la démarche du Prophète ﷺ ?", ar: "كيف كانت مشية النبي ﷺ؟" }, a: { fr: "Énergique et digne, comme s'il descendait une pente douce.", ar: "بنشاط وقوة، كأنما ينحدر من صبب." } },
+                { q: { fr: "Comment s'asseyait-il souvent par humilité ?", ar: "كيف كان يجلس ﷺ تواضعاً؟" }, a: { fr: "En Qurfusa (les bras entourant les genoux) ou en tailleur.", ar: "جلسة القرفصاء (ضم الركبتين بالذراعين) والمتربع." } },
+                { q: { fr: "Avec combien de doigts le Prophète ﷺ mangeait-il ?", ar: "بكم إصبع كان يأكل النبي ﷺ؟" }, a: { fr: "Avec trois doigts (pouce, index, majeur) qu'il léchait après le repas.", ar: "بثلاث أصابع ويلعقها بعد الطعام." } },
+                { q: { fr: "De quel pain se nourrissait principalement sa famille ?", ar: "ما هو غالب خبز آل محمد ﷺ؟" }, a: { fr: "Du pain d'orge (خبز الشعير).", ar: "خبز الشعير." } },
+                { q: { fr: "En combien de gorgées buvait-il un verre d'eau ?", ar: "على كم دفعة كان يشرب الماء ﷺ؟" }, a: { fr: "En trois gorgées en éloignant le verre pour respirer.", ar: "على ثلاث دفعات ويبعد الإناء عن فمه." } },
+                { q: { fr: "Comment était la parole du Prophète ﷺ ?", ar: "كيف كان كلام النبي ﷺ؟" }, a: { fr: "Claire et distincte, telle qu'on aurait pu compter ses mots.", ar: "كلاماً بيّناً فصلاً، لو عده العاد لأحصاه." } },
+                { q: { fr: "Comment était le rire du Prophète ﷺ ?", ar: "كيف كان ضحك النبي ﷺ؟" }, a: { fr: "Un large sourire sincère sans rire bruyant.", ar: "كان جل ضحكه التبسم من غير قهقهة." } },
+                { q: { fr: "Que respectait le Prophète ﷺ en plaisantant ?", ar: "ماذا كان يراعي النبي ﷺ في مزاحه؟" }, a: { fr: "Il ne disait que la vérité stricte.", ar: "كان لا يقول في مزاحه إلا حقاً وصدقاً." } },
+                { q: { fr: "Quelle était son attitude face au parfum offered ?", ar: "ما كان موقف النبي ﷺ إذا أُهدي إليه طيب؟" }, a: { fr: "Il aimait le parfum et ne le refusait jamais.", ar: "كان يحب الطيب ولا يرده." } },
+                { q: { fr: "Sur quel côté s'allongeait-il pour dormir ?", ar: "على أي شق كان ينام النبي ﷺ؟" }, a: { fr: "Sur le côté droit, la main droite sous la joue.", ar: "على شقه الأيمن واضعاً يده تحت خده الأيمن." } },
+                { q: { fr: "À quoi ressemblait le son de ses pleurs en prière ?", ar: "بماذا شُبِّه صوت بكائه ﷺ في الصلاة؟" }, a: { fr: "Au bouillonnement d'une marmite (أزيز المرجل) dans sa poitrine.", ar: "كأزيز المرجل (القدر تغلي) من شدة الخشية." } },
+                { q: { fr: "Que signifie son nom 'Al-Mahi' (الماحي) ?", ar: "ما معنى اسم 'الماحي' من أسماء النبي ﷺ؟" }, a: { fr: "Celui par qui Allah efface l'incrédulité.", ar: "الذي يمحو الله به الكفر." } },
+                { q: { fr: "Qu'a laissé le Prophète ﷺ en héritage à sa mort ?", ar: "ماذا ترك النبي ﷺ عند وفاته؟" }, a: { fr: "Ni dinar ni dirham, mais le savoir et la guidée.", ar: "لم يترك ديناراً ولا درهماً، بل ترك العلم والهدى." } }
+            ]
+        };
+
+        const state = {
+            lang: localStorage.getItem('shamail_lang') || 'fr',
+            theme: localStorage.getItem('shamail_theme') || 'light',
+            view: 'dashboard', 
+            activeGroupId: null,
+            favorites: JSON.parse(localStorage.getItem('shamail_favorites')) || [],
+            readChapters: JSON.parse(localStorage.getItem('shamail_read')) || [],
+            lastBookmark: localStorage.getItem('shamail_last_bookmark') || null,
+            dailySunnahIdx: Math.floor(Math.random() * appData.chapters.length),
+            searchQuery: '',
+            dictQuery: '',
+            activeFilter: 'all',
+            quizIndex: 0,
+            quizScore: 0,
+            quizFlipped: false,
+            quizFinished: false,
+            fontScale: parseFloat(localStorage.getItem('shamail_arabic_scale')) || 1.05,
+            currentGeneratedImageData: null,
+            settings: {
+                fontFamily: localStorage.getItem('shamail_fontFamily') || 'Cairo'
+            }
+        };
+
+        const totalChapters = 56;
+
+        function getEl(id) { return document.getElementById(id); }
+
+        function init() {
+            applyTheme();
+            applySettings();
+            registerPWA();
+            render();
+            setupGlobalListeners();
+        }
+
+        function registerPWA() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+            }
+        }
+
+        function setupGlobalListeners() {
+            document.addEventListener('click', (e) => {
+                const gharib = e.target.closest('.gharib-word');
+                if (gharib) {
+                    const wasActive = gharib.classList.contains('active');
+                    document.querySelectorAll('.gharib-word').forEach(el => el.classList.remove('active'));
+                    if (!wasActive) gharib.classList.add('active');
+                } else {
+                    document.querySelectorAll('.gharib-word').forEach(el => el.classList.remove('active'));
+                }
+            });
+        }
+
+        function zoomText(delta) {
+            let currentScale = state.fontScale + delta;
+            currentScale = Math.min(1.45, Math.max(0.75, currentScale));
+            currentScale = Math.round(currentScale * 100) / 100;
+            state.fontScale = currentScale;
+            localStorage.setItem('shamail_arabic_scale', currentScale);
+            document.documentElement.style.setProperty('--arabic-scale', currentScale);
+            showToast(`Taille du texte : ${Math.round(currentScale * 100)}%`);
+        }
+
+        function applyTheme() {
+            const html = document.documentElement;
+            const body = document.body;
+            
+            html.classList.remove('dark');
+            body.classList.remove('theme-sepia', 'theme-oled');
+
+            if (state.theme === 'dark') {
+                html.classList.add('dark');
+            } else if (state.theme === 'sepia') {
+                body.classList.add('theme-sepia');
+            } else if (state.theme === 'oled') {
+                html.classList.add('dark');
+                body.classList.add('theme-oled');
+            }
+
+            const themeContainer = getEl('theme-icon-container');
+            if (themeContainer) {
+                let iconName = 'sun';
+                if (state.theme === 'dark') iconName = 'moon';
+                else if (state.theme === 'sepia') iconName = 'book-open';
+                else if (state.theme === 'oled') iconName = 'sparkles';
+                themeContainer.innerHTML = `<i data-lucide="${iconName}" class="w-4 h-4"></i>`;
+            }
+
+            ['light', 'dark', 'sepia', 'oled'].forEach(mode => {
+                const btn = getEl(`theme-btn-${mode}`);
+                if (btn) {
+                    if (state.theme === mode) {
+                        btn.classList.add('border-madinah-500', 'bg-madinah-50', 'dark:bg-madinah-900/40', 'text-madinah-600', 'dark:text-white');
+                        btn.classList.remove('border-slate-200', 'dark:border-slate-700');
+                    } else {
+                        btn.classList.remove('border-madinah-500', 'bg-madinah-50', 'dark:bg-madinah-900/40', 'text-madinah-600', 'dark:text-white');
+                        btn.classList.add('border-slate-200', 'dark:border-slate-700');
+                    }
+                }
+            });
+
+            lucide.createIcons();
+        }
+
+        function cycleTheme() {
+            const themes = ['light', 'dark', 'sepia', 'oled'];
+            const nextIdx = (themes.indexOf(state.theme) + 1) % themes.length;
+            setThemeMode(themes[nextIdx]);
+        }
+
+        function setThemeMode(mode) {
+            state.theme = mode;
+            localStorage.setItem('shamail_theme', mode);
+            applyTheme();
+        }
+
+        function toggleSettings() {
+            const modal = getEl('settings-modal');
+            const content = getEl('settings-content');
+            if (!modal || !content) return;
+
+            if (modal.classList.contains('modal-closed')) {
+                modal.classList.remove('modal-closed');
+                modal.classList.add('modal-open');
+                setTimeout(() => content.classList.remove('scale-95'), 10);
+            } else {
+                content.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.remove('modal-open');
+                    modal.classList.add('modal-closed');
+                }, 180);
+            }
+        }
+
+        function setFont(font) {
+            state.settings.fontFamily = font;
+            localStorage.setItem('shamail_fontFamily', font);
+            applySettings();
+            render();
+        }
+
+        function applySettings() {
+            document.documentElement.style.setProperty('--arabic-scale', state.fontScale);
+
+            ['Cairo', 'Amiri', 'Noto Naskh Arabic'].forEach(f => {
+                const btnId = f === 'Noto Naskh Arabic' ? 'Noto' : f;
+                const btn = getEl(`btn-font-${btnId}`);
+                if (btn) {
+                    if (f === state.settings.fontFamily) {
+                        btn.classList.add('border-madinah-500', 'bg-madinah-50', 'dark:bg-madinah-900/30');
+                        btn.classList.remove('border-transparent', 'bg-slate-50', 'dark:bg-slate-700');
+                    } else {
+                        btn.classList.remove('border-madinah-500', 'bg-madinah-50', 'dark:bg-madinah-900/30');
+                        btn.classList.add('border-transparent', 'bg-slate-50', 'dark:bg-slate-700');
+                    }
+                }
+            });
+        }
+
+        function toggleLang() {
+            state.lang = state.lang === 'fr' ? 'ar' : 'fr';
+            localStorage.setItem('shamail_lang', state.lang);
+            render();
+        }
+
+        function setFilter(filter) {
+            if (filter === 'dict') {
+                setView('dictionary');
+                return;
+            }
+            state.activeFilter = filter;
+            renderDashboard();
+        }
+
+        function render() {
+            const isRtl = state.lang === 'ar';
+            document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+            
+            const langBtnSpan = document.querySelector('#lang-btn span');
+            if (langBtnSpan) {
+                langBtnSpan.innerText = state.lang === 'fr' ? 'عربي' : 'FR';
+            }
+
+            const headerLeft = getEl('header-left');
+            if (headerLeft) {
+                headerLeft.innerHTML = state.view !== 'dashboard' 
+                    ? `<button onclick="setView('dashboard')" title="Retour" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200/60 dark:border-slate-700/60"><i data-lucide="${isRtl ? 'chevron-right' : 'chevron-left'}" class="w-5 h-5 text-slate-600 dark:text-slate-300"></i></button>`
+                    : `<div class="w-8 h-8 rounded-lg bg-gradient-to-br from-madinah-400 to-madinah-600 flex items-center justify-center shadow-sm"><i data-lucide="book-open" class="w-4 h-4 text-white"></i></div><span class="font-extrabold text-lg tracking-tight text-slate-800 dark:text-white font-arabicTitle">${appData.ui.title[state.lang]}</span>`;
+            }
+
+            if (state.view === 'dashboard') renderDashboard();
+            else if (state.view === 'favorites') renderFavorites();
+            else if (state.view === 'quiz') renderQuiz();
+            else if (state.view === 'dictionary') renderDictionary();
+            else renderGroup(state.activeGroupId);
+
+            lucide.createIcons();
+        }
+
+        function handleSearch(e) {
+            state.searchQuery = e.target.value.toLowerCase();
+            updateSearchResults();
+        }
+
+        function updateSearchResults() {
+            const isRtl = state.lang === 'ar';
+            const container = getEl('dashboard-items-container');
+            if (!container) return;
+
+            let filteredChapters = appData.chapters;
+
+            if (state.activeFilter === 'sharh') {
+                filteredChapters = filteredChapters.filter(c => c.sharh);
+            } else if (state.activeFilter === 'action') {
+                filteredChapters = filteredChapters.filter(c => c.action);
+            } else if (state.activeFilter === 'fav') {
+                filteredChapters = filteredChapters.filter(c => state.favorites.includes(`${c.group_id}-${c.bab}`));
+            }
+
+            if (state.searchQuery.trim() !== '') {
+                filteredChapters = filteredChapters.filter(c => 
+                    c.title.fr.toLowerCase().includes(state.searchQuery) || 
+                    c.title.ar.includes(state.searchQuery) ||
+                    c.content.fr.toLowerCase().includes(state.searchQuery) ||
+                    c.content.ar.includes(state.searchQuery)
+                );
+            }
+
+            if (state.searchQuery.trim() !== '' || state.activeFilter !== 'all') {
+                if (filteredChapters.length > 0) {
+                    let html = `<div class="space-y-4">`;
+                    filteredChapters.forEach((chapter, index) => {
+                        const group = appData.groups.find(g => g.id === chapter.group_id);
+                        html += generateChapterCard(chapter, group, index, isRtl);
+                    });
+                    html += `</div>`;
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = `<div class="text-center py-10 text-slate-400"><i data-lucide="search-x" class="w-10 h-10 mx-auto mb-2 opacity-40"></i><p class="font-medium text-sm">${appData.ui.noResults[state.lang]}</p></div>`;
+                }
+            } else {
+                let html = `<div class="grid grid-cols-2 gap-3.5">`;
+                appData.groups.forEach((group, idx) => {
+                    html += `
+                        <button onclick="setView('group', '${group.id}')" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-4 rounded-2xl premium-shadow border border-slate-100 dark:border-slate-700/70 hover:-translate-y-0.5 active:scale-95 transition-all text-left flex flex-col h-full group relative overflow-hidden" style="animation-delay: ${idx * 30}ms; ${isRtl ? 'text-align: right;' : 'text-align: left;'}">
+                            <div class="absolute inset-0 bg-gradient-to-br ${group.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                            <div class="w-11 h-11 rounded-xl bg-gradient-to-br ${group.gradient} flex items-center justify-center shadow-md mb-3 transform group-hover:scale-105 transition-transform duration-300">
+                                <i data-lucide="${group.icon}" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <h3 class="font-bold text-base text-slate-800 dark:text-white mb-0.5 font-arabic">${group.title[state.lang]}</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-snug font-medium line-clamp-2">${group.desc[state.lang]}</p>
+                        </button>
+                    `;
+                });
+                html += `</div>`;
+                container.innerHTML = html;
+            }
+            lucide.createIcons();
+        }
+
+        function refreshDailySunnah() {
+            state.dailySunnahIdx = (state.dailySunnahIdx + 1) % appData.chapters.length;
+            renderDashboard();
+        }
+
+        function resumeLastBookmark() {
+            if (!state.lastBookmark) return;
+            const chapter = appData.chapters.find(c => `${c.group_id}-${c.bab}` === state.lastBookmark);
+            if (chapter) setView('group', chapter.group_id);
+        }
+
+        function renderDashboard() {
+            const isRtl = state.lang === 'ar';
+            const progressPct = Math.min(100, Math.round((state.readChapters.length / totalChapters) * 100));
+            const strokeDashoffset = 119 - (119 * progressPct / 100);
+
+            const dailyChapter = appData.chapters[state.dailySunnahIdx];
+            let bookmarkChapter = null;
+            if (state.lastBookmark) {
+                bookmarkChapter = appData.chapters.find(c => `${c.group_id}-${c.bab}` === state.lastBookmark);
+            }
+
+            let html = `
+                <div class="animate-fade-in space-y-4 pb-4">
+                    
+                    <!-- ELEGANT HERO CARD -->
+                    <div class="bg-gradient-to-br from-madinah-500/10 via-emerald-500/5 to-teal-500/10 dark:from-madinah-900/30 dark:to-slate-800/80 p-5 rounded-3xl border border-madinah-500/20 dark:border-slate-700/60 shadow-sm relative overflow-hidden">
+                        
+                        <!-- Calligraphic Salawat Banner -->
+                        <div class="text-center py-2.5 px-4 bg-gradient-to-r from-emerald-500/10 via-madinah-500/20 to-emerald-500/10 dark:from-emerald-900/40 dark:via-madinah-900/50 dark:to-emerald-900/40 rounded-2xl border border-emerald-500/25 dark:border-emerald-700/50 mb-3.5 shadow-sm">
+                            <span class="font-arabicTitle text-lg sm:text-xl font-bold text-emerald-800 dark:text-emerald-300 tracking-wide block leading-normal">
+                                ﷺ اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَآلِهِ وَسَلِّمْ
+                            </span>
+                        </div>
+
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex-1 min-w-0">
+                                <h2 class="text-2xl font-extrabold text-slate-800 dark:text-white font-arabicTitle tracking-tight leading-tight">Shamâ'il</h2>
+                                <p class="text-xs sm:text-sm text-madinah-600 dark:text-madinah-400 font-medium truncate">${appData.ui.subtitle[state.lang]}</p>
+                            </div>
+
+                            <!-- Circular Progress Ring (48px) -->
+                            <div class="relative w-12 h-12 shrink-0 flex items-center justify-center">
+                                <svg class="w-12 h-12 transform -rotate-90">
+                                    <circle cx="24" cy="24" r="19" stroke="currentColor" stroke-width="3.5" class="text-slate-200/70 dark:text-slate-700" fill="transparent" />
+                                    <circle cx="24" cy="24" r="19" stroke="currentColor" stroke-width="3.5" class="text-madinah-500 transition-all duration-1000" stroke-linecap="round" fill="transparent" stroke-dasharray="119" stroke-dashoffset="${strokeDashoffset}" />
+                                </svg>
+                                <span class="absolute text-xs font-black text-slate-700 dark:text-slate-200 font-mono">${progressPct}%</span>
+                            </div>
+                        </div>
+
+                        ${bookmarkChapter ? `
+                        <div class="mt-3 pt-3 border-t border-madinah-500/15 dark:border-slate-700/50 flex items-center justify-between">
+                            <span class="text-xs font-medium text-slate-600 dark:text-slate-300 flex items-center gap-1.5"><i data-lucide="bookmark" class="w-4 h-4 text-madinah-500"></i> Reprendre: <strong class="truncate max-w-[150px]">${bookmarkChapter.title[state.lang]}</strong></span>
+                            <button onclick="resumeLastBookmark()" class="px-3 py-1 rounded-xl bg-madinah-600 text-white text-xs font-bold shadow-sm active:scale-95 transition-all">Continuer</button>
+                        </div>
+                        ` : ''}
+
+                        <!-- Quick Action Row -->
+                        <div class="flex gap-2 mt-3.5 pt-3 border-t border-madinah-500/15 dark:border-slate-700/50">
+                            <button onclick="setView('quiz')" class="flex-1 py-2 px-3 rounded-xl bg-violet-100/80 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 text-xs font-bold flex items-center justify-center gap-1.5 hover:scale-[1.02] active:scale-95 transition-all">
+                                <i data-lucide="brain" class="w-4 h-4"></i> Quiz
+                            </button>
+                            <button onclick="setView('dictionary')" class="flex-1 py-2 px-3 rounded-xl bg-emerald-100/80 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold flex items-center justify-center gap-1.5 hover:scale-[1.02] active:scale-95 transition-all">
+                                <i data-lucide="book-marked" class="w-4 h-4"></i> Dico
+                            </button>
+                            <button onclick="setView('favorites')" class="flex-1 py-2 px-3 rounded-xl bg-rose-100/80 dark:bg-rose-900/40 text-rose-700 dark:text-rose-300 text-xs font-bold flex items-center justify-center gap-1.5 hover:scale-[1.02] active:scale-95 transition-all">
+                                <i data-lucide="heart" class="w-4 h-4 fill-current"></i> Favoris (${state.favorites.length})
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SUNNAH DU JOUR CARD -->
+                    <div class="bg-amber-50/90 dark:bg-amber-950/30 p-4 rounded-2xl border border-amber-200/70 dark:border-amber-800/40 shadow-sm relative">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-xs font-bold text-amber-700 dark:text-amber-400 flex items-center gap-1.5"><i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i> Sunnah du Jour</span>
+                            <button onclick="refreshDailySunnah()" title="Changer de Sunnah" class="text-amber-600 dark:text-amber-400 p-1 hover:bg-amber-100 dark:hover:bg-amber-900/50 rounded-lg transition-colors text-xs font-bold flex items-center gap-1">
+                                🎲 Autre
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-800 dark:text-white mb-1 font-arabicTitle">${dailyChapter.title[state.lang]}</h4>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed mb-2">${dailyChapter.content[state.lang]}</p>
+                        <button onclick="setView('group', '${dailyChapter.group_id}')" class="text-xs font-bold text-amber-700 dark:text-amber-400 hover:underline flex items-center gap-1">Lire le chapitre complet <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></button>
+                    </div>
+
+                    <!-- SEARCH & FILTER ROW -->
+                    <div class="space-y-2">
+                        <!-- Search Bar -->
+                        <div class="relative">
+                            <i data-lucide="search" class="absolute ${isRtl ? 'right-3.5' : 'left-3.5'} top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                            <input id="search-input" type="text" oninput="handleSearch(event)" value="${state.searchQuery}" placeholder="${appData.ui.searchPlaceholder[state.lang]}" class="w-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 rounded-2xl py-2.5 ${isRtl ? 'pr-10 pl-3' : 'pl-10 pr-3'} text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-madinah-500 transition-all font-medium placeholder-slate-400 shadow-sm">
+                        </div>
+
+                        <!-- Compact Filter Pills Menu (No Scrollbar) -->
+                        <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+                            <button onclick="setFilter('all')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${state.activeFilter === 'all' ? 'bg-madinah-600 text-white shadow-sm' : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60'}">Tous</button>
+                            <button onclick="setFilter('sharh')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${state.activeFilter === 'sharh' ? 'bg-madinah-600 text-white shadow-sm' : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60'}">💡 Sharh</button>
+                            <button onclick="setFilter('action')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${state.activeFilter === 'action' ? 'bg-madinah-600 text-white shadow-sm' : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60'}">⚡ Sunnah</button>
+                            <button onclick="setFilter('fav')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${state.activeFilter === 'fav' ? 'bg-madinah-600 text-white shadow-sm' : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60'}">❤️ Favoris</button>
+                            <button onclick="setFilter('dict')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60">📖 Dico Gharib</button>
+                        </div>
+                    </div>
+
+                    <div id="dashboard-items-container"></div>
+                </div>
+            `;
+
+            getEl('app-content').innerHTML = html;
+            updateSearchResults();
+        }
+
+        function renderGroup(groupId) {
+            const group = appData.groups.find(g => g.id === groupId);
+            const chapters = appData.chapters.filter(c => c.group_id === groupId);
+            const isRtl = state.lang === 'ar';
+
+            let html = `
+                <div class="animate-fade-in pb-8">
+                    <div class="text-center mb-6 pt-1">
+                        <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${group.gradient} flex items-center justify-center shadow-xl mb-3 transform rotate-2 ring-4 ring-white/50 dark:ring-slate-800/50">
+                            <i data-lucide="${group.icon}" class="w-8 h-8 text-white"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-800 dark:text-white font-arabicTitle mb-1">${group.title[state.lang]}</h2>
+                        <p class="text-slate-500 dark:text-slate-400 font-medium text-xs">${group.desc[state.lang]}</p>
+                    </div>
+                    <div class="space-y-4">
+            `;
+            
+            chapters.forEach((chapter, index) => {
+                html += generateChapterCard(chapter, group, index, isRtl);
+            });
+
+            html += `</div></div>`;
+            getEl('app-content').innerHTML = html;
+        }
+
+        function generateChapterCard(chapter, group, index, isRtl) {
+            const chapterKey = `${group.id}-${chapter.bab}`;
+            const isFav = state.favorites.includes(chapterKey);
+            const isRead = state.readChapters.includes(chapterKey);
+            
+            let authBadge = '';
+            if (chapter.auth === 'sahih') {
+                authBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-200 dark:border-emerald-800/50 flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>صحيح Sahih</span>`;
+            } else if (chapter.auth === 'hasan') {
+                authBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-800/50 flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>حسن Hasan</span>`;
+            }
+
+            const fontClass = state.settings.fontFamily === 'Amiri' ? 'font-arabicTitle' : (state.settings.fontFamily === 'Noto Naskh Arabic' ? 'font-arabicNaskh' : 'font-arabic');
+
+            return `
+                <div onclick="saveBookmark('${chapterKey}')" class="group bg-white/90 dark:bg-slate-800/95 backdrop-blur-2xl p-6 rounded-3xl premium-shadow border border-white/80 dark:border-slate-700 transition-all duration-300 flex flex-col gap-4 animate-slide-up relative overflow-hidden ${isRead ? 'opacity-85' : ''} hover:-translate-y-0.5 hover:shadow-xl" style="animation-delay: ${index * 30}ms; animation-fill-mode: both;">
+                    <div class="card-spine bg-gradient-to-b ${group.gradient}"></div>
+                    
+                    <div class="flex items-start justify-between pl-2">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase mb-0.5 flex items-center gap-1"><i data-lucide="door-open" class="w-3.5 h-3.5"></i> Bâb ${chapter.bab}</span>
+                            <h3 class="font-scaled-title font-bold text-slate-800 dark:text-white ${isRtl ? fontClass : ''}">${chapter.title[state.lang]}</h3>
+                        </div>
+                    </div>
+                    
+                    <p class="font-scaled-body text-slate-600 dark:text-slate-300 pl-2 ${isRtl ? fontClass : ''}">${chapter.content[state.lang]}</p>
+
+                    <div class="relative bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-900/80 dark:to-slate-900/40 p-4.5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
+                        <i data-lucide="quote" class="absolute top-3 ${isRtl ? 'left-3' : 'right-3'} w-8 h-8 text-slate-200 dark:text-slate-700/50 opacity-40 pointer-events-none transform ${isRtl ? '-scale-x-100' : ''}"></i>
+                        <div class="flex items-center justify-between mb-2 relative z-10">
+                            <div class="flex items-center gap-1.5">
+                                <div class="bg-madinah-100 dark:bg-madinah-900/30 p-1 rounded-md border border-madinah-200 dark:border-madinah-800/50">
+                                    <i data-lucide="book-text" class="w-3.5 h-3.5 text-madinah-600 dark:text-madinah-400"></i>
+                                </div>
+                                <span class="text-xs font-black uppercase tracking-widest text-madinah-600 dark:text-madinah-400">
+                                    ${appData.ui.proof[state.lang]}
+                                </span>
+                            </div>
+                            ${authBadge}
+                        </div>
+                        <p class="font-scaled-dalil text-slate-700 dark:text-slate-300 relative z-10 ${isRtl ? fontClass : 'italic font-medium'}">${chapter.dalil[state.lang]}</p>
+                    </div>
+
+                    ${chapter.sharh ? `
+                    <div class="relative z-10">
+                        <button onclick="toggleSharh('${chapterKey}', event)" class="w-full flex items-center justify-between py-1.5 px-1 text-slate-500 hover:text-madinah-600 dark:text-slate-400 dark:hover:text-madinah-400 transition-colors text-xs sm:text-sm font-bold">
+                            <span class="flex items-center gap-1.5"><i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i> ${appData.ui.sharhBtn[state.lang]}</span>
+                            <i data-lucide="chevron-down" id="sharh-icon-${chapterKey}" class="w-4 h-4 transition-transform duration-300"></i>
+                        </button>
+                        <div id="sharh-${chapterKey}" class="sharh-content">
+                            <div class="p-4 mt-1.5 bg-indigo-50/60 dark:bg-indigo-900/20 rounded-xl border border-indigo-100/80 dark:border-indigo-800/30 text-slate-700 dark:text-slate-300 font-scaled-sharh ${isRtl ? `border-r-4 border-r-indigo-500 ${fontClass}` : 'border-l-4 border-l-indigo-500'}">
+                                ${chapter.sharh[state.lang]}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${chapter.action ? `
+                    <div class="bg-amber-50/80 dark:bg-amber-900/20 p-3.5 rounded-xl border border-amber-200/50 dark:border-amber-800/30 flex items-start gap-2.5">
+                        <div class="bg-amber-100 dark:bg-amber-900/50 p-1 rounded-md shrink-0 mt-0.5">
+                            <i data-lucide="zap" class="w-4 h-4 text-amber-600 dark:text-amber-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block mb-0.5">${appData.ui.sunnahAction[state.lang]}</span>
+                            <p class="text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-300 ${isRtl ? fontClass : ''}">${chapter.action[state.lang]}</p>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-700/50">
+                        <button onclick="toggleRead('${chapterKey}', event)" class="flex-1 py-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95 ${isRead ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' : 'bg-slate-50 text-slate-500 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'}">
+                            <i data-lucide="${isRead ? 'check-circle-2' : 'circle'}" class="w-4 h-4"></i>
+                            ${appData.ui.markRead[state.lang]}
+                        </button>
+                        <button onclick="generateHadithCard('${chapterKey}', event)" title="Générer Carte Hadith" class="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center transition-all active:scale-95">
+                            <i data-lucide="image" class="w-4.5 h-4.5"></i>
+                        </button>
+                        <button onclick="toggleFavorite('${chapterKey}', event)" title="Favoris" class="w-10 h-10 rounded-xl flex items-center justify-center transition-all active:scale-95 ${isFav ? 'bg-rose-100 text-rose-500 dark:bg-rose-900/50 dark:text-rose-400 border border-rose-200 dark:border-rose-800' : 'bg-slate-50 text-slate-400 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700'}">
+                            <i data-lucide="heart" class="w-4.5 h-4.5 ${isFav ? 'fill-current' : ''}"></i>
+                        </button>
+                        <button onclick="shareChapter('${chapterKey}', event)" title="Partager Texte" class="w-10 h-10 rounded-xl bg-slate-50 text-slate-400 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center transition-all active:scale-95">
+                            <i data-lucide="share-2" class="w-4.5 h-4.5"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function saveBookmark(chapterKey) {
+            state.lastBookmark = chapterKey;
+            localStorage.setItem('shamail_last_bookmark', chapterKey);
+        }
+
+        function renderDictionary() {
+            const isRtl = state.lang === 'ar';
+            let filteredDict = appData.dictionary;
+
+            if (state.dictQuery && state.dictQuery.trim() !== '') {
+                const q = state.dictQuery.toLowerCase();
+                filteredDict = filteredDict.filter(d => 
+                    d.word.toLowerCase().includes(q) || 
+                    d.def.fr.toLowerCase().includes(q) || 
+                    d.def.ar.includes(q)
+                );
+            }
+
+            let html = `
+                <div class="animate-fade-in pb-8">
+                    <div class="text-center mb-6 pt-2">
+                        <div class="w-14 h-14 mx-auto rounded-2xl bg-emerald-100 dark:bg-emerald-900/50 flex items-center justify-center mb-3 text-emerald-600 dark:text-emerald-400 shadow-md">
+                            <i data-lucide="book-marked" class="w-7 h-7"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-800 dark:text-white font-arabicTitle mb-1">Gharîb al-Hadîth (غرائب الألفاظ)</h2>
+                        <p class="text-slate-500 dark:text-slate-400 font-medium text-xs">Le dictionnaire des termes rares et complexes</p>
+                    </div>
+
+                    <!-- Search Dict Input -->
+                    <div class="relative mb-5">
+                        <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                        <input type="text" oninput="handleDictSearch(event)" value="${state.dictQuery}" placeholder="Rechercher un mot (ex: الممغط, القرفصاء...)" class="w-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 rounded-2xl py-2.5 pl-10 pr-4 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-madinah-500 shadow-sm">
+                    </div>
+
+                    <div class="space-y-3.5">
+            `;
+
+            if (filteredDict.length === 0) {
+                html += `<div class="text-center py-10 text-slate-400"><i data-lucide="search-x" class="w-10 h-10 mx-auto mb-2 opacity-40"></i><p class="font-medium text-xs">Aucun terme trouvé.</p></div>`;
+            } else {
+                filteredDict.forEach((item) => {
+                    const chapter = appData.chapters.find(c => `${c.group_id}-${c.bab}` === item.chapterKey);
+                    html += `
+                        <div class="bg-white/90 dark:bg-slate-800/95 backdrop-blur-xl p-4.5 rounded-2xl border border-slate-200/80 dark:border-slate-700 shadow-sm hover:shadow-md transition-all">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xl font-bold font-arabicTitle text-emerald-600 dark:text-emerald-400">${item.word}</span>
+                                <span class="px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-[10px] font-bold uppercase tracking-wider">${item.type}</span>
+                            </div>
+                            <p class="text-sm font-medium text-slate-700 dark:text-slate-200 mb-1.5">${item.def.fr}</p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 font-arabic mb-3">${item.def.ar}</p>
+                            ${chapter ? `
+                                <button onclick="setView('group', '${chapter.group_id}')" class="text-xs font-bold text-madinah-600 dark:text-madinah-400 hover:underline flex items-center gap-1">
+                                    <i data-lucide="link" class="w-3.5 h-3.5"></i> Voir le chapitre: ${chapter.title[state.lang]}
+                                </button>
+                            ` : ''}
+                        </div>
+                    `;
+                });
+            }
+
+            html += `</div></div>`;
+            getEl('app-content').innerHTML = html;
+        }
+
+        function handleDictSearch(e) {
+            state.dictQuery = e.target.value;
+            renderDictionary();
+            lucide.createIcons();
+        }
+
+        /* HTML5 Canvas Hadith Image Generator */
+        function generateHadithCard(chapterKey, e) {
+            if (e) e.stopPropagation();
+            const chapter = appData.chapters.find(c => `${c.group_id}-${c.bab}` === chapterKey);
+            if (!chapter) return;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = 1080;
+            canvas.height = 1080;
+            const ctx = canvas.getContext('2d');
+
+            // Background Gradient
+            const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
+            grad.addColorStop(0, '#064e3b');
+            grad.addColorStop(1, '#022c22');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 1080, 1080);
+
+            // Inner Gold Border
+            ctx.strokeStyle = '#fbbf24';
+            ctx.lineWidth = 10;
+            ctx.strokeRect(40, 40, 1000, 1000);
+
+            // Calligraphy Salawat Header
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = 'bold 44px Amiri, serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('ﷺ اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَآلِهِ وَسَلِّمْ', 540, 130);
+
+            // Chapter Title
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 48px Amiri, serif';
+            ctx.fillText(chapter.title.fr, 540, 220);
+
+            // Hadith Content (Word wrapped)
+            ctx.fillStyle = '#ecfdf5';
+            ctx.font = '34px Cairo, sans-serif';
+            wrapCanvasText(ctx, chapter.content.fr, 540, 330, 900, 50);
+
+            // Hadith Dalil Quote
+            let dalilClean = chapter.dalil.fr.replace(/<[^>]*>?/gm, '');
+            ctx.fillStyle = '#fbbf24';
+            ctx.font = 'italic 28px Inter, sans-serif';
+            wrapCanvasText(ctx, dalilClean, 540, 680, 880, 42);
+
+            // Footer Branding
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = 'bold 26px Inter, sans-serif';
+            ctx.fillText("— Shamâ'il Muhammadiyya", 540, 980);
+
+            const dataUrl = canvas.toDataURL('image/png');
+            state.currentGeneratedImageData = dataUrl;
+
+            const modalImg = getEl('card-preview-img');
+            const downloadBtn = getEl('card-download-btn');
+            if (modalImg) modalImg.src = dataUrl;
+            if (downloadBtn) downloadBtn.href = dataUrl;
+
+            openCardModal();
+        }
+
+        function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let currentY = y;
+
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line.trim(), x, currentY);
+                    line = words[n] + ' ';
+                    currentY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line.trim(), x, currentY);
+        }
+
+        function openCardModal() {
+            const modal = getEl('card-modal');
+            const content = getEl('card-modal-content');
+            if (!modal || !content) return;
+            modal.classList.remove('modal-closed');
+            modal.classList.add('modal-open');
+            setTimeout(() => content.classList.remove('scale-95'), 10);
+        }
+
+        function closeCardModal() {
+            const modal = getEl('card-modal');
+            const content = getEl('card-modal-content');
+            if (!modal || !content) return;
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.remove('modal-open');
+                modal.classList.add('modal-closed');
+            }, 180);
+        }
+
+        function shareCardImage() {
+            if (navigator.share && state.currentGeneratedImageData) {
+                fetch(state.currentGeneratedImageData)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        const file = new File([blob], 'hadith-shamail.png', { type: 'image/png' });
+                        navigator.share({
+                            title: "Hadith Shamâ'il",
+                            files: [file]
+                        }).catch(() => showToast("Image téléchargée !"));
+                    });
+            } else {
+                showToast("Téléchargement de l'image...");
+            }
+        }
+
+        function toggleSharh(chapterKey, e) {
+            if (e) e.stopPropagation();
+            const content = getEl(`sharh-${chapterKey}`);
+            const icon = getEl(`sharh-icon-${chapterKey}`);
+            if (!content || !icon) return;
+
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function toggleFavorite(chapterKey, e) {
+            if (e) e.stopPropagation();
+            const idx = state.favorites.indexOf(chapterKey);
+            if (idx > -1) {
+                state.favorites.splice(idx, 1);
+                showToast(appData.ui.removed[state.lang]);
+            } else {
+                state.favorites.push(chapterKey);
+                showToast(appData.ui.saved[state.lang]);
+            }
+            localStorage.setItem('shamail_favorites', JSON.stringify(state.favorites));
+            render();
+        }
+
+        function toggleRead(chapterKey, e) {
+            if (e) e.stopPropagation();
+            const idx = state.readChapters.indexOf(chapterKey);
+            if (idx > -1) {
+                state.readChapters.splice(idx, 1);
+            } else {
+                state.readChapters.push(chapterKey);
+            }
+            localStorage.setItem('shamail_read', JSON.stringify(state.readChapters));
+            render();
+        }
+
+        function shareChapter(chapterKey, e) {
+            if (e) e.stopPropagation();
+            const chapter = appData.chapters.find(c => `${c.group_id}-${c.bab}` === chapterKey);
+            if (!chapter) return;
+
+            let dalilClean = chapter.dalil[state.lang].replace(/<[^>]*>?/gm, '');
+            const text = `✨ ${chapter.title[state.lang]}\n\n📖 ${chapter.content[state.lang]}\n\n📜 ${appData.ui.proof[state.lang]}: ${dalilClean}\n\n— Shamâ'il App`;
+            
+            if (navigator.share) {
+                navigator.share({ title: chapter.title[state.lang], text: text }).catch(() => {
+                    copyToClipboard(text);
+                });
+            } else {
+                copyToClipboard(text);
+            }
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(appData.ui.copied[state.lang]);
+            }).catch(() => {
+                showToast(appData.ui.copied[state.lang]);
+            });
+        }
+
+        function renderFavorites() {
+            const isRtl = state.lang === 'ar';
+            let html = `
+                <div class="animate-fade-in pb-8">
+                    <div class="text-center mb-6 pt-2">
+                        <div class="w-14 h-14 mx-auto rounded-full bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center mb-3 text-rose-500">
+                            <i data-lucide="heart" class="w-7 h-7 fill-current"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-800 dark:text-white font-arabicTitle">${appData.ui.favorites[state.lang]}</h2>
+                    </div>
+                    <div class="space-y-4">
+            `;
+            
+            if (state.favorites.length === 0) {
+                html += `<div class="text-center py-10 text-slate-400"><i data-lucide="heart-off" class="w-10 h-10 mx-auto mb-2 opacity-40"></i><p class="font-medium text-xs">${appData.ui.noFavorites[state.lang]}</p></div>`;
+            } else {
+                state.favorites.forEach((key, index) => {
+                    const chapter = appData.chapters.find(c => `${c.group_id}-${c.bab}` === key);
+                    if (chapter) {
+                        const group = appData.groups.find(g => g.id === chapter.group_id);
+                        html += generateChapterCard(chapter, group, index, isRtl);
+                    }
+                });
+            }
+            html += `</div></div>`;
+            getEl('app-content').innerHTML = html;
+        }
+
+        function renderQuiz() {
+            const isRtl = state.lang === 'ar';
+            
+            if (state.quizFinished) {
+                let celebrateMsg = "Excellent travail ! Vous maîtrisez les Shamâ'il prophétiques.";
+                if (state.quizScore < 12) celebrateMsg = "Bon effort ! Continuez votre lecture pour enrichir vos connaissances.";
+
+                let html = `
+                    <div class="animate-fade-in flex flex-col items-center justify-center min-h-[65vh] py-4 text-center">
+                        <div class="w-20 h-20 rounded-full bg-gradient-to-br from-violet-400 to-fuchsia-600 flex items-center justify-center text-white shadow-xl mb-4 animate-bounce-short">
+                            <i data-lucide="trophy" class="w-10 h-10"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-800 dark:text-white font-arabicTitle mb-1">Quiz Terminé !</h2>
+                        <p class="text-slate-500 dark:text-slate-400 font-medium text-xs mb-5 max-w-xs">${celebrateMsg}</p>
+                        
+                        <div class="bg-white/90 dark:bg-slate-800/90 p-5 rounded-3xl border border-slate-200/80 dark:border-slate-700 shadow-lg mb-6 w-full max-w-xs">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-1">Votre Score Final</span>
+                            <span class="text-3xl font-black text-violet-600 dark:text-violet-400 font-mono">${state.quizScore} / ${appData.quiz.length}</span>
+                        </div>
+
+                        <button onclick="resetQuiz()" class="px-7 py-3 rounded-full bg-gradient-to-r from-violet-500 to-fuchsia-600 text-white font-bold text-xs hover:scale-105 active:scale-95 transition-all shadow-lg flex items-center gap-2">
+                            <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Recommencer le Quiz
+                        </button>
+                    </div>
+                `;
+                getEl('app-content').innerHTML = html;
+                lucide.createIcons();
+                return;
+            }
+
+            const quizItem = appData.quiz[state.quizIndex];
+            state.quizFlipped = false;
+
+            let html = `
+                <div class="animate-fade-in flex flex-col items-center justify-center min-h-[65vh] py-3">
+                    <div class="text-center mb-5">
+                        <h2 class="text-xl font-black text-slate-800 dark:text-white mb-0.5 flex items-center justify-center gap-1.5 font-arabicTitle"><i data-lucide="brain" class="w-5 h-5 text-violet-500"></i> ${appData.ui.quizTitle[state.lang]}</h2>
+                        <div class="flex items-center justify-center gap-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                            <span>Question ${state.quizIndex + 1} / ${appData.quiz.length}</span>
+                            <span>•</span>
+                            <span class="text-emerald-600 dark:text-emerald-400">Score: ${state.quizScore}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="w-full max-w-sm h-60 perspective-1000 mb-5 cursor-pointer" onclick="flipCard(event)">
+                        <div id="quiz-card" class="flip-card-inner">
+                            <div class="flip-card-front bg-gradient-to-br from-violet-500 to-fuchsia-500 p-5 flex flex-col items-center justify-center text-center shadow-xl border border-white/20">
+                                <i data-lucide="help-circle" class="w-10 h-10 text-white/50 mb-3"></i>
+                                <p class="text-lg font-bold text-white font-arabicTitle leading-relaxed">${quizItem.q[state.lang]}</p>
+                            </div>
+                            <div class="flip-card-back bg-white dark:bg-slate-800 p-5 flex flex-col items-center justify-center text-center shadow-xl border border-slate-200 dark:border-slate-700">
+                                <i data-lucide="check-circle" class="w-10 h-10 text-emerald-500 mb-3"></i>
+                                <p class="text-lg font-bold text-slate-800 dark:text-white font-arabicTitle leading-relaxed">${quizItem.a[state.lang]}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="quiz-actions" class="flex flex-col items-center gap-2.5 w-full max-w-sm">
+                        <button onclick="flipCard(event)" class="w-full py-2.5 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-bold hover:scale-105 active:scale-95 transition-all shadow-sm">${appData.ui.flipBtn[state.lang]}</button>
+                        
+                        <div id="quiz-score-buttons" class="hidden flex gap-2.5 w-full">
+                            <button onclick="answerQuiz(false)" class="flex-1 py-2.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold hover:bg-slate-200 active:scale-95 transition-all flex items-center justify-center gap-1">
+                                🔄 À revoir
+                            </button>
+                            <button onclick="answerQuiz(true)" class="flex-1 py-2.5 rounded-full bg-emerald-500 text-white text-xs font-bold hover:bg-emerald-600 active:scale-95 transition-all shadow-md flex items-center justify-center gap-1">
+                                ✅ Je savais (+1)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            getEl('app-content').innerHTML = html;
+        }
+
+        function flipCard(e) {
+            if (e) e.stopPropagation();
+            state.quizFlipped = !state.quizFlipped;
+            const card = getEl('quiz-card');
+            const scoreBtns = getEl('quiz-score-buttons');
+            if (card) {
+                if (state.quizFlipped) {
+                    card.classList.add('flipped');
+                    if (scoreBtns) scoreBtns.classList.remove('hidden');
+                } else {
+                    card.classList.remove('flipped');
+                    if (scoreBtns) scoreBtns.classList.add('hidden');
+                }
+            }
+        }
+
+        function answerQuiz(correct) {
+            if (correct) state.quizScore++;
+            if (state.quizIndex + 1 >= appData.quiz.length) {
+                state.quizFinished = true;
+            } else {
+                state.quizIndex++;
+            }
+            renderQuiz();
+        }
+
+        function resetQuiz() {
+            state.quizIndex = 0;
+            state.quizScore = 0;
+            state.quizFinished = false;
+            state.quizFlipped = false;
+            renderQuiz();
+        }
+
+        function setView(view, groupId = null) {
+            state.view = view;
+            state.activeGroupId = groupId;
+            render();
+        }
+
+        let toastTimeout;
+        function showToast(msg) {
+            const toast = getEl('toast');
+            const toastMsg = getEl('toast-msg');
+            if (!toast || !toastMsg) return;
+
+            toastMsg.innerText = msg;
+            toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // Initialize App
+        window.onload = init;
+    </script>
 </body>
 </html>
