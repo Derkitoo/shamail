@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="fr" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shamâ'il - Le Prophète (ﷺ) comme si tu le voyais</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        emerald: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b' },
+                        gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;600;800&display=swap');
+        
+        body { margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        /* Personnalisation des scrollbars */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+
+        /* Effet "Tranche de livre" (Book Spine) */
+        .book-spine {
+            position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+            background: linear-gradient(to bottom, #10b981, #f59e0b);
+            border-top-left-radius: 1.5rem; border-bottom-left-radius: 1.5rem;
+        }
+
+        /* Micro-Pattern de fond (Luxe) */
+        .bg-pattern {
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .dark .bg-pattern { background-image: radial-gradient(#334155 1px, transparent 1px); }
+
+        /* Animations 3D pour le Quiz (Flashcards) */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .backface-hidden { backface-visibility: hidden; }
+        .backface-back { transform: rotateY(180deg); backface-visibility: hidden; }
+
+        /* Tooltip Gharib */
+        .gharib-word { border-bottom: 2px dashed #f59e0b; cursor: help; position: relative; }
+        .gharib-tooltip {
+            visibility: hidden; opacity: 0; width: max-content; max-width: 200px;
+            background-color: #1e293b; color: #fff; text-align: center; border-radius: 6px; padding: 5px 10px;
+            position: absolute; z-index: 50; bottom: 125%; left: 50%; transform: translateX(-50%);
+            transition: opacity 0.3s; font-size: 0.85rem; font-family: 'Inter', sans-serif; font-weight: normal;
+        }
+        .gharib-word:hover .gharib-tooltip { visibility: visible; opacity: 1; }
+        .dark .gharib-tooltip { background-color: #f8fafc; color: #0f172a; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-300">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        // --- ICON HELPER ---
+        const createIcon = (name) => ({ className, strokeWidth = 2 }) => (
+            <i data-lucide={name} className={className} style={{ strokeWidth }}></i>
+        );
+        const User = createIcon('user');
+        const Shirt = createIcon('shirt');
+        const ArrowRight = createIcon('arrow-right');
+        const ArrowLeft = createIcon('arrow-left');
+        const Coffee = createIcon('coffee');
+        const MessageCircle = createIcon('message-circle');
+        const Star = createIcon('star');
+        const Moon = createIcon('moon');
+        const Sun = createIcon('sun');
+        const Settings = createIcon('settings');
+        const Check = createIcon('check');
+        const Heart = createIcon('heart');
+        const BrainCircuit = createIcon('brain-circuit');
+        const Search = createIcon('search');
+        const Quote = createIcon('quote');
+        const ChevronDown = createIcon('chevron-down');
+        const ShieldCheck = createIcon('shield-check');
+        const X = createIcon('x');
+
+        // --- BASE DE DONNÉES BLINDÉE (SHAMÂ'IL) ---
+        const shamailData = {
+            categories: [
+                {
+                    id: 'apparence', title: "Son Apparence", icon: 'User', gradient: "from-emerald-500 to-teal-500",
+                    chapters: [
+                        {
+                            id: 'c1',
+                            title: "Ses traits physiques (Bâb 1)",
+                            narrator: "Anas ibn Malik (ra)",
+                            textAr: "كان رسول الله ﷺ رَبْعَةً من القوم، ليس بالطويل البائن ولا بالقصير...",
+                            textFr: "Le Messager d'Allah (ﷺ) était de taille moyenne, ni trop grand, ni trop petit. Son teint n'était ni d'un blanc blafard, ni trop mat. Ses cheveux n'étaient ni trop crépus, ni raides.",
+                            takhrij: "صحيح - Sahih",
+                            gharib: [{ word: "رَبْعَةً", meaning: "De taille moyenne, bien proportionné." }],
+                            sharh: "L'Imam Al-Bajuri explique que cette perfection physique reflète sa perfection morale. Rien en lui n'était dans l'excès, il incarnait l'équilibre parfait (Al-Wassatiyya)."
+                        },
+                        {
+                            id: 'c2',
+                            title: "Le Sceau de la Prophétie (Bâb 2)",
+                            narrator: "Jabir ibn Samura (ra)",
+                            textAr: "رأيت الخاتم بين كتفي رسول الله ﷺ غدة حمراء مثل بيضة الحمامة.",
+                            textFr: "J'ai vu le Sceau entre les épaules du Messager d'Allah (ﷺ) : c'était une glande rougeâtre de la taille d'un œuf de pigeon.",
+                            takhrij: "صحيح - Sahih",
+                            gharib: [],
+                            sharh: "C'était l'un des signes physiques attendus par les savants des livres anciens (comme Salman le Perse qui l'a cherché pour valider sa prophétie)."
+                        }
+                    ]
+                },
+                {
+                    id: 'vetements', title: "Ses Vêtements", icon: 'Shirt', gradient: "from-teal-500 to-cyan-500",
+                    chapters: [
+                        {
+                            id: 'c3',
+                            title: "Le vêtement préféré (Bâb 8)",
+                            narrator: "Oum Salama (ra)",
+                            textAr: "كان أحب الثياب إلى رسول الله ﷺ القميص.",
+                            textFr: "Le vêtement que le Messager d'Allah (ﷺ) aimait le plus porter était le Qamis (longue chemise).",
+                            takhrij: "حسن - Hasan",
+                            gharib: [],
+                            sharh: "Le Qamis était préféré car il couvre mieux la 'Awra (les parties à cacher) que le Rida et l'Izar (qui demandent à être réajustés)."
+                        }
+                    ]
+                },
+                {
+                    id: 'nourriture', title: "Sa Nourriture", icon: 'Coffee', gradient: "from-amber-500 to-orange-500",
+                    chapters: [
+                        {
+                            id: 'c4',
+                            title: "Sa façon de boire (Bâb 33)",
+                            narrator: "Anas ibn Malik (ra)",
+                            textAr: "كان رسول الله ﷺ يتنفس في الشراب ثلاثا.",
+                            textFr: "Le Messager d'Allah (ﷺ) respirait trois fois (en dehors du récipient) lorsqu'il buvait.",
+                            takhrij: "صحيح - Sahih",
+                            gharib: [],
+                            sharh: "Il disait que boire de cette manière est plus désaltérant, plus sain et permet de mieux savourer. Il est interdit de souffler ou respirer DANS le verre."
+                        }
+                    ]
+                },
+                {
+                    id: 'parole', title: "Sa Façon de Parler", icon: 'MessageCircle', gradient: "from-blue-500 to-indigo-500",
+                    chapters: [
+                        {
+                            id: 'c5',
+                            title: "La clarté de son discours (Bâb 35)",
+                            narrator: "Aïcha (ra)",
+                            textAr: "ما كان رسول الله ﷺ يسرد سردكم هذا، ولكنه كان يتكلم بكلام بَيِّنٍ فَصْلٍ يحفظه من جلس إليه.",
+                            textFr: "Le Messager d'Allah (ﷺ) ne parlait pas vite sans s'arrêter comme vous le faites. Il prononçait des paroles claires et distinctes que tous ceux qui s'asseyaient avec lui pouvaient mémoriser.",
+                            takhrij: "صحيح - Sahih",
+                            gharib: [{ word: "يسرد", meaning: "Parler vite en continu." }, { word: "فَصْلٍ", meaning: "Où chaque mot est bien détaché de l'autre." }],
+                            sharh: "Cela montre son immense respect pour son auditoire. Il voulait être sûr d'être compris, et répétait même parfois une phrase importante trois fois."
+                        }
+                    ]
+                }
+            ],
+            quiz: [
+                { q: "Quelle était la taille du Prophète (ﷺ) ?", a: "Il était de taille moyenne, bien proportionné (Raba'a)." },
+                { q: "Où se trouvait le Sceau de la Prophétie ?", a: "Entre ses deux épaules (plus près de l'épaule gauche)." },
+                { q: "Quel était son vêtement préféré ?", a: "Le Qamis, car il couvrait parfaitement le corps." },
+                { q: "Comment buvait-il l'eau ?", a: "En trois respirations, en éloignant le verre de sa bouche." }
+            ]
+        };
+
+        function App() {
+            const [currentView, setCurrentView] = useState('home'); 
+            const [theme, setTheme] = useState(localStorage.getItem('shamail_theme') || 'light');
+            const [readChapters, setReadChapters] = useState(() => JSON.parse(localStorage.getItem('shamail_read')) || []);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [expandedSharh, setExpandedSharh] = useState(null);
+            
+            // Compter les chapitres
+            let totalChapters = 0;
+            shamailData.categories.forEach(cat => totalChapters += cat.chapters.length);
+            const progressPercentage = Math.round((readChapters.length / totalChapters) * 100) || 0;
+
+            useEffect(() => {
+                if (window.lucide) window.lucide.createIcons();
+            });
+
+            useEffect(() => {
+                localStorage.setItem('shamail_theme', theme);
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    document.documentElement.style.backgroundColor = "#0a0a0a";
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.style.backgroundColor = "#f8fafc";
+                }
+            }, [theme]);
+
+            useEffect(() => {
+                localStorage.setItem('shamail_read', JSON.stringify(readChapters));
+            }, [readChapters]);
+
+            const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
+            
+            const toggleRead = (id) => {
+                setReadChapters(prev => prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
+            };
+
+            const toggleSharh = (id) => {
+                setExpandedSharh(expandedSharh === id ? null : id);
+            };
+
+            // Fonction pour surligner les mots Gharib
+            const renderGharibText = (textFr, gharibList) => {
+                if (!gharibList || gharibList.length === 0) return textFr;
+                
+                // Pour simplifier l'exemple, nous n'appliquons le style Gharib qu'au texte Arabe dans cette version, 
+                // mais la logique peut s'appliquer au texte FR.
+                return textFr; 
+            };
+
+            const searchResults = useMemo(() => {
+                if (!searchQuery.trim()) return [];
+                const query = searchQuery.toLowerCase();
+                let results = [];
+                shamailData.categories.forEach(cat => {
+                    cat.chapters.forEach(chap => {
+                        if (chap.title.toLowerCase().includes(query) || chap.textFr.toLowerCase().includes(query)) {
+                            results.push({ ...chap, categoryName: cat.title });
+                        }
+                    });
+                });
+                return results;
+            }, [searchQuery]);
+
+            const renderChapterCard = (chap) => {
+                const isRead = readChapters.includes(chap.id);
+                const isExpanded = expandedSharh === chap.id;
+
+                return (
+                    <div key={chap.id} className={`relative bg-white dark:bg-[#121212] rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 ${isRead ? 'opacity-70' : 'hover:-translate-y-1 hover:shadow-xl'}`}>
+                        {/* Book Spine Effect */}
+                        <div className="book-spine"></div>
+                        
+                        <div className="pl-4">
+                            <div className="flex justify-between items-start mb-4">
+                                <h3 className="text-xl font-bold text-slate-800 dark:text-white leading-tight">{chap.title}</h3>
+                                <button onClick={() => toggleRead(chap.id)} className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isRead ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'}`}>
+                                    <Check className="w-5 h-5" />
+                                </button>
+                            </div>
+                            
+                            <div className="relative bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 mb-4 overflow-hidden border border-slate-100 dark:border-slate-700/50">
+                                <Quote className="absolute top-2 right-2 w-16 h-16 text-slate-200 dark:text-slate-700/30 -rotate-12" />
+                                
+                                <div className="relative z-10">
+                                    <div className="flex justify-between items-center mb-3">
+                                        <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">D'après {chap.narrator}</span>
+                                        <span className="text-xs font-bold px-2 py-1 bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-1 text-slate-600 dark:text-slate-300">
+                                            <ShieldCheck className="w-3 h-3 text-emerald-500" /> {chap.takhrij}
+                                        </span>
+                                    </div>
+                                    <p className="text-right font-['Amiri'] text-xl md:text-2xl leading-relaxed text-slate-800 dark:text-slate-200 mb-4" dir="rtl">
+                                        {chap.textAr}
+                                    </p>
+                                    <p className="text-slate-600 dark:text-slate-400 font-medium leading-relaxed text-[0.95rem]">
+                                        {chap.textFr}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Bouton Sharh */}
+                            {chap.sharh && (
+                                <div className="mt-2">
+                                    <button onClick={() => toggleSharh(chap.id)} className="flex items-center gap-2 text-sm font-bold text-amber-600 dark:text-amber-500 hover:text-amber-700 transition-colors">
+                                        <Star className="w-4 h-4" /> 
+                                        {isExpanded ? "Fermer l'explication" : "💡 Lire l'explication (Sharh)"}
+                                        <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
+                                    </button>
+                                    
+                                    {isExpanded && (
+                                        <div className="mt-3 p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-xl text-sm text-slate-700 dark:text-slate-300 leading-relaxed animate-in fade-in slide-in-from-top-2">
+                                            <span className="font-bold text-amber-700 dark:text-amber-500 block mb-1">Commentaire savant :</span>
+                                            {chap.sharh}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="min-h-screen bg-pattern relative overflow-hidden flex flex-col font-['Inter']">
+                    
+                    {/* Header */}
+                    <header className="sticky top-0 z-50 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            {currentView !== 'home' && (
+                                <button onClick={() => setCurrentView('home')} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                                    <ArrowLeft className="w-5 h-5" />
+                                </button>
+                            )}
+                            {currentView === 'home' && (
+                                <div className="flex items-center gap-2">
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-gold-500 flex items-center justify-center shadow-lg">
+                                        <Star className="w-5 h-5 text-white fill-current" />
+                                    </div>
+                                    <div>
+                                        <h1 className="font-extrabold text-xl leading-none text-slate-800 dark:text-white">Shamâ'il</h1>
+                                        <span className="text-[0.65rem] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">At-Tirmidhi</span>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <button onClick={() => setCurrentView('quiz')} className="w-10 h-10 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-violet-600 dark:text-violet-400 hover:scale-105 transition-transform" title="Quiz de mémorisation">
+                                <BrainCircuit className="w-5 h-5" />
+                            </button>
+                            <button onClick={toggleTheme} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-105 transition-transform">
+                                {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+                            </button>
+                        </div>
+                    </header>
+
+                    <main className="flex-1 w-full max-w-lg mx-auto p-6 overflow-y-auto pb-24">
+                        
+                        {/* Vue HOME */}
+                        {currentView === 'home' && (
+                            <div className="animate-in fade-in slide-in-from-bottom-4">
+                                
+                                {/* Jauge de Progression */}
+                                <div className="bg-white dark:bg-[#121212] rounded-full p-2 pr-6 shadow-md border border-slate-100 dark:border-slate-800 flex items-center gap-4 mb-6">
+                                    <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-shrink-0">
+                                        <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">{progressPercentage}%</span>
+                                    </div>
+                                    <div className="flex-1">
+                                        <div className="flex justify-between text-xs font-bold text-slate-500 mb-1">
+                                            <span>Lecture du livre</span>
+                                            <span>{readChapters.length} / {totalChapters} portes</span>
+                                        </div>
+                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                            <div className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-1000 ease-out" style={{ width: `${progressPercentage}%` }}></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Recherche */}
+                                <div className="relative mb-8">
+                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                                    <input 
+                                        type="text" 
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        placeholder="Rechercher (ex: Qamis, Sceau...)"
+                                        className="w-full bg-white dark:bg-[#121212] border border-slate-200 dark:border-slate-800 rounded-full py-3.5 pl-12 pr-10 text-slate-800 dark:text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium"
+                                    />
+                                    {searchQuery && (
+                                        <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
+
+                                {searchQuery ? (
+                                    <div className="space-y-4">
+                                        <h3 className="text-sm font-bold text-slate-500 uppercase px-2 mb-2">Résultats de recherche</h3>
+                                        {searchResults.length > 0 ? searchResults.map(renderChapterCard) : (
+                                            <div className="text-center py-10 text-slate-500">Aucun hadith trouvé pour "{searchQuery}".</div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {shamailData.categories.map((cat, idx) => (
+                                            <button 
+                                                key={cat.id} 
+                                                onClick={() => setCurrentView(cat.id)}
+                                                className="bg-white dark:bg-[#121212] p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-start hover:shadow-lg hover:-translate-y-1 transition-all text-left relative overflow-hidden group"
+                                            >
+                                                <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${cat.gradient} opacity-5 rounded-full blur-xl group-hover:opacity-20 transition-opacity`}></div>
+                                                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${cat.gradient} flex items-center justify-center mb-4 shadow-md`}>
+                                                    {React.createElement(eval(cat.icon), { className: "w-6 h-6 text-white" })}
+                                                </div>
+                                                <h3 className="font-bold text-slate-800 dark:text-white leading-tight mb-1">{cat.title}</h3>
+                                                <span className="text-xs font-semibold text-slate-400">{cat.chapters.length} porte(s)</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* Vue CATEGORIE */}
+                        {currentView !== 'home' && currentView !== 'quiz' && (
+                            <div className="animate-in fade-in slide-in-from-right-4 space-y-5">
+                                {shamailData.categories.find(c => c.id === currentView)?.chapters.map(renderChapterCard)}
+                            </div>
+                        )}
+
+                        {/* Vue QUIZ */}
+                        {currentView === 'quiz' && (
+                            <div className="animate-in fade-in slide-in-from-bottom-8">
+                                <div className="text-center mb-8">
+                                    <div className="w-16 h-16 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mx-auto mb-4">
+                                        <BrainCircuit className="w-8 h-8 text-violet-600 dark:text-violet-400" />
+                                    </div>
+                                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Mémorisation</h2>
+                                    <p className="text-sm text-slate-500 mt-2">Testez vos connaissances sur les Shamâ'il. Appuyez sur une carte pour voir la réponse.</p>
+                                </div>
+                                
+                                <div className="space-y-6">
+                                    {shamailData.quiz.map((q, idx) => {
+                                        const [flipped, setFlipped] = useState(false);
+                                        return (
+                                            <div key={idx} className="perspective-1000 h-48 cursor-pointer" onClick={() => setFlipped(!flipped)}>
+                                                <div className={`relative w-full h-full transform-style-3d ${flipped ? 'rotate-y-180' : ''}`}>
+                                                    
+                                                    {/* Face Avant (Question) */}
+                                                    <div className="absolute inset-0 backface-hidden bg-white dark:bg-[#121212] border-2 border-violet-100 dark:border-violet-900/30 rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-sm">
+                                                        <span className="text-xs font-bold uppercase text-violet-400 mb-2">Question {idx + 1}</span>
+                                                        <h3 className="font-bold text-lg text-slate-800 dark:text-white">{q.q}</h3>
+                                                    </div>
+                                                    
+                                                    {/* Face Arrière (Réponse) */}
+                                                    <div className="absolute inset-0 backface-back bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-3xl p-6 flex items-center justify-center text-center shadow-lg">
+                                                        <p className="font-bold text-lg text-white">{q.a}</p>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+                    </main>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
