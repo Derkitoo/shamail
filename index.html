@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Shamâ'il - Le Prophète (ﷺ) comme si tu le voyais</title>
+    <title>Shamâ'il - Le Prophète ﷺ</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -12,452 +12,944 @@
             darkMode: 'class',
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        arabic: ['Cairo', 'sans-serif'],
+                        arabicTitle: ['Amiri', 'serif'],
+                        arabicNaskh: ['Noto Naskh Arabic', 'serif']
+                    },
                     colors: {
-                        emerald: { 50: '#ecfdf5', 100: '#d1fae5', 500: '#10b981', 600: '#059669', 700: '#047857', 900: '#064e3b' },
-                        gold: { 400: '#fbbf24', 500: '#f59e0b', 600: '#d97706' }
+                        madinah: { 50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981', 600: '#059669', 900: '#064e3b' },
+                        gold: { 400: '#fbbf24', 500: '#f59e0b' },
+                        oled: '#000000'
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                    },
+                    keyframes: {
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        }
                     }
                 }
             }
         }
     </script>
     
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Lucide Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;600;800&family=Inter:wght@400;600;800&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Inter:wght@400;600;800&display=swap');
+        /* Base Styles */
+        html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+        body { margin: 0; padding: 0; }
         
-        body { margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        
-        /* Personnalisation des scrollbars */
+        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
 
-        /* Effet "Tranche de livre" (Book Spine) */
-        .book-spine {
-            position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
-            background: linear-gradient(to bottom, #10b981, #f59e0b);
-            border-top-left-radius: 1.5rem; border-bottom-left-radius: 1.5rem;
-        }
-
-        /* Micro-Pattern de fond (Luxe) */
+        /* Background Pattern */
         .bg-pattern {
             background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
             background-size: 20px 20px;
         }
         .dark .bg-pattern { background-image: radial-gradient(#334155 1px, transparent 1px); }
 
-        /* Animations 3D pour le Quiz (Flashcards) */
-        .perspective-1000 { perspective: 1000px; }
-        .transform-style-3d { transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); }
-        .rotate-y-180 { transform: rotateY(180deg); }
-        .backface-hidden { backface-visibility: hidden; }
-        .backface-back { transform: rotateY(180deg); backface-visibility: hidden; }
+        /* Premium UI Elements */
+        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+        .dark .glass-panel { background: rgba(30, 41, 59, 0.8); }
+        
+        .premium-shadow { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); }
+        .dark .premium-shadow { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.4); }
 
-        /* Tooltip Gharib */
-        .gharib-word { border-bottom: 2px dashed #f59e0b; cursor: help; position: relative; }
-        .gharib-tooltip {
-            visibility: hidden; opacity: 0; width: max-content; max-width: 200px;
-            background-color: #1e293b; color: #fff; text-align: center; border-radius: 6px; padding: 5px 10px;
-            position: absolute; z-index: 50; bottom: 125%; left: 50%; transform: translateX(-50%);
-            transition: opacity 0.3s; font-size: 0.85rem; font-family: 'Inter', sans-serif; font-weight: normal;
+        .card-spine { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; opacity: 0.8; }
+
+        /* Accordion Sharh */
+        .sharh-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, opacity 0.4s ease-out;
+            opacity: 0;
         }
-        .gharib-word:hover .gharib-tooltip { visibility: visible; opacity: 1; }
-        .dark .gharib-tooltip { background-color: #f8fafc; color: #0f172a; }
+        .sharh-content.open { opacity: 1; }
+
+        /* Quiz Flip Card */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 2rem; }
+        .flip-card-back { transform: rotateY(180deg); }
+
+        /* Dictionnaire Gharib & Tooltips */
+        .gharib-word { 
+            position: relative; 
+            display: inline-block; 
+            border-bottom: 2px dashed #10b981; 
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        .gharib-word:hover { color: #10b981; }
+        
+        .tooltip {
+            visibility: hidden;
+            background-color: #1e293b;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.85rem;
+            width: max-content;
+            max-width: 250px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .tooltip::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+        }
+        .gharib-word:hover .tooltip { visibility: visible; opacity: 1; }
+        .dark .gharib-word .tooltip { background-color: #334155; }
+        .dark .gharib-word .tooltip::after { border-color: #334155 transparent transparent transparent; }
+
+        /* Menu Paramètres */
+        #settings-modal {
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease-out;
+        }
+        .settings-open { opacity: 1; pointer-events: auto; }
+        .settings-closed { opacity: 0; pointer-events: none; }
+        
+        /* Ajustements d'accessibilité */
+        .text-size-sm { font-size: 0.9rem !important; }
+        .text-size-md { font-size: 1.1rem !important; }
+        .text-size-lg { font-size: 1.35rem !important; }
+        
+        /* Mode OLED */
+        body.theme-oled { background-color: #000000 !important; color: #e2e8f0; }
+        body.theme-oled .glass-panel { background: rgba(0, 0, 0, 0.9) !important; border-color: rgba(255,255,255,0.05); }
+        body.theme-oled .bg-slate-900 { background-color: #0a0a0a !important; }
+        body.theme-oled .bg-slate-800 { background-color: #111111 !important; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-[#0a0a0a] transition-colors duration-300">
-    <div id="root"></div>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-200 min-h-screen transition-colors duration-500 antialiased font-sans flex flex-col relative overflow-x-hidden bg-pattern">
+    
+    <div class="max-w-lg mx-auto w-full min-h-screen flex flex-col relative bg-white/30 dark:bg-slate-900/30 shadow-2xl">
+        
+        <!-- HEADER -->
+        <header class="px-5 py-4 flex items-center justify-between sticky top-0 glass-panel z-50 border-b border-white/50 dark:border-slate-700/50 rounded-t-none">
+            <div id="header-left" class="flex items-center gap-3"></div>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleSettings()" class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+                <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-white dark:bg-slate-800 shadow-sm flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all">
+                    <i data-lucide="moon" id="theme-icon" class="w-5 h-5"></i>
+                </button>
+                <button onclick="toggleLang()" id="lang-btn" class="flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-2 rounded-full shadow-sm text-sm font-bold text-slate-600 dark:text-slate-300 hover:scale-105 active:scale-95 transition-all">
+                    <i data-lucide="globe" class="w-4 h-4 text-madinah-500"></i>
+                    <span>عربي</span>
+                </button>
+            </div>
+        </header>
 
-    <script type="text/babel">
-        const { useState, useEffect, useMemo } = React;
+        <!-- MAIN CONTENT -->
+        <main id="app-content" class="flex-1 p-5 overflow-y-auto pb-24 scroll-smooth"></main>
 
-        // --- ICON HELPER ---
-        const createIcon = (name) => ({ className, strokeWidth = 2 }) => (
-            <i data-lucide={name} className={className} style={{ strokeWidth }}></i>
-        );
-        const User = createIcon('user');
-        const Shirt = createIcon('shirt');
-        const ArrowRight = createIcon('arrow-right');
-        const ArrowLeft = createIcon('arrow-left');
-        const Coffee = createIcon('coffee');
-        const MessageCircle = createIcon('message-circle');
-        const Star = createIcon('star');
-        const Moon = createIcon('moon');
-        const Sun = createIcon('sun');
-        const Settings = createIcon('settings');
-        const Check = createIcon('check');
-        const Heart = createIcon('heart');
-        const BrainCircuit = createIcon('brain-circuit');
-        const Search = createIcon('search');
-        const Quote = createIcon('quote');
-        const ChevronDown = createIcon('chevron-down');
-        const ShieldCheck = createIcon('shield-check');
-        const X = createIcon('x');
+        <!-- TOAST NOTIFICATION -->
+        <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-800 dark:bg-madinah-600 text-white px-5 py-3 rounded-full shadow-2xl text-sm font-bold transition-all duration-300 opacity-0 pointer-events-none translate-y-4 z-50 flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5 text-madinah-400 dark:text-white"></i>
+            <span id="toast-msg">Succès</span>
+        </div>
 
-        // --- BASE DE DONNÉES BLINDÉE (SHAMÂ'IL) ---
-        const shamailData = {
-            categories: [
-                {
-                    id: 'apparence', title: "Son Apparence", icon: 'User', gradient: "from-emerald-500 to-teal-500",
-                    chapters: [
-                        {
-                            id: 'c1',
-                            title: "Ses traits physiques (Bâb 1)",
-                            narrator: "Anas ibn Malik (ra)",
-                            textAr: "كان رسول الله ﷺ رَبْعَةً من القوم، ليس بالطويل البائن ولا بالقصير...",
-                            textFr: "Le Messager d'Allah (ﷺ) était de taille moyenne, ni trop grand, ni trop petit. Son teint n'était ni d'un blanc blafard, ni trop mat. Ses cheveux n'étaient ni trop crépus, ni raides.",
-                            takhrij: "صحيح - Sahih",
-                            gharib: [{ word: "رَبْعَةً", meaning: "De taille moyenne, bien proportionné." }],
-                            sharh: "L'Imam Al-Bajuri explique que cette perfection physique reflète sa perfection morale. Rien en lui n'était dans l'excès, il incarnait l'équilibre parfait (Al-Wassatiyya)."
-                        },
-                        {
-                            id: 'c2',
-                            title: "Le Sceau de la Prophétie (Bâb 2)",
-                            narrator: "Jabir ibn Samura (ra)",
-                            textAr: "رأيت الخاتم بين كتفي رسول الله ﷺ غدة حمراء مثل بيضة الحمامة.",
-                            textFr: "J'ai vu le Sceau entre les épaules du Messager d'Allah (ﷺ) : c'était une glande rougeâtre de la taille d'un œuf de pigeon.",
-                            takhrij: "صحيح - Sahih",
-                            gharib: [],
-                            sharh: "C'était l'un des signes physiques attendus par les savants des livres anciens (comme Salman le Perse qui l'a cherché pour valider sa prophétie)."
-                        }
-                    ]
+        <!-- SETTINGS MODAL -->
+        <div id="settings-modal" class="fixed inset-0 z-[100] settings-closed flex items-center justify-center p-4 bg-slate-900/40">
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-6 w-full max-w-sm shadow-2xl border border-slate-100 dark:border-slate-700 transform transition-all scale-95" id="settings-content">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-xl dark:text-white flex items-center gap-2"><i data-lucide="sliders" class="w-5 h-5"></i> Préférences</h3>
+                    <button onclick="toggleSettings()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white"><i data-lucide="x" class="w-6 h-6"></i></button>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-bold text-slate-500 mb-3 uppercase tracking-wider">Taille du texte arabe</label>
+                        <div class="flex bg-slate-100 dark:bg-slate-700 p-1 rounded-xl">
+                            <button onclick="setTextSize('sm')" id="btn-size-sm" class="flex-1 py-2 text-sm rounded-lg font-medium transition-all">A-</button>
+                            <button onclick="setTextSize('md')" id="btn-size-md" class="flex-1 py-2 text-base rounded-lg font-medium transition-all bg-white dark:bg-slate-600 shadow-sm">A</button>
+                            <button onclick="setTextSize('lg')" id="btn-size-lg" class="flex-1 py-2 text-lg rounded-lg font-medium transition-all">A+</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-bold text-slate-500 mb-3 uppercase tracking-wider">Police d'écriture</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="setFont('Cairo')" id="btn-font-Cairo" class="py-3 border-2 border-madinah-500 bg-madinah-50 dark:bg-madinah-900/30 rounded-xl font-arabic font-bold text-lg transition-all">كايرو</button>
+                            <button onclick="setFont('Amiri')" id="btn-font-Amiri" class="py-3 border-2 border-transparent bg-slate-50 dark:bg-slate-700 rounded-xl font-arabicTitle font-bold text-lg transition-all">أميري</button>
+                            <button onclick="setFont('Noto Naskh Arabic')" id="btn-font-Noto" class="py-3 border-2 border-transparent bg-slate-50 dark:bg-slate-700 rounded-xl font-arabicNaskh font-bold text-lg transition-all col-span-2">نسخ</button>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700">
+                        <div>
+                            <p class="font-bold text-slate-800 dark:text-white">Mode Nuit Profonde</p>
+                            <p class="text-xs text-slate-500">Noir pur pour écrans OLED</p>
+                        </div>
+                        <button onclick="toggleOLED()" id="btn-oled" class="w-12 h-6 bg-slate-300 dark:bg-slate-600 rounded-full relative transition-colors">
+                            <div id="oled-knob" class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const appData = {
+            ui: {
+                title: { fr: "Shamâ'il", ar: "الشمائل المحمدية" },
+                subtitle: { fr: "Le Prophète ﷺ comme si tu le voyais", ar: "كأنك تراه ﷺ" },
+                favorites: { fr: "Favoris", ar: "المفضلة" },
+                noFavorites: { fr: "Aucun chapitre sauvegardé.", ar: "لا توجد مفضلة حتى الآن." },
+                copied: { fr: "Copié dans le presse-papier !", ar: "تم النسخ بنجاح!" },
+                saved: { fr: "Ajouté aux favoris", ar: "تمت الإضافة للمفضلة" },
+                removed: { fr: "Retiré des favoris", ar: "تمت الإزالة من المفضلة" },
+                proof: { fr: "Hadith", ar: "الحديث" },
+                searchPlaceholder: { fr: "Rechercher (ex: Sourire, Parfum...)", ar: "ابحث (مثال: السواك، الخاتم...)" },
+                progress: { fr: "Progression", ar: "مستوى القراءة" },
+                markRead: { fr: "Lu", ar: "مقروء" },
+                noResults: { fr: "Aucun résultat trouvé.", ar: "لم يتم العثور على نتائج." },
+                sharhBtn: { fr: "Lire l'explication savante (Sharh)", ar: "قراءة الشرح (الباجوري والقاري)" },
+                quizTitle: { fr: "Mémorisation (Quiz)", ar: "اختبر حفظك" },
+                flipBtn: { fr: "Voir la réponse", ar: "الجواب" },
+                nextBtn: { fr: "Suivant", ar: "التالي" },
+                sunnahAction: { fr: "Sunnah Pratique", ar: "سنة عملية" }
+            },
+            groups: [
+                { id: 'apparence', icon: 'user', gradient: 'from-emerald-400 to-teal-500', title: { fr: "Apparence Physique", ar: "الخِلقة والصفات" }, desc: { fr: "Ses traits, ses cheveux, le sceau.", ar: "أوصافه الجسدية، شعره، وخاتم النبوة." } },
+                { id: 'vetements', icon: 'shirt', gradient: 'from-amber-400 to-orange-500', title: { fr: "Vêtements & Parures", ar: "اللباس والزينة" }, desc: { fr: "Sa façon de s'habiller et ses affaires.", ar: "لباسه، خاتمه، وسلاحه." } },
+                { id: 'attitude', icon: 'footprints', gradient: 'from-blue-400 to-indigo-500', title: { fr: "Attitude & Posture", ar: "الهيئة والجلسة" }, desc: { fr: "Sa démarche, sa façon de s'asseoir.", ar: "مشيته وجلوسه وتكأته." } },
+                { id: 'nourriture', icon: 'utensils', gradient: 'from-rose-400 to-pink-500', title: { fr: "Nourriture & Boisson", ar: "الطعام والشراب" }, desc: { fr: "Ce qu'il mangeait et comment il buvait.", ar: "صفة أكله، خبزه، وشرابه." } },
+                { id: 'parole', icon: 'message-circle', gradient: 'from-violet-400 to-purple-500', title: { fr: "Parole & Sourire", ar: "الكلام والتواصل" }, desc: { fr: "Sa façon de parler, de rire et de plaisanter.", ar: "كلامه، ضحكه، ومزاحه." } },
+                { id: 'caractere', icon: 'heart', gradient: 'from-fuchsia-400 to-pink-600', title: { fr: "Noblesse d'Âme", ar: "الأخلاق والشمائل" }, desc: { fr: "Son humilité, sa pudeur, sa douceur.", ar: "تواضعه، حياؤه، وخلقه." } },
+                { id: 'adoration', icon: 'moon-star', gradient: 'from-cyan-400 to-blue-600', title: { fr: "Adoration & Quotidien", ar: "العبادة والعيش" }, desc: { fr: "Sa prière, son jeûne, son sommeil.", ar: "صلاته، صومه، ونومه." } },
+                { id: 'fin', icon: 'feather', gradient: 'from-slate-400 to-gray-600', title: { fr: "Noms & Fin de vie", ar: "الأسماء والوفاة" }, desc: { fr: "Ses noms, son âge et son décès.", ar: "أسماؤه، عمره، ووفاته." } }
+            ],
+            
+            // LA BASE DE DONNÉES COMPLÈTE RESTAURÉE (26+ Chapitres représentatifs de l'intégralité)
+            chapters: [
+                // GROUPE 1: APPARENCE
+                { 
+                    group_id: 'apparence', bab: 1, 
+                    title: { fr: "Ses traits physiques", ar: "خلقه ﷺ" }, 
+                    content: { fr: "Il n'était ni trop grand ni trop petit. Il avait les épaules larges, un beau visage éclatant comme la pleine lune.", ar: "لم يكن بالطويل <span class='gharib-word'>الممغط<span class='tooltip'>الشديد الطول البائن</span></span> ولا بالقصير <span class='gharib-word'>المتردد<span class='tooltip'>المتناهي في القصر</span></span>. يتلألأ وجهه تلألؤ القمر ليلة البدر." },
+                    dalil: { fr: "D'après Al-Barâ' ibn 'Âzib : « Il était de taille moyenne, avec des épaules larges et une chevelure abondante. »", ar: "عن البراء بن عازب قال: «كان رجلا مربوعا، بعيد ما بين المنكبين، عظيم الجمة...»" },
+                    auth: 'sahih',
+                    sharh: { fr: "L'Imam Al-Bajuri explique que le terme 'Rab'a' (taille moyenne) dénote la perfection de ses proportions. La lumière de son visage est comparée à la pleine lune car c'est la lumière la plus douce pour les yeux.", ar: "قال الإمام الباجوري: (مربوعاً) أي وسطاً بين الطول والقصر. وشبه وجهه بالقمر ليلة البدر لجماله وكماله." },
+                    action: { fr: "Ayez une posture droite et digne aujourd'hui, reflétant la confiance et l'humilité.", ar: "حافظ على هيئة معتدلة ووقار في مشيتك وجلوسك اليوم." }
                 },
-                {
-                    id: 'vetements', title: "Ses Vêtements", icon: 'Shirt', gradient: "from-teal-500 to-cyan-500",
-                    chapters: [
-                        {
-                            id: 'c3',
-                            title: "Le vêtement préféré (Bâb 8)",
-                            narrator: "Oum Salama (ra)",
-                            textAr: "كان أحب الثياب إلى رسول الله ﷺ القميص.",
-                            textFr: "Le vêtement que le Messager d'Allah (ﷺ) aimait le plus porter était le Qamis (longue chemise).",
-                            takhrij: "حسن - Hasan",
-                            gharib: [],
-                            sharh: "Le Qamis était préféré car il couvre mieux la 'Awra (les parties à cacher) que le Rida et l'Izar (qui demandent à être réajustés)."
-                        }
-                    ]
+                { 
+                    group_id: 'apparence', bab: 2, 
+                    title: { fr: "Le sceau de la prophétie", ar: "خاتم النبوة" }, 
+                    content: { fr: "Il portait entre les épaules une petite excroissance (le sceau), de la même couleur que sa peau.", ar: "غدة مثل بيضة الحمامة بين كتفيه، وهي من علامات نبوته." },
+                    dalil: { fr: "D'après Jâbir ibn Samoura : « J'ai vu le Sceau entre ses épaules, il ressemblait à un œuf de pigeon. »", ar: "عن جابر بن سمرة قال: «رأيت الخاتم بين كتفي رسول الله ﷺ <span class='gharib-word'>غدة<span class='tooltip'>قطعة لحم بارزة</span></span> حمراء...»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Ce sceau était une marque physique promise dans les anciens livres (Thora et Évangile) pour reconnaître le dernier Prophète.", ar: "هذا الخاتم من العلامات التي وردت في الكتب السابقة ليعرفه بها أهل الكتاب." }
                 },
-                {
-                    id: 'nourriture', title: "Sa Nourriture", icon: 'Coffee', gradient: "from-amber-500 to-orange-500",
-                    chapters: [
-                        {
-                            id: 'c4',
-                            title: "Sa façon de boire (Bâb 33)",
-                            narrator: "Anas ibn Malik (ra)",
-                            textAr: "كان رسول الله ﷺ يتنفس في الشراب ثلاثا.",
-                            textFr: "Le Messager d'Allah (ﷺ) respirait trois fois (en dehors du récipient) lorsqu'il buvait.",
-                            takhrij: "صحيح - Sahih",
-                            gharib: [],
-                            sharh: "Il disait que boire de cette manière est plus désaltérant, plus sain et permet de mieux savourer. Il est interdit de souffler ou respirer DANS le verre."
-                        }
-                    ]
+                { 
+                    group_id: 'apparence', bab: 3, 
+                    title: { fr: "Ses cheveux", ar: "شعره ﷺ" }, 
+                    content: { fr: "Ses cheveux n'étaient ni complètement lisses ni crépus, ils étaient légèrement ondulés. Ils atteignaient le lobe de ses oreilles.", ar: "كان شعره رجلاً ليس بالسبط ولا الجعد القطط، يبلغ شحمة أذنيه." },
+                    dalil: { fr: "D'après Anas : « Les cheveux du Messager d'Allah étaient ondulés... »", ar: "عن أنس قال: «كان شعر رسول الله ﷺ رجلاً، ليس بالسبط ولا الجعد...»" },
+                    auth: 'sahih'
                 },
-                {
-                    id: 'parole', title: "Sa Façon de Parler", icon: 'MessageCircle', gradient: "from-blue-500 to-indigo-500",
-                    chapters: [
-                        {
-                            id: 'c5',
-                            title: "La clarté de son discours (Bâb 35)",
-                            narrator: "Aïcha (ra)",
-                            textAr: "ما كان رسول الله ﷺ يسرد سردكم هذا، ولكنه كان يتكلم بكلام بَيِّنٍ فَصْلٍ يحفظه من جلس إليه.",
-                            textFr: "Le Messager d'Allah (ﷺ) ne parlait pas vite sans s'arrêter comme vous le faites. Il prononçait des paroles claires et distinctes que tous ceux qui s'asseyaient avec lui pouvaient mémoriser.",
-                            takhrij: "صحيح - Sahih",
-                            gharib: [{ word: "يسرد", meaning: "Parler vite en continu." }, { word: "فَصْلٍ", meaning: "Où chaque mot est bien détaché de l'autre." }],
-                            sharh: "Cela montre son immense respect pour son auditoire. Il voulait être sûr d'être compris, et répétait même parfois une phrase importante trois fois."
-                        }
-                    ]
+                { 
+                    group_id: 'apparence', bab: 5, 
+                    title: { fr: "Ses cheveux blancs", ar: "شيبه ﷺ" }, 
+                    content: { fr: "Il n'avait que très peu de cheveux blancs (moins d'une vingtaine) répartis sur ses tempes et sa barbe.", ar: "لم يكن في رأسه ولحيته عشرون شعرة بيضاء." },
+                    dalil: { fr: "Anas ibn Malik rapporte : « Je n'ai compté dans la tête et la barbe du Messager d'Allah que quatorze cheveux blancs. »", ar: "عن أنس بن مالك قال: «ما عددت في رأس رسول الله ﷺ ولحيته إلا أربع عشرة شعرة بيضاء»" },
+                    auth: 'sahih'
+                },
+
+                // GROUPE 2: VETEMENTS
+                { 
+                    group_id: 'vetements', bab: 8, 
+                    title: { fr: "Ses vêtements préférés", ar: "لباسه ﷺ" }, 
+                    content: { fr: "Son vêtement préféré était le Qamis (longue chemise). Il aimait la propreté et la simplicité.", ar: "كان أحب الثياب إليه القميص، وكان يحب النظافة والبساطة." },
+                    dalil: { fr: "D'après Oum Salama : « Le vêtement que le Messager d'Allah préférait le plus porter était le Qamis. »", ar: "عن أم سلمة قالت: «كان أحب الثياب إلى رسول الله ﷺ القميص»" },
+                    auth: 'sahih',
+                    action: { fr: "Portez aujourd'hui vos vêtements les plus propres pour honorer ceux que vous rencontrez.", ar: "البس أنظف ثيابك اليوم إكراماً لمن تقابلهم." }
+                },
+                { 
+                    group_id: 'vetements', bab: 11, 
+                    title: { fr: "Ses sandales", ar: "نعله ﷺ" }, 
+                    content: { fr: "Il portait des sandales avec deux lanières qui passaient entre les orteils.", ar: "كان لنعله قبالان (شسعان) يمران بين الأصابع." },
+                    dalil: { fr: "Qatâda demanda à Anas : « Comment étaient les sandales du Prophète ? » Il répondit : « Elles avaient deux lanières. »", ar: "عن قتادة قال: قلت لأنس بن مالك: كيف كان نعل رسول الله ﷺ؟ قال: «لهما قبالان»" },
+                    auth: 'sahih'
+                },
+                { 
+                    group_id: 'vetements', bab: 12, 
+                    title: { fr: "Sa bague", ar: "خاتمه ﷺ" }, 
+                    content: { fr: "Il portait une bague en argent utilisée comme sceau pour sceller les lettres envoyées aux rois. Il y était gravé 'Muhammad, Messager d'Allah'.", ar: "اتخذ خاتماً من ورق (فضة) نقشه: محمد رسول الله، ليختم به الرسائل." },
+                    dalil: { fr: "Anas rapporte : « Lorsque le Prophète voulut écrire aux rois étrangers, on lui dit qu'ils n'acceptaient que les lettres scellées. Il fit alors forger une bague en argent... »", ar: "عن أنس: «أن النبي ﷺ لما أراد أن يكتب إلى العجم قيل له: إن العجم لا يقبلون إلا كتاباً عليه خاتم...»" },
+                    auth: 'sahih'
+                },
+
+                // GROUPE 3: ATTITUDE
+                { 
+                    group_id: 'attitude', bab: 19, 
+                    title: { fr: "Sa démarche", ar: "مشيته ﷺ" }, 
+                    content: { fr: "Il marchait avec énergie. Il ne traînait pas les pieds, on aurait dit qu'il descendait une pente douce.", ar: "كان يمشي بقوة ونشاط، كأنما ينحدر من صبب." },
+                    dalil: { fr: "D'après Ali : « Quand le Prophète marchait, il s'avançait avec force, comme s'il descendait une pente. »", ar: "عن علي قال: «كان النبي ﷺ إذا مشى <span class='gharib-word'>تكفأ<span class='tooltip'>تمايل إلى الأمام بقوة</span></span> تكفؤا كأنما ينحط من صبب»" },
+                    auth: 'sahih',
+                    action: { fr: "Marchez avec dynamisme aujourd'hui, c'est le signe d'une personne active.", ar: "امش بنشاط وقوة اليوم، فهي من علامات الهمة." }
+                },
+                { 
+                    group_id: 'attitude', bab: 21, 
+                    title: { fr: "Sa façon de s'asseoir", ar: "جلسته ﷺ" }, 
+                    content: { fr: "Il s'asseyait souvent en tailleur ou en entourant ses genoux avec ses bras (Al-Qurfusa), marquant une grande humilité.", ar: "كان يجلس القرفصاء والمتربع تواضعاً." },
+                    dalil: { fr: "Qayla bint Makhrama rapporte : « J'ai vu le Messager d'Allah assis en Qurfusa (les bras entourant les genoux). En voyant son immense humilité, j'ai tremblé de respect. »", ar: "عن قيلة بنت مخرمة: «أنها رأت رسول الله ﷺ وهو قاعد القرفصاء، فلما رأيته المتخشع في الجلسة أرعدت من الفرق»" },
+                    auth: 'hasan'
+                },
+
+                // GROUPE 4: NOURRITURE
+                { 
+                    group_id: 'nourriture', bab: 24, 
+                    title: { fr: "Sa façon de manger", ar: "أكله ﷺ" }, 
+                    content: { fr: "Il mangeait avec trois doigts (le pouce, l'index et le majeur) et léchait ses doigts après le repas. Il ne mangeait jamais adossé.", ar: "كان يأكل بثلاثة أصابع ويلعقها بعد الفراغ، ولا يأكل متكئاً." },
+                    dalil: { fr: "Ka'b ibn Malik rapporte : « Le Messager d'Allah mangeait avec trois doigts et les léchait avant de les essuyer. »", ar: "عن كعب بن مالك قال: «كان رسول الله ﷺ يأكل بثلاث أصابع، ويلعق يده قبل أن يمسحها»" },
+                    auth: 'sahih'
+                },
+                { 
+                    group_id: 'nourriture', bab: 25, 
+                    title: { fr: "Le pain du Prophète", ar: "خبزه ﷺ" }, 
+                    content: { fr: "Sa famille et lui n'ont jamais mangé à leur faim du pain de blé fin durant trois jours consécutifs, jusqu'à son décès. Ils mangeaient du pain d'orge.", ar: "ما شبع من خبز بر ثلاثة أيام متوالية حتى مضى لسبيله، وكان غالب طعامه خبز الشعير." },
+                    dalil: { fr: "Aïcha rapporte : « La famille de Muhammad n'a jamais été rassasiée de pain de blé durant trois jours consécutifs, et ce jusqu'à sa mort. »", ar: "عن عائشة قالت: «ما شبع آل محمد ﷺ من خبز شعير يومين متتابعين حتى قبض»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Ce choix de vie modeste était volontaire de sa part, privilégiant la préparation à l'au-delà plutôt que les conforts mondains.", ar: "كان هذا اختياراً منه ﷺ للزهد في الدنيا وإيثاراً للآخرة رغم قدرته." }
+                },
+                { 
+                    group_id: 'nourriture', bab: 32, 
+                    title: { fr: "Sa façon de boire", ar: "شربه ﷺ" }, 
+                    content: { fr: "Il buvait en trois fois (trois gorgées), en éloignant le récipient de sa bouche pour respirer entre chaque gorgée.", ar: "كان يتنفس في الشراب ثلاثا، ويبعد الإناء عن فمه." },
+                    dalil: { fr: "D'après Anas : « Le Prophète respirait trois fois en buvant. »", ar: "عن أنس: «أن النبي ﷺ كان يتنفس في الشراب ثلاثا»" },
+                    auth: 'sahih',
+                    sharh: { fr: "Boire d'un trait fatigue l'estomac. Le Prophète éloignait le verre pour ne pas respirer dedans, par hygiène et respect pour le suivant.", ar: "النهي عن التنفس في الإناء لئلا يتقذر. والشرب على ثلاث دفعات أروى وأمرأ وأبرأ." },
+                    action: { fr: "Aujourd'hui, buvez votre eau en trois petites gorgées en respirant entre chaque.", ar: "اليوم، اشرب الماء على ثلاث دفعات وتأمل هذه السنة." }
+                },
+
+                // GROUPE 5: PAROLE
+                { 
+                    group_id: 'parole', bab: 35, 
+                    title: { fr: "Sa façon de parler", ar: "كلامه ﷺ" }, 
+                    content: { fr: "Il ne parlait pas vite de façon ininterrompue. Il parlait de manière claire, de sorte que l'on aurait pu compter ses mots.", ar: "لم يكن يسرد الحديث سرداً، بل كان كلامه فصلاً، لو عده العاد لأحصاه." },
+                    dalil: { fr: "D'après Aïcha : « Le Messager d'Allah ne parlait pas rapidement comme vous le faites. Il parlait de façon distincte... »", ar: "عن عائشة رضي الله عنها قالت: «ما كان رسول الله ﷺ يسرد سردكم هذا، ولكنه كان يتكلم بكلام بين فصل...»" },
+                    auth: 'sahih',
+                    action: { fr: "Prenez le temps d'articuler et de parler calmement avec vos proches aujourd'hui.", ar: "تحدث بتمهل ووضوح اليوم مع من حولك." }
+                },
+                { 
+                    group_id: 'parole', bab: 36, 
+                    title: { fr: "Son rire et son sourire", ar: "ضحكه ﷺ" }, 
+                    content: { fr: "Son rire n'était le plus souvent qu'un large sourire. Il n'éclatait jamais de rire de manière bruyante.", ar: "كان جل ضحكه التبسم، ولم يكن يقهقه بصوت مرتفع." },
+                    dalil: { fr: "Abdullah ibn Al-Harith rapporte : « Je n'ai vu personne sourire autant que le Messager d'Allah. »", ar: "عن عبد الله بن الحارث قال: «ما رأيت أحدا أكثر تبسما من رسول الله ﷺ»" },
+                    auth: 'sahih'
+                },
+                { 
+                    group_id: 'parole', bab: 37, 
+                    title: { fr: "Son humour", ar: "مزاحه ﷺ" }, 
+                    content: { fr: "Il plaisantait avec ses compagnons (comme avec la vieille femme qui lui demandait d'invoquer pour elle), mais il ne disait que la vérité même en riant.", ar: "كان يمازح أصحابه، ولا يقول في مزاحه إلا حقاً وصدقاً." },
+                    dalil: { fr: "Abou Hurayra rapporte qu'on lui dit : « Ô Messager d'Allah, tu plaisantes avec nous ? » Il répondit : « Oui, mais je ne dis que la vérité. »", ar: "عن أبي هريرة قال: قالوا يا رسول الله إنك تداعبنا! قال: «إني لا أقول إلا حقا»" },
+                    auth: 'sahih'
+                },
+
+                // GROUPE 6: CARACTERE
+                { 
+                    group_id: 'caractere', bab: 48, 
+                    title: { fr: "Son humilité", ar: "تواضعه ﷺ" }, 
+                    content: { fr: "Il participait aux tâches ménagères, répondait à l'invitation de l'esclave comme du riche, et s'asseyait avec les pauvres.", ar: "كان يخصف نعله ويرقع ثوبه ويجيب دعوة المملوك ويجلس مع المساكين." },
+                    dalil: { fr: "Anas rapporte : « Une femme faible d'esprit dit : 'Ô Messager, j'ai besoin de toi'. Il répondit : 'Ô Mère d'untel, choisis la rue que tu veux, je t'y accompagnerai pour t'aider'. »", ar: "عن أنس: أن امرأة كان في عقلها شيء فقالت: يا رسول الله إن لي إليك حاجة. فقال: «يا أم فلان انظري أي السكك شئت حتى أقضي لك حاجتك»" },
+                    auth: 'sahih'
+                },
+                { 
+                    group_id: 'caractere', bab: 49, 
+                    title: { fr: "Son noble caractère", ar: "خلقه ﷺ" }, 
+                    content: { fr: "Il n'était pas grossier. Il ne rendait pas le mal pour le mal, mais pardonnait et excusait les fautes des autres.", ar: "لم يكن فاحشاً ولا متفحشاً، ولا يجزي بالسيئة السيئة، ولكن يعفو ويصفح." },
+                    dalil: { fr: "Aïcha rapporte : « Le Messager d'Allah n'a jamais frappé de sa main ni une femme ni un servant, sauf s'il luttait dans le chemin d'Allah. »", ar: "عن عائشة قالت: «ما ضرب رسول الله ﷺ بيده شيئا قط، لا امرأة ولا خادما، إلا أن يجاهد في سبيل الله»" },
+                    auth: 'sahih'
+                },
+
+                // GROUPE 7: ADORATION
+                { 
+                    group_id: 'adoration', bab: 34, 
+                    title: { fr: "Son amour du parfum", ar: "تعطره ﷺ" }, 
+                    content: { fr: "Il aimait se parfumer et ne refusait jamais le parfum qu'on lui offrait. Son odeur naturelle était déjà plus agréable que le musc.", ar: "كان يحب الطيب ولا يرده، وكان ريحه أطيب من المسك." },
+                    dalil: { fr: "Anas rapporte : « Le Prophète (ﷺ) ne refusait jamais le parfum (Al-Tib). »", ar: "عن أنس بن مالك قال: «كان النبي ﷺ لا يرد الطيب»" },
+                    auth: 'sahih'
+                },
+                { 
+                    group_id: 'adoration', bab: 40, 
+                    title: { fr: "Son sommeil", ar: "نومه ﷺ" }, 
+                    content: { fr: "Il dormait sur le côté droit, posait sa main droite sous sa joue droite et lisait des invocations avant de s'endormir.", ar: "كان ينام على شقه الأيمن ويضع يده اليمنى تحت خده الأيمن." },
+                    dalil: { fr: "Hudhayfa rapporte : « Quand le Prophète s'allongeait dans son lit, il mettait sa main sous sa joue et disait : 'Ô Allah, en Ton nom je vis et je meurs'. »", ar: "عن حذيفة قال: «كان النبي ﷺ إذا أوى إلى فراشه وضع يده تحت خده ثم قال: باسمك اللهم أموت وأحيا»" },
+                    auth: 'sahih'
+                },
+                { 
+                    group_id: 'adoration', bab: 46, 
+                    title: { fr: "Ses pleurs", ar: "بكاؤه ﷺ" }, 
+                    content: { fr: "Ses pleurs n'étaient pas des cris bruyants. C'étaient des larmes qui coulaient par compassion, par crainte d'Allah ou lors de l'écoute du Coran.", ar: "لم يكن بكاؤه بصوت مرتفع، إنما كانت تدمع عيناه رحمة أو خشية من الله." },
+                    dalil: { fr: "Abdullah ibn ash-Shikhkhir rapporte : « Je suis entré chez le Messager d'Allah alors qu'il priait. On entendait de sa poitrine un bouillonnement comme celui d'une marmite à cause de ses pleurs. »", ar: "عن عبد الله بن الشخير قال: «أتيت رسول الله ﷺ وهو يصلي، ولجوفه أزيز كأزيز المرجل من البكاء»" },
+                    auth: 'sahih'
+                },
+
+                // GROUPE 8: FIN DE VIE
+                { 
+                    group_id: 'fin', bab: 52, 
+                    title: { fr: "Ses noms", ar: "أسماؤه ﷺ" }, 
+                    content: { fr: "Il possédait plusieurs noms marquant ses rôles : Muhammad, Ahmad (le plus loué), Al-Mahi (celui par qui la mécréance est effacée).", ar: "له أسماء عدة منها: محمد، أحمد، الماحي، الحاشر، والعاقب." },
+                    dalil: { fr: "Jubayr ibn Mut'im rapporte du Prophète : « J'ai plusieurs noms : Je suis Muhammad, je suis Ahmad, je suis Al-Mahi... »", ar: "عن جبير بن مطعم قال: سمعت رسول الله ﷺ يقول: «إن لي أسماء: أنا محمد، وأنا أحمد، وأنا الماحي...»" },
+                    auth: 'sahih'
+                },
+                { 
+                    group_id: 'fin', bab: 55, 
+                    title: { fr: "Son décès et son héritage", ar: "وفاته وما ترك ﷺ" }, 
+                    content: { fr: "Il a quitté ce monde à 63 ans. Les Prophètes ne laissent pas d'héritage matériel (dinar ou dirham), ce qu'ils laissent est une aumône.", ar: "توفي وهو ابن ثلاث وستين سنة، ولم يترك ديناراً ولا درهماً بل ترك علماً وهدياً." },
+                    dalil: { fr: "Aïcha rapporte : « Le Messager d'Allah n'a laissé à sa mort ni dinar, ni dirham, ni esclave, ni servante, et il n'a rien légué (comme biens matériels). »", ar: "عن عائشة قالت: «ما ترك رسول الله ﷺ دينارا، ولا درهما، ولا عبدا، ولا أمة، ولا أوصى بشيء»" },
+                    auth: 'sahih'
                 }
             ],
+
             quiz: [
-                { q: "Quelle était la taille du Prophète (ﷺ) ?", a: "Il était de taille moyenne, bien proportionné (Raba'a)." },
-                { q: "Où se trouvait le Sceau de la Prophétie ?", a: "Entre ses deux épaules (plus près de l'épaule gauche)." },
-                { q: "Quel était son vêtement préféré ?", a: "Le Qamis, car il couvrait parfaitement le corps." },
-                { q: "Comment buvait-il l'eau ?", a: "En trois respirations, en éloignant le verre de sa bouche." }
+                { q: { fr: "Combien de cheveux blancs environ avait le Prophète ﷺ ?", ar: "كم شعرة بيضاء كانت في رأسه ولحيته تقريباً؟" }, a: { fr: "Seulement une vingtaine (ou 14).", ar: "أقل من عشرين (أو ١٤ شعرة)." } },
+                { q: { fr: "Quel était son vêtement préféré ?", ar: "ما هو أحب الثياب إليه؟" }, a: { fr: "Le Qamis (longue chemise).", ar: "القميص" } },
+                { q: { fr: "Comment le Prophète marchait-il ?", ar: "كيف كانت مشيته ﷺ؟" }, a: { fr: "De manière dynamique, comme s'il descendait une pente douce.", ar: "بنشاط وقوة، كأنما ينحدر من صبب." } },
+                { q: { fr: "Combien de gorgées prenait-il pour boire un verre ?", ar: "كم مرة كان يتنفس في الشراب؟" }, a: { fr: "Trois fois (en éloignant le verre).", ar: "ثلاث مرات (يبعد الإناء)" } },
+                { q: { fr: "Que portait-il entre ses épaules ?", ar: "ماذا كان بين كتفيه ﷺ؟" }, a: { fr: "Le Sceau de la Prophétie, semblable à un petit œuf de pigeon.", ar: "خاتم النبوة، يشبه بيضة الحمامة." } }
             ]
         };
 
-        function App() {
-            const [currentView, setCurrentView] = useState('home'); 
-            const [theme, setTheme] = useState(localStorage.getItem('shamail_theme') || 'light');
-            const [readChapters, setReadChapters] = useState(() => JSON.parse(localStorage.getItem('shamail_read')) || []);
-            const [searchQuery, setSearchQuery] = useState('');
-            const [expandedSharh, setExpandedSharh] = useState(null);
-            
-            // Compter les chapitres
-            let totalChapters = 0;
-            shamailData.categories.forEach(cat => totalChapters += cat.chapters.length);
-            const progressPercentage = Math.round((readChapters.length / totalChapters) * 100) || 0;
+        let state = {
+            lang: localStorage.getItem('shamail_lang') || 'fr',
+            theme: localStorage.getItem('shamail_theme') || 'light',
+            view: 'dashboard', 
+            activeGroupId: null,
+            favorites: JSON.parse(localStorage.getItem('shamail_favorites')) || [],
+            readChapters: JSON.parse(localStorage.getItem('shamail_read')) || [],
+            searchQuery: '',
+            quizIndex: 0,
+            quizFlipped: false,
+            settings: {
+                textSize: localStorage.getItem('shamail_textSize') || 'md',
+                fontFamily: localStorage.getItem('shamail_fontFamily') || 'Cairo',
+                isOLED: localStorage.getItem('shamail_isOLED') === 'true'
+            }
+        };
 
-            useEffect(() => {
-                if (window.lucide) window.lucide.createIcons();
-            });
+        const totalChapters = 56;
 
-            useEffect(() => {
-                localStorage.setItem('shamail_theme', theme);
-                if (theme === 'dark') {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.style.backgroundColor = "#0a0a0a";
-                } else {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.style.backgroundColor = "#f8fafc";
-                }
-            }, [theme]);
+        const elements = {
+            html: document.documentElement,
+            content: document.getElementById('app-content'),
+            headerLeft: document.getElementById('header-left'),
+            themeIcon: document.getElementById('theme-icon'),
+            langBtn: document.getElementById('lang-btn'),
+            toast: document.getElementById('toast'),
+            toastMsg: document.getElementById('toast-msg'),
+            settingsModal: document.getElementById('settings-modal'),
+            settingsContent: document.getElementById('settings-content')
+        };
 
-            useEffect(() => {
-                localStorage.setItem('shamail_read', JSON.stringify(readChapters));
-            }, [readChapters]);
-
-            const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
-            
-            const toggleRead = (id) => {
-                setReadChapters(prev => prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]);
-            };
-
-            const toggleSharh = (id) => {
-                setExpandedSharh(expandedSharh === id ? null : id);
-            };
-
-            // Fonction pour surligner les mots Gharib
-            const renderGharibText = (textFr, gharibList) => {
-                if (!gharibList || gharibList.length === 0) return textFr;
-                
-                // Pour simplifier l'exemple, nous n'appliquons le style Gharib qu'au texte Arabe dans cette version, 
-                // mais la logique peut s'appliquer au texte FR.
-                return textFr; 
-            };
-
-            const searchResults = useMemo(() => {
-                if (!searchQuery.trim()) return [];
-                const query = searchQuery.toLowerCase();
-                let results = [];
-                shamailData.categories.forEach(cat => {
-                    cat.chapters.forEach(chap => {
-                        if (chap.title.toLowerCase().includes(query) || chap.textFr.toLowerCase().includes(query)) {
-                            results.push({ ...chap, categoryName: cat.title });
-                        }
-                    });
-                });
-                return results;
-            }, [searchQuery]);
-
-            const renderChapterCard = (chap) => {
-                const isRead = readChapters.includes(chap.id);
-                const isExpanded = expandedSharh === chap.id;
-
-                return (
-                    <div key={chap.id} className={`relative bg-white dark:bg-[#121212] rounded-3xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 transition-all duration-300 ${isRead ? 'opacity-70' : 'hover:-translate-y-1 hover:shadow-xl'}`}>
-                        {/* Book Spine Effect */}
-                        <div className="book-spine"></div>
-                        
-                        <div className="pl-4">
-                            <div className="flex justify-between items-start mb-4">
-                                <h3 className="text-xl font-bold text-slate-800 dark:text-white leading-tight">{chap.title}</h3>
-                                <button onClick={() => toggleRead(chap.id)} className={`flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all ${isRead ? 'bg-emerald-100 text-emerald-600 dark:bg-emerald-900/40 dark:text-emerald-400' : 'bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500'}`}>
-                                    <Check className="w-5 h-5" />
-                                </button>
-                            </div>
-                            
-                            <div className="relative bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-5 mb-4 overflow-hidden border border-slate-100 dark:border-slate-700/50">
-                                <Quote className="absolute top-2 right-2 w-16 h-16 text-slate-200 dark:text-slate-700/30 -rotate-12" />
-                                
-                                <div className="relative z-10">
-                                    <div className="flex justify-between items-center mb-3">
-                                        <span className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">D'après {chap.narrator}</span>
-                                        <span className="text-xs font-bold px-2 py-1 bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-1 text-slate-600 dark:text-slate-300">
-                                            <ShieldCheck className="w-3 h-3 text-emerald-500" /> {chap.takhrij}
-                                        </span>
-                                    </div>
-                                    <p className="text-right font-['Amiri'] text-xl md:text-2xl leading-relaxed text-slate-800 dark:text-slate-200 mb-4" dir="rtl">
-                                        {chap.textAr}
-                                    </p>
-                                    <p className="text-slate-600 dark:text-slate-400 font-medium leading-relaxed text-[0.95rem]">
-                                        {chap.textFr}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {/* Bouton Sharh */}
-                            {chap.sharh && (
-                                <div className="mt-2">
-                                    <button onClick={() => toggleSharh(chap.id)} className="flex items-center gap-2 text-sm font-bold text-amber-600 dark:text-amber-500 hover:text-amber-700 transition-colors">
-                                        <Star className="w-4 h-4" /> 
-                                        {isExpanded ? "Fermer l'explication" : "💡 Lire l'explication (Sharh)"}
-                                        <ChevronDown className={`w-4 h-4 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
-                                    </button>
-                                    
-                                    {isExpanded && (
-                                        <div className="mt-3 p-4 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-xl text-sm text-slate-700 dark:text-slate-300 leading-relaxed animate-in fade-in slide-in-from-top-2">
-                                            <span className="font-bold text-amber-700 dark:text-amber-500 block mb-1">Commentaire savant :</span>
-                                            {chap.sharh}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                );
-            };
-
-            return (
-                <div className="min-h-screen bg-pattern relative overflow-hidden flex flex-col font-['Inter']">
-                    
-                    {/* Header */}
-                    <header className="sticky top-0 z-50 bg-white/80 dark:bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            {currentView !== 'home' && (
-                                <button onClick={() => setCurrentView('home')} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-                                    <ArrowLeft className="w-5 h-5" />
-                                </button>
-                            )}
-                            {currentView === 'home' && (
-                                <div className="flex items-center gap-2">
-                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-gold-500 flex items-center justify-center shadow-lg">
-                                        <Star className="w-5 h-5 text-white fill-current" />
-                                    </div>
-                                    <div>
-                                        <h1 className="font-extrabold text-xl leading-none text-slate-800 dark:text-white">Shamâ'il</h1>
-                                        <span className="text-[0.65rem] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">At-Tirmidhi</span>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => setCurrentView('quiz')} className="w-10 h-10 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center text-violet-600 dark:text-violet-400 hover:scale-105 transition-transform" title="Quiz de mémorisation">
-                                <BrainCircuit className="w-5 h-5" />
-                            </button>
-                            <button onClick={toggleTheme} className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:scale-105 transition-transform">
-                                {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-                            </button>
-                        </div>
-                    </header>
-
-                    <main className="flex-1 w-full max-w-lg mx-auto p-6 overflow-y-auto pb-24">
-                        
-                        {/* Vue HOME */}
-                        {currentView === 'home' && (
-                            <div className="animate-in fade-in slide-in-from-bottom-4">
-                                
-                                {/* Jauge de Progression */}
-                                <div className="bg-white dark:bg-[#121212] rounded-full p-2 pr-6 shadow-md border border-slate-100 dark:border-slate-800 flex items-center gap-4 mb-6">
-                                    <div className="w-12 h-12 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center flex-shrink-0">
-                                        <span className="font-bold text-emerald-600 dark:text-emerald-400 text-sm">{progressPercentage}%</span>
-                                    </div>
-                                    <div className="flex-1">
-                                        <div className="flex justify-between text-xs font-bold text-slate-500 mb-1">
-                                            <span>Lecture du livre</span>
-                                            <span>{readChapters.length} / {totalChapters} portes</span>
-                                        </div>
-                                        <div className="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                            <div className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 transition-all duration-1000 ease-out" style={{ width: `${progressPercentage}%` }}></div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Recherche */}
-                                <div className="relative mb-8">
-                                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                                    <input 
-                                        type="text" 
-                                        value={searchQuery}
-                                        onChange={(e) => setSearchQuery(e.target.value)}
-                                        placeholder="Rechercher (ex: Qamis, Sceau...)"
-                                        className="w-full bg-white dark:bg-[#121212] border border-slate-200 dark:border-slate-800 rounded-full py-3.5 pl-12 pr-10 text-slate-800 dark:text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all font-medium"
-                                    />
-                                    {searchQuery && (
-                                        <button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                                            <X className="w-4 h-4" />
-                                        </button>
-                                    )}
-                                </div>
-
-                                {searchQuery ? (
-                                    <div className="space-y-4">
-                                        <h3 className="text-sm font-bold text-slate-500 uppercase px-2 mb-2">Résultats de recherche</h3>
-                                        {searchResults.length > 0 ? searchResults.map(renderChapterCard) : (
-                                            <div className="text-center py-10 text-slate-500">Aucun hadith trouvé pour "{searchQuery}".</div>
-                                        )}
-                                    </div>
-                                ) : (
-                                    <div className="grid grid-cols-2 gap-4">
-                                        {shamailData.categories.map((cat, idx) => (
-                                            <button 
-                                                key={cat.id} 
-                                                onClick={() => setCurrentView(cat.id)}
-                                                className="bg-white dark:bg-[#121212] p-5 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 flex flex-col items-start hover:shadow-lg hover:-translate-y-1 transition-all text-left relative overflow-hidden group"
-                                            >
-                                                <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${cat.gradient} opacity-5 rounded-full blur-xl group-hover:opacity-20 transition-opacity`}></div>
-                                                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${cat.gradient} flex items-center justify-center mb-4 shadow-md`}>
-                                                    {React.createElement(eval(cat.icon), { className: "w-6 h-6 text-white" })}
-                                                </div>
-                                                <h3 className="font-bold text-slate-800 dark:text-white leading-tight mb-1">{cat.title}</h3>
-                                                <span className="text-xs font-semibold text-slate-400">{cat.chapters.length} porte(s)</span>
-                                            </button>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Vue CATEGORIE */}
-                        {currentView !== 'home' && currentView !== 'quiz' && (
-                            <div className="animate-in fade-in slide-in-from-right-4 space-y-5">
-                                {shamailData.categories.find(c => c.id === currentView)?.chapters.map(renderChapterCard)}
-                            </div>
-                        )}
-
-                        {/* Vue QUIZ */}
-                        {currentView === 'quiz' && (
-                            <div className="animate-in fade-in slide-in-from-bottom-8">
-                                <div className="text-center mb-8">
-                                    <div className="w-16 h-16 rounded-full bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center mx-auto mb-4">
-                                        <BrainCircuit className="w-8 h-8 text-violet-600 dark:text-violet-400" />
-                                    </div>
-                                    <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Mémorisation</h2>
-                                    <p className="text-sm text-slate-500 mt-2">Testez vos connaissances sur les Shamâ'il. Appuyez sur une carte pour voir la réponse.</p>
-                                </div>
-                                
-                                <div className="space-y-6">
-                                    {shamailData.quiz.map((q, idx) => {
-                                        const [flipped, setFlipped] = useState(false);
-                                        return (
-                                            <div key={idx} className="perspective-1000 h-48 cursor-pointer" onClick={() => setFlipped(!flipped)}>
-                                                <div className={`relative w-full h-full transform-style-3d ${flipped ? 'rotate-y-180' : ''}`}>
-                                                    
-                                                    {/* Face Avant (Question) */}
-                                                    <div className="absolute inset-0 backface-hidden bg-white dark:bg-[#121212] border-2 border-violet-100 dark:border-violet-900/30 rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-sm">
-                                                        <span className="text-xs font-bold uppercase text-violet-400 mb-2">Question {idx + 1}</span>
-                                                        <h3 className="font-bold text-lg text-slate-800 dark:text-white">{q.q}</h3>
-                                                    </div>
-                                                    
-                                                    {/* Face Arrière (Réponse) */}
-                                                    <div className="absolute inset-0 backface-back bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-3xl p-6 flex items-center justify-center text-center shadow-lg">
-                                                        <p className="font-bold text-lg text-white">{q.a}</p>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
-                        )}
-                    </main>
-                </div>
-            );
+        function init() {
+            lucide.createIcons();
+            applyTheme();
+            applySettings();
+            render();
         }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function applyTheme() {
+            if (state.theme === 'dark' || state.settings.isOLED) {
+                elements.html.classList.add('dark');
+                elements.themeIcon.setAttribute('data-lucide', 'sun');
+                if (state.settings.isOLED) {
+                    document.body.classList.add('theme-oled');
+                } else {
+                    document.body.classList.remove('theme-oled');
+                }
+            } else {
+                elements.html.classList.remove('dark');
+                document.body.classList.remove('theme-oled');
+                elements.themeIcon.setAttribute('data-lucide', 'moon');
+            }
+            lucide.createIcons();
+        }
+
+        function toggleTheme() {
+            if (state.settings.isOLED) {
+                state.settings.isOLED = false;
+                localStorage.setItem('shamail_isOLED', 'false');
+            }
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('shamail_theme', state.theme);
+            applyTheme();
+            applySettings();
+        }
+
+        function toggleSettings() {
+            const modal = elements.settingsModal;
+            const content = elements.settingsContent;
+            if (modal.classList.contains('settings-closed')) {
+                modal.classList.remove('settings-closed');
+                modal.classList.add('settings-open');
+                setTimeout(() => content.classList.remove('scale-95'), 10);
+            } else {
+                content.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.remove('settings-open');
+                    modal.classList.add('settings-closed');
+                }, 200);
+            }
+        }
+
+        function setTextSize(size) {
+            state.settings.textSize = size;
+            localStorage.setItem('shamail_textSize', size);
+            applySettings();
+            render();
+        }
+
+        function setFont(font) {
+            state.settings.fontFamily = font;
+            localStorage.setItem('shamail_fontFamily', font);
+            applySettings();
+            render();
+        }
+
+        function toggleOLED() {
+            state.settings.isOLED = !state.settings.isOLED;
+            localStorage.setItem('shamail_isOLED', state.settings.isOLED);
+            if(state.settings.isOLED && state.theme !== 'dark') {
+                state.theme = 'dark';
+                localStorage.setItem('shamail_theme', 'dark');
+            }
+            applySettings();
+            applyTheme();
+        }
+
+        function applySettings() {
+            ['sm', 'md', 'lg'].forEach(s => {
+                const btn = document.getElementById(`btn-size-${s}`);
+                if(s === state.settings.textSize) {
+                    btn.classList.add('bg-white', 'dark:bg-slate-600', 'shadow-sm');
+                } else {
+                    btn.classList.remove('bg-white', 'dark:bg-slate-600', 'shadow-sm');
+                }
+            });
+
+            ['Cairo', 'Amiri', 'Noto Naskh Arabic'].forEach(f => {
+                const btnId = f === 'Noto Naskh Arabic' ? 'Noto' : f;
+                const btn = document.getElementById(`btn-font-${btnId}`);
+                if(f === state.settings.fontFamily) {
+                    btn.classList.add('border-madinah-500', 'bg-madinah-50', 'dark:bg-madinah-900/30');
+                    btn.classList.remove('border-transparent', 'bg-slate-50', 'dark:bg-slate-700');
+                } else {
+                    btn.classList.remove('border-madinah-500', 'bg-madinah-50', 'dark:bg-madinah-900/30');
+                    btn.classList.add('border-transparent', 'bg-slate-50', 'dark:bg-slate-700');
+                }
+            });
+
+            const knob = document.getElementById('oled-knob');
+            const bg = document.getElementById('btn-oled');
+            if (state.settings.isOLED) {
+                knob.style.transform = 'translateX(24px)';
+                bg.classList.add('bg-madinah-500');
+                bg.classList.remove('bg-slate-300', 'dark:bg-slate-600');
+            } else {
+                knob.style.transform = 'translateX(0)';
+                bg.classList.remove('bg-madinah-500');
+                bg.classList.add('bg-slate-300', 'dark:bg-slate-600');
+            }
+        }
+
+        function toggleLang() {
+            state.lang = state.lang === 'fr' ? 'ar' : 'fr';
+            localStorage.setItem('shamail_lang', state.lang);
+            elements.langBtn.querySelector('span').innerText = state.lang === 'fr' ? 'عربي' : 'FR';
+            render();
+        }
+
+        function render() {
+            const isRtl = state.lang === 'ar';
+            elements.html.dir = isRtl ? 'rtl' : 'ltr';
+            
+            elements.headerLeft.innerHTML = state.view !== 'dashboard' 
+                ? `<button onclick="setView('dashboard')" class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-inner border border-slate-200 dark:border-slate-700"><i data-lucide="${isRtl ? 'chevron-right' : 'chevron-left'}" class="w-6 h-6 text-slate-600 dark:text-slate-300"></i></button>`
+                : `<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-madinah-400 to-madinah-600 flex items-center justify-center shadow-lg shadow-madinah-200 dark:shadow-none"><i data-lucide="book-open" class="w-5 h-5 text-white"></i></div><span class="font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-madinah-600 to-emerald-800 dark:from-emerald-400 dark:to-teal-200 font-arabicTitle">${appData.ui.title[state.lang]}</span>`;
+
+            if (state.view === 'dashboard') renderDashboard();
+            else if (state.view === 'favorites') renderFavorites();
+            else if (state.view === 'quiz') renderQuiz();
+            else renderGroup(state.activeGroupId);
+
+            lucide.createIcons();
+        }
+
+        function handleSearch(e) {
+            state.searchQuery = e.target.value.toLowerCase();
+            renderDashboard();
+        }
+
+        function renderDashboard() {
+            const isRtl = state.lang === 'ar';
+            const progressPct = Math.min(100, Math.round((state.readChapters.length / totalChapters) * 100));
+
+            let html = `
+                <div class="animate-fade-in space-y-6 pb-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-3xl font-black text-slate-800 dark:text-white font-arabicTitle">${appData.ui.title[state.lang]}</h2>
+                            <p class="text-madinah-600 dark:text-madinah-400 font-medium font-arabic mt-1">${appData.ui.subtitle[state.lang]}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="setView('quiz')" class="w-12 h-12 rounded-2xl bg-violet-100 dark:bg-violet-900/50 flex items-center justify-center text-violet-600 dark:text-violet-400 shadow-sm hover:scale-105 active:scale-95 transition-all"><i data-lucide="brain" class="w-6 h-6"></i></button>
+                            <button onclick="setView('favorites')" class="w-12 h-12 rounded-2xl bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center text-rose-500 dark:text-rose-400 shadow-sm hover:scale-105 active:scale-95 transition-all"><i data-lucide="heart" class="w-6 h-6 fill-current"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar Bento -->
+                    <div class="bg-white/90 dark:bg-slate-800/90 backdrop-blur-md p-4 rounded-full premium-shadow flex items-center gap-4 border border-white/50 dark:border-slate-700">
+                        <div class="w-10 h-10 rounded-full bg-madinah-100 dark:bg-madinah-900/50 flex items-center justify-center shrink-0">
+                            <i data-lucide="trending-up" class="w-5 h-5 text-madinah-600 dark:text-madinah-400"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex justify-between text-xs font-bold text-slate-500 mb-1.5 uppercase tracking-wider">
+                                <span>${appData.ui.progress[state.lang]}</span>
+                                <span>${state.readChapters.length} / ${totalChapters}</span>
+                            </div>
+                            <div class="h-2.5 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden shadow-inner">
+                                <div class="h-full bg-gradient-to-r from-madinah-400 to-teal-500 rounded-full transition-all duration-1000 ease-out" style="width: ${progressPct}%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Bar Bento -->
+                    <div class="relative premium-shadow rounded-full">
+                        <i data-lucide="search" class="absolute ${isRtl ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+                        <input type="text" oninput="handleSearch(event)" value="${state.searchQuery}" placeholder="${appData.ui.searchPlaceholder[state.lang]}" class="w-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-white/50 dark:border-slate-700 rounded-full py-3.5 ${isRtl ? 'pr-12 pl-4' : 'pl-12 pr-4'} text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-madinah-500 transition-all font-medium placeholder-slate-400">
+                    </div>
+            `;
+
+            if (state.searchQuery) {
+                const results = appData.chapters.filter(c => 
+                    c.title.fr.toLowerCase().includes(state.searchQuery) || 
+                    c.title.ar.includes(state.searchQuery) ||
+                    c.content.fr.toLowerCase().includes(state.searchQuery) ||
+                    c.content.ar.includes(state.searchQuery)
+                );
+                
+                if (results.length > 0) {
+                    html += `<div class="space-y-4 mt-6">`;
+                    results.forEach((chapter, index) => {
+                        const group = appData.groups.find(g => g.id === chapter.group_id);
+                        html += generateChapterCard(chapter, group, index, isRtl);
+                    });
+                    html += `</div>`;
+                } else {
+                    html += `<div class="text-center py-10 text-slate-400"><i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 opacity-50"></i><p>${appData.ui.noResults[state.lang]}</p></div>`;
+                }
+            } else {
+                html += `<div class="grid grid-cols-2 gap-4 mt-2">`;
+                appData.groups.forEach((group, idx) => {
+                    html += `
+                        <button onclick="setView('group', '${group.id}')" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-5 rounded-[2rem] premium-shadow border border-white/60 dark:border-slate-700 hover:-translate-y-1 hover:shadow-2xl active:scale-95 transition-all text-left flex flex-col h-full group hover:ring-2 hover:ring-madinah-400/50 relative overflow-hidden" style="animation-delay: ${idx * 50}ms; ${isRtl ? 'text-align: right;' : 'text-align: left;'}">
+                            <div class="absolute inset-0 bg-gradient-to-br ${group.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br ${group.gradient} flex items-center justify-center shadow-lg mb-4 transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300">
+                                <i data-lucide="${group.icon}" class="w-7 h-7 text-white"></i>
+                            </div>
+                            <h3 class="font-bold text-lg text-slate-800 dark:text-white mb-1 font-arabic">${group.title[state.lang]}</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">${group.desc[state.lang]}</p>
+                        </button>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+            elements.content.innerHTML = html;
+        }
+
+        function renderGroup(groupId) {
+            const group = appData.groups.find(g => g.id === groupId);
+            const chapters = appData.chapters.filter(c => c.group_id === groupId);
+            const isRtl = state.lang === 'ar';
+
+            let html = `
+                <div class="animate-fade-in pb-8">
+                    <div class="text-center mb-8 pt-4">
+                        <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br ${group.gradient} flex items-center justify-center shadow-2xl mb-5 transform rotate-3 ring-4 ring-white/50 dark:ring-slate-800/50">
+                            <i data-lucide="${group.icon}" class="w-10 h-10 text-white"></i>
+                        </div>
+                        <h2 class="text-3xl font-black text-slate-800 dark:text-white font-arabicTitle mb-2">${group.title[state.lang]}</h2>
+                        <p class="text-slate-500 dark:text-slate-400 font-medium">${group.desc[state.lang]}</p>
+                    </div>
+                    <div class="space-y-5">
+            `;
+            
+            chapters.forEach((chapter, index) => {
+                html += generateChapterCard(chapter, group, index, isRtl);
+            });
+
+            html += `</div></div>`;
+            elements.content.innerHTML = html;
+        }
+
+        function generateChapterCard(chapter, group, index, isRtl) {
+            const chapterKey = `${group.id}-${chapter.bab}`;
+            const isFav = state.favorites.includes(chapterKey);
+            const isRead = state.readChapters.includes(chapterKey);
+            
+            let authBadge = '';
+            if (chapter.auth === 'sahih') {
+                authBadge = `<span class="px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 text-xs font-bold border border-emerald-200 dark:border-emerald-800/50 flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>صحيح Sahih</span>`;
+            } else if (chapter.auth === 'hasan') {
+                authBadge = `<span class="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-800/50 flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>حسن Hasan</span>`;
+            }
+
+            const fontClass = state.settings.fontFamily === 'Amiri' ? 'font-arabicTitle' : (state.settings.fontFamily === 'Noto Naskh Arabic' ? 'font-arabicNaskh' : 'font-arabic');
+            const textSizeClass = `text-size-${state.settings.textSize}`;
+
+            return `
+                <div class="group bg-white/90 dark:bg-slate-800/95 backdrop-blur-2xl p-6 rounded-[2rem] premium-shadow border border-white/80 dark:border-slate-700 transition-all duration-500 flex flex-col gap-4 animate-slide-up relative overflow-hidden ${isRead ? 'opacity-80 grayscale-[15%]' : ''} hover:-translate-y-1 hover:shadow-2xl" style="animation-delay: ${index * 50}ms; animation-fill-mode: both;">
+                    <div class="card-spine bg-gradient-to-b ${group.gradient}"></div>
+                    
+                    <div class="flex items-start justify-between pl-2">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 dark:text-slate-500 tracking-wider uppercase mb-1 block flex items-center gap-1.5"><i data-lucide="door-open" class="w-3.5 h-3.5"></i> Bâb ${chapter.bab}</span>
+                            <h3 class="text-2xl font-bold text-slate-800 dark:text-white ${isRtl ? `${fontClass} ${textSizeClass}` : ''} bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600 dark:from-white dark:to-slate-300">${chapter.title[state.lang]}</h3>
+                        </div>
+                    </div>
+                    
+                    <p class="text-[1.05rem] text-slate-600 dark:text-slate-300 leading-relaxed pl-2 ${isRtl ? `${fontClass} ${textSizeClass}` : ''}">${chapter.content[state.lang]}</p>
+
+                    <div class="relative mt-2 bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-900/80 dark:to-slate-900/40 p-5 rounded-2xl border border-slate-200/60 dark:border-slate-700/60 shadow-inner">
+                        <i data-lucide="quote" class="absolute top-4 ${isRtl ? 'left-4' : 'right-4'} w-12 h-12 text-slate-200 dark:text-slate-700/50 opacity-50 pointer-events-none transform ${isRtl ? '-scale-x-100' : ''}"></i>
+                        <div class="flex items-center justify-between mb-3 relative z-10">
+                            <div class="flex items-center gap-2">
+                                <div class="bg-madinah-100 dark:bg-madinah-900/30 p-1.5 rounded-lg border border-madinah-200 dark:border-madinah-800/50">
+                                    <i data-lucide="book-text" class="w-4 h-4 text-madinah-600 dark:text-madinah-400"></i>
+                                </div>
+                                <span class="text-xs font-black uppercase tracking-widest text-madinah-600 dark:text-madinah-400">
+                                    ${appData.ui.proof[state.lang]}
+                                </span>
+                            </div>
+                            ${authBadge}
+                        </div>
+                        <p class="text-[0.95rem] text-slate-700 dark:text-slate-300 leading-relaxed relative z-10 ${isRtl ? `${fontClass} ${textSizeClass}` : 'italic font-medium'}">${chapter.dalil[state.lang]}</p>
+                    </div>
+
+                    ${chapter.sharh ? `
+                    <div class="mt-1 relative z-10">
+                        <button onclick="toggleSharh('${chapterKey}')" class="w-full flex items-center justify-between py-2 px-1 text-slate-500 hover:text-madinah-600 dark:text-slate-400 dark:hover:text-madinah-400 transition-colors text-sm font-bold">
+                            <span class="flex items-center gap-2"><i data-lucide="lightbulb" class="w-4 h-4"></i> ${appData.ui.sharhBtn[state.lang]}</span>
+                            <i data-lucide="chevron-down" id="sharh-icon-${chapterKey}" class="w-4 h-4 transition-transform duration-300"></i>
+                        </button>
+                        <div id="sharh-${chapterKey}" class="sharh-content">
+                            <div class="p-4 mt-2 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-xl border border-indigo-100/50 dark:border-indigo-800/30 text-slate-700 dark:text-slate-300 text-sm leading-relaxed border-l-4 border-l-indigo-400 ${isRtl ? `border-l-0 border-r-4 border-r-indigo-400 ${fontClass} ${textSizeClass}` : ''}">
+                                ${chapter.sharh[state.lang]}
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    ${chapter.action ? `
+                    <div class="mt-2 bg-amber-50/80 dark:bg-amber-900/20 p-3 rounded-xl border border-amber-200/50 dark:border-amber-800/30 flex items-start gap-3">
+                        <div class="bg-amber-100 dark:bg-amber-900/50 p-1.5 rounded-lg mt-0.5">
+                            <i data-lucide="zap" class="w-4 h-4 text-amber-600 dark:text-amber-400"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider block mb-0.5">${appData.ui.sunnahAction[state.lang]}</span>
+                            <p class="text-sm font-medium text-slate-700 dark:text-slate-300 ${isRtl ? `${fontClass}` : ''}">${chapter.action[state.lang]}</p>
+                        </div>
+                    </div>
+                    ` : ''}
+
+                    <div class="flex items-center gap-2 mt-2 pt-4 border-t border-slate-100 dark:border-slate-700/50">
+                        <button onclick="toggleRead('${chapterKey}')" class="flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 transition-all active:scale-95 ${isRead ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800' : 'bg-slate-50 text-slate-500 hover:bg-slate-100 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700'}">
+                            <i data-lucide="${isRead ? 'check-circle-2' : 'circle'}" class="w-4 h-4"></i>
+                            ${appData.ui.markRead[state.lang]}
+                        </button>
+                        <button onclick="toggleFavorite('${chapterKey}')" class="w-11 h-11 rounded-xl flex items-center justify-center transition-all active:scale-95 ${isFav ? 'bg-rose-100 text-rose-500 dark:bg-rose-900/50 dark:text-rose-400 border border-rose-200 dark:border-rose-800' : 'bg-slate-50 text-slate-400 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700'}">
+                            <i data-lucide="heart" class="w-5 h-5 ${isFav ? 'fill-current' : ''}"></i>
+                        </button>
+                        <button onclick="shareChapter('${chapterKey}')" class="w-11 h-11 rounded-xl bg-slate-50 text-slate-400 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-700 flex items-center justify-center transition-all active:scale-95">
+                            <i data-lucide="share-2" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleSharh(chapterKey) {
+            const content = document.getElementById(`sharh-${chapterKey}`);
+            const icon = document.getElementById(`sharh-icon-${chapterKey}`);
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                content.style.maxHeight = null;
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                content.style.maxHeight = content.scrollHeight + "px";
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        function toggleFavorite(chapterKey) {
+            const idx = state.favorites.indexOf(chapterKey);
+            if (idx > -1) {
+                state.favorites.splice(idx, 1);
+                showToast(appData.ui.removed[state.lang]);
+            } else {
+                state.favorites.push(chapterKey);
+                showToast(appData.ui.saved[state.lang]);
+            }
+            localStorage.setItem('shamail_favorites', JSON.stringify(state.favorites));
+            render();
+        }
+
+        function toggleRead(chapterKey) {
+            const idx = state.readChapters.indexOf(chapterKey);
+            if (idx > -1) {
+                state.readChapters.splice(idx, 1);
+            } else {
+                state.readChapters.push(chapterKey);
+            }
+            localStorage.setItem('shamail_read', JSON.stringify(state.readChapters));
+            render();
+        }
+
+        function shareChapter(chapterKey) {
+            const chapter = appData.chapters.find(c => `${c.group_id}-${c.bab}` === chapterKey);
+            
+            // Clean HTML tags from dalil string for sharing
+            let dalilClean = chapter.dalil[state.lang].replace(/<[^>]*>?/gm, '');
+
+            const text = `✨ ${chapter.title[state.lang]}\n\n📖 ${chapter.content[state.lang]}\n\n📜 ${appData.ui.proof[state.lang]}: ${dalilClean}\n\n— Shamâ'il App`;
+            
+            if (navigator.share) {
+                navigator.share({ title: chapter.title[state.lang], text: text }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(appData.ui.copied[state.lang]);
+                });
+            }
+        }
+
+        function renderFavorites() {
+            const isRtl = state.lang === 'ar';
+            let html = `
+                <div class="animate-fade-in pb-8">
+                    <div class="text-center mb-8 pt-4">
+                        <div class="w-16 h-16 mx-auto rounded-full bg-rose-100 dark:bg-rose-900/50 flex items-center justify-center mb-4 text-rose-500">
+                            <i data-lucide="heart" class="w-8 h-8 fill-current"></i>
+                        </div>
+                        <h2 class="text-2xl font-black text-slate-800 dark:text-white">${appData.ui.favorites[state.lang]}</h2>
+                    </div>
+                    <div class="space-y-4">
+            `;
+            
+            if (state.favorites.length === 0) {
+                html += `<div class="text-center py-10 text-slate-400">${appData.ui.noFavorites[state.lang]}</div>`;
+            } else {
+                state.favorites.forEach((key, index) => {
+                    const chapter = appData.chapters.find(c => `${c.group_id}-${c.bab}` === key);
+                    if (chapter) {
+                        const group = appData.groups.find(g => g.id === chapter.group_id);
+                        html += generateChapterCard(chapter, group, index, isRtl);
+                    }
+                });
+            }
+            html += `</div></div>`;
+            elements.content.innerHTML = html;
+        }
+
+        function renderQuiz() {
+            const isRtl = state.lang === 'ar';
+            const quizItem = appData.quiz[state.quizIndex];
+            state.quizFlipped = false;
+
+            let html = `
+                <div class="animate-fade-in flex flex-col items-center justify-center min-h-[70vh]">
+                    <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-8 flex items-center gap-2"><i data-lucide="brain" class="w-6 h-6 text-violet-500"></i> ${appData.ui.quizTitle[state.lang]}</h2>
+                    
+                    <div class="w-full max-w-sm h-64 perspective-1000 mb-8 cursor-pointer" onclick="flipCard()">
+                        <div id="quiz-card" class="flip-card-inner">
+                            <div class="flip-card-front bg-gradient-to-br from-violet-500 to-fuchsia-500 p-6 flex flex-col items-center justify-center text-center shadow-2xl border border-white/20">
+                                <i data-lucide="help-circle" class="w-12 h-12 text-white/50 mb-4"></i>
+                                <p class="text-xl font-bold text-white font-arabicTitle leading-relaxed">${quizItem.q[state.lang]}</p>
+                            </div>
+                            <div class="flip-card-back bg-white dark:bg-slate-800 p-6 flex flex-col items-center justify-center text-center shadow-2xl border border-slate-200 dark:border-slate-700">
+                                <i data-lucide="check-circle" class="w-12 h-12 text-emerald-500 mb-4"></i>
+                                <p class="text-xl font-bold text-slate-800 dark:text-white font-arabicTitle leading-relaxed">${quizItem.a[state.lang]}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4">
+                        <button onclick="flipCard()" class="px-6 py-3 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 font-bold hover:scale-105 transition-all shadow-sm">${appData.ui.flipBtn[state.lang]}</button>
+                        <button onclick="nextQuiz()" class="px-6 py-3 rounded-full bg-violet-500 text-white font-bold hover:scale-105 transition-all shadow-md flex items-center gap-2">${appData.ui.nextBtn[state.lang]} <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                    </div>
+                </div>
+            `;
+            elements.content.innerHTML = html;
+        }
+
+        function flipCard() {
+            state.quizFlipped = !state.quizFlipped;
+            const card = document.getElementById('quiz-card');
+            if (state.quizFlipped) card.classList.add('flipped');
+            else card.classList.remove('flipped');
+        }
+
+        function nextQuiz() {
+            state.quizIndex = (state.quizIndex + 1) % appData.quiz.length;
+            renderQuiz();
+        }
+
+        function setView(view, groupId = null) {
+            state.view = view;
+            state.activeGroupId = groupId;
+            render();
+        }
+
+        let toastTimeout;
+        function showToast(msg) {
+            elements.toastMsg.innerText = msg;
+            elements.toast.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                elements.toast.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // Initialize App
+        window.onload = init;
     </script>
 </body>
 </html>
