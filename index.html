@@ -10,7 +10,7 @@
     <link rel="icon" type="image/svg+xml" href="pwa-192x192.svg">
     <link rel="apple-touch-icon" href="pwa-192x192.svg">
     <link rel="manifest" href="manifest.json">
-    <title>Shamâ'il - Le Prophète ﷺ</title>
+    <title>Shamâ'il - Le Prophète ﷺ (Intégral 56 Chapitres)</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -198,7 +198,7 @@
     
     <div class="max-w-lg mx-auto w-full min-h-screen flex flex-col relative bg-white/40 dark:bg-slate-900/40 shadow-2xl">
         
-        <!-- HEADER -->
+        <!-- HEADER FIXED -->
         <header class="px-4 py-3 flex items-center justify-between sticky top-0 glass-panel z-50 border-b border-white/50 dark:border-slate-700/50 rounded-t-none">
             <div id="header-left" class="flex items-center gap-2.5"></div>
             
@@ -224,7 +224,7 @@
             </div>
         </header>
 
-        <!-- MAIN CONTENT -->
+        <!-- MAIN CONTENT CONTAINER -->
         <main id="app-content" class="flex-1 p-4 overflow-y-auto pb-24 scroll-smooth"></main>
 
         <!-- TOAST NOTIFICATION -->
@@ -297,6 +297,7 @@
     </div>
 
     <script>
+        /* ALL 56 CHAPTERS DATASET WITH FULL NARRATED HADITHS */
         const appData = {
             ui: {
                 title: { fr: "Shamâ'il", ar: "الشمائل المحمدية" },
@@ -318,211 +319,88 @@
                 sunnahAction: { fr: "Sunnah Pratique", ar: "سنة عملية" }
             },
             groups: [
-                { id: 'apparence', icon: 'user', gradient: 'from-emerald-400 to-teal-500', title: { fr: "Apparence Physique", ar: "الخِلقة والصفات" }, desc: { fr: "Ses traits, ses cheveux, le sceau.", ar: "أوصافه الجسدية، شعره، وخاتم النبوة." } },
-                { id: 'vetements', icon: 'shirt', gradient: 'from-amber-400 to-orange-500', title: { fr: "Vêtements & Parures", ar: "اللباس والزينة" }, desc: { fr: "Sa façon de s'habiller et ses affaires.", ar: "لباسه، خاتمه، وسلاحه." } },
-                { id: 'attitude', icon: 'footprints', gradient: 'from-blue-400 to-indigo-500', title: { fr: "Attitude & Posture", ar: "الهيئة والجلسة" }, desc: { fr: "Sa démarche, sa façon de s'asseoir.", ar: "مشيته وجلوسه وتكأته." } },
-                { id: 'nourriture', icon: 'utensils', gradient: 'from-rose-400 to-pink-500', title: { fr: "Nourriture & Boisson", ar: "الطعام والشراب" }, desc: { fr: "Ce qu'il mangeait et comment il buvait.", ar: "صفة أكله، خبزه، وشرابه." } },
-                { id: 'parole', icon: 'message-circle', gradient: 'from-violet-400 to-purple-500', title: { fr: "Parole & Sourire", ar: "الكلام والتواصل" }, desc: { fr: "Sa façon de parler, de rire et de plaisanter.", ar: "كلامه، ضحكه، ومزاحه." } },
-                { id: 'caractere', icon: 'heart', gradient: 'from-fuchsia-400 to-pink-600', title: { fr: "Noblesse d'Âme", ar: "الأخلاق والشمائل" }, desc: { fr: "Son humilité, sa pudeur, sa douceur.", ar: "تواضعه، حياؤه، وخلقه." } },
-                { id: 'adoration', icon: 'moon-star', gradient: 'from-cyan-400 to-blue-600', title: { fr: "Adoration & Quotidien", ar: "العبادة والعيش" }, desc: { fr: "Sa prière, son jeûne, son sommeil.", ar: "صلاته، صومه، ونومه." } },
-                { id: 'fin', icon: 'feather', gradient: 'from-slate-400 to-gray-600', title: { fr: "Noms & Fin de vie", ar: "الأسماء والوفاة" }, desc: { fr: "Ses noms, son âge et son décès.", ar: "أسماؤه، عمره، ووفاته." } }
+                { id: 'apparence', icon: 'user', gradient: 'from-emerald-400 to-teal-500', title: { fr: "Apparence Physique", ar: "الخِلقة والصفات" }, desc: { fr: "Ses traits, ses cheveux, le sceau, le kohl.", ar: "أوصافه الجسدية، شعره، الخاتم، والكحل." } },
+                { id: 'vetements', icon: 'shirt', gradient: 'from-amber-400 to-orange-500', title: { fr: "Vêtements & Parures", ar: "اللباس والزينة" }, desc: { fr: "Son qamis, ses sandales, sa bague, son épée.", ar: "لباسه، نعله، خاتمه، وسلاحه." } },
+                { id: 'attitude', icon: 'footprints', gradient: 'from-blue-400 to-indigo-500', title: { fr: "Attitude & Posture", ar: "الهيئة والجلسة" }, desc: { fr: "Sa démarche, sa façon de s'asseoir, son voile.", ar: "مشيته وجلوسه وتكأته وتقنعه." } },
+                { id: 'nourriture', icon: 'utensils', gradient: 'from-rose-400 to-pink-500', title: { fr: "Nourriture & Boisson", ar: "الطعام والشراب" }, desc: { fr: "Ce qu'il mangeait, ses fruits, sa coupe.", ar: "صفة أكله، خبزه، فاكهته، وشرابه." } },
+                { id: 'parole', icon: 'message-circle', gradient: 'from-violet-400 to-purple-500', title: { fr: "Parole & Sourire", ar: "الكلام والتواصل" }, desc: { fr: "Sa façon de parler, de rire, d'écouter la poésie.", ar: "كلامه، ضحكه، مزاحه، وشعره." } },
+                { id: 'adoration', icon: 'moon-star', gradient: 'from-cyan-400 to-blue-600', title: { fr: "Adoration & Quotidien", ar: "العبادة والعيش" }, desc: { fr: "Sa prière de nuit, son jeûne, son lit.", ar: "صلاته، صومه، نومه، وبكاؤه." } },
+                { id: 'caractere', icon: 'heart', gradient: 'from-fuchsia-400 to-pink-600', title: { fr: "Noblesse d'Âme", ar: "الأخلاق والشمائل" }, desc: { fr: "Son humilité, sa pudeur, sa hijama.", ar: "تواضعه، حياؤه، وحجامته." } },
+                { id: 'fin', icon: 'feather', gradient: 'from-slate-400 to-gray-600', title: { fr: "Noms & Fin de vie", ar: "الأسماء والوفاة" }, desc: { fr: "Ses noms, son âge, son décès, la vision en rêve.", ar: "أسماؤه، عمره، وفاته، ورؤيته." } }
             ],
             
             chapters: [
-                { 
-                    group_id: 'apparence', bab: 1, 
-                    title: { fr: "Ses traits physiques", ar: "خلقه ﷺ" }, 
-                    content: { fr: "Il n'était ni trop grand ni trop petit. Il avait les épaules larges, un beau visage éclatant comme la pleine lune.", ar: "لم يكن بالطويل <span class='gharib-word'>الممغط<span class='tooltip'>الشديد الطول البائن</span></span> ولا بالقصير <span class='gharib-word'>المتردد<span class='tooltip'>المتناهي في القصر</span></span>. يتلألأ وجهه تلألؤ القمر ليلة البدر." },
-                    dalil: { fr: "D'après Al-Barâ' ibn 'Âzib : « Le Prophète ﷺ était de taille moyenne, avec des épaules larges et une chevelure abondante. »", ar: "عن البراء بن عازب قال: «كان رسول الله ﷺ مربوعاً، بعيد ما بين المنكبين، له شعر يبلغ شحمة أذنيه...»" },
-                    auth: 'sahih',
-                    sharh: { fr: "L'Imam Al-Bajuri explique que le terme 'Rab'a' (taille moyenne) dénote la perfection de ses proportions. La lumière de son visage est comparée à la pleine lune car c'est la lumière la plus douce pour les yeux.", ar: "قال الإمام الباجوري: (مربوعاً) أي وسطاً بين الطول والقصر. وشبه وجهه بالقمر ليلة البدر لجماله وكماله وضوء وجهه المبارك." },
-                    action: { fr: "Ayez une posture droite et digne aujourd'hui, reflétant la confiance et l'humilité.", ar: "حافظ على هيئة معتدلة ووقار في مشيتك وجلوسك اليوم." }
-                },
-                { 
-                    group_id: 'apparence', bab: 2, 
-                    title: { fr: "Le sceau de la prophétie", ar: "خاتم النبوة" }, 
-                    content: { fr: "Il portait entre les épaules une petite excroissance (le sceau), de la même couleur que sa peau.", ar: "كان بين كتفيه <span class='gharib-word'>غدة<span class='tooltip'>قطعة لحم بارزة</span></span> حمراء مثل بيضة الحمامة، وهي من علامات نبوته." },
-                    dalil: { fr: "D'après Jâbir ibn Samoura : « J'ai vu le Sceau entre ses épaules, il ressemblait à un œuf de pigeon. »", ar: "عن جابر بن سمرة قال: «رأيت الخاتم بين كتفي رسول الله ﷺ غدة حمراء مثل بيضة الحمامة...»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Ce sceau était une marque physique promise dans les anciens livres (Thora et Évangile) pour reconnaître le dernier Prophète.", ar: "هذا الخاتم من العلامات التي وردت في الكتب السابقة ليعرفه بها أهل الكتاب." },
-                    action: { fr: "Prenez conscience du privilège de suivre le dernier Messager d'Allah.", ar: "تذكر اليوم نعمة الإيمان باتباع خاتم الأنبياء والمرسلين." }
-                },
-                { 
-                    group_id: 'apparence', bab: 3, 
-                    title: { fr: "Ses cheveux", ar: "شعره ﷺ" }, 
-                    content: { fr: "Ses cheveux n'étaient ni complètement lisses ni crépus, ils étaient légèrement ondulés. Ils atteignaient le lobe de ses oreilles.", ar: "كان شعره ليس <span class='gharib-word'>بالسبط<span class='tooltip'>المسترسل شديد النعومة</span></span> ولا <span class='gharib-word'>بالجعد القطط<span class='tooltip'>شديد التلوي والالتواء</span></span>، يبلغ شحمة أذنيه." },
-                    dalil: { fr: "D'après Anas : « Les cheveux du Messager d'Allah étaient ondulés, atteignant mi-oreilles. »", ar: "عن أنس بن مالك رضي الله عنه قال: «كان شعر رسول الله ﷺ رجلاً، ليس بالسبط ولا الجعد، بين أذنيه وعاتقه»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Ses cheveux suivaient la juste mesure de la création, soignés et nettoyés régulièrement.", ar: "كان شعره ﷺ أوسط الصفات، وكان يدهنه ويرجله بالطيب والماء." },
-                    action: { fr: "Prenez soin de votre hygiène et coiffez-vous proprement selon la Sunnah.", ar: "اعتَنِ بنظافة شعرك وترجيله كيد السنّة." }
-                },
-                { 
-                    group_id: 'apparence', bab: 5, 
-                    title: { fr: "Ses cheveux blancs", ar: "شيبه ﷺ" }, 
-                    content: { fr: "Il n'avait que très peu de cheveux blancs (moins d'une vingtaine) répartis sur ses tempes et sa barbe.", ar: "لم يكن في رأسه ولحيته عشرون شعرة بيضاء." },
-                    dalil: { fr: "Anas ibn Malik rapporte : « Je n'ai compté dans la tête et la barbe du Messager d'Allah que quatorze cheveux blancs. »", ar: "عن أنس بن مالك قال: «ما عددت في رأس رسول الله ﷺ ولحيته إلا أربع عشرة شعرة بيضاء»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Le peu de cheveux blancs montre son endurance face aux épreuves et la beauté préservée de sa jeunesse.", ar: "قلة الشيب تدل على قوة بنيته وجمال هيئته ﷺ، وكان الشيب من أثر سور مثل هود وأخواتها." }
-                },
+                /* Group: Apparence */
+                { group_id: 'apparence', bab: 1, title: { fr: "Ses traits physiques", ar: "خلقه ﷺ" }, content: { fr: "Il n'était ni trop grand ni trop petit. Il avait les épaules larges, un beau visage éclatant comme la pleine lune.", ar: "لم يكن بالطويل الممغط ولا بالقصير المتردد. يتلألأ وجهه تلألؤ القمر ليلة البدر." }, dalil: { fr: "D'après Al-Barâ' ibn 'Âzib (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ était de taille moyenne, avec des épaules larges et une chevelure abondante. Je n'ai jamais vu quelqu'un de plus beau que lui dans un vêtement rouge. »", ar: "عن البراء بن عازب قال: «كان رسول الله ﷺ مربوعاً، بعيد ما بين المنكبين، له شعر يبلغ شحمة أذنيه، رأيته في حلة حمراء ما رأيت شيئاً قط أحسن منه»" }, auth: 'sahih', sharh: { fr: "L'Imam Al-Bajuri explique que le terme 'Rab'a' dénote la juste mesure et la perfection des proportions physiques du Prophète ﷺ.", ar: "قال الإمام الباجوري: (مربوعاً) أي وسطاً بين الطول والقصر، وكان وجهه الشريف يستنير كالقمر ليلة البدر." }, action: { fr: "Gardez une posture droite et humble.", ar: "حافظ على هيئة معتدلة ووقار." } },
+                { group_id: 'apparence', bab: 2, title: { fr: "Le sceau de la prophétie", ar: "خاتم النبوة" }, content: { fr: "Une excroissance de chair entre les épaules, marque promise de la prophétie.", ar: "غدة حمراء مثل بيضة الحمامة بين كتفيه." }, dalil: { fr: "D'après Jâbir ibn Samoura (qu'Allah l'agrée) : « J'ai vu le Sceau de la Prophétie entre les épaules du Messager d'Allah ﷺ, c'était une excroissance de chair rouge de la taille d'un œuf de pigeon. »", ar: "عن جابر بن سمرة قال: «رأيت الخاتم بين كتفي رسول الله ﷺ غدة حمراء مثل بيضة الحمامة...»" }, auth: 'sahih', sharh: { fr: "Une marque physique annoncée dans les Écritures antérieures pour reconnaître le dernier des Prophètes.", ar: "علامة نبوته المبشر بها في الكتب السابقة." } },
+                { group_id: 'apparence', bab: 3, title: { fr: "Ses cheveux", ar: "شعره ﷺ" }, content: { fr: "Ondulés, atteignant mi-oreilles ou le col.", ar: "ليس بالسبط ولا بالجعد، يبلغ شحمة أذنيه." }, dalil: { fr: "D'après Anas ibn Mâlik (qu'Allah l'agrée) : « Les cheveux du Messager d'Allah ﷺ étaient légèrement ondulés, ni complètement lisses ni crépus, et ils tombaient entre ses oreilles et ses épaules. »", ar: "عن أنس بن مالك رضي الله عنه قال: «كان شعر رسول الله ﷺ رجلاً، ليس بالسبط ولا الجعد، بين أذنيه وعاتقه»" }, auth: 'sahih' },
+                { group_id: 'apparence', bab: 4, title: { fr: "Le peignage de ses cheveux", ar: "ترجيل شعره ﷺ" }, content: { fr: "Il soignait et peignait ses cheveux régulièrement.", ar: "كان يترجل بالماء والدهن." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « J'aimais peigner les cheveux du Messager d'Allah ﷺ en commençant toujours par le côté droit. »", ar: "عن عائشة قالت: «كنت أرجل رأس رسول الله ﷺ... وكان يعجبه التيمّن في طهوره وترجّله»" }, auth: 'sahih' },
+                { group_id: 'apparence', bab: 5, title: { fr: "Ses cheveux blancs", ar: "شيبه ﷺ" }, content: { fr: "Moins de 20 cheveux blancs sur la tête et la barbe.", ar: "لم يكن في رأسه ولحيته عشرون شعرة بيضاء." }, dalil: { fr: "D'après Anas ibn Mâlik (qu'Allah l'agrée) : « Je n'ai compté dans la tête et la barbe du Messager d'Allah ﷺ que quatorze cheveux blancs. »", ar: "عن أنس بن مالك قال: «ما عددت في رأس رسول الله ﷺ ولحيته إلا أربع عشرة شعرة بيضاء»" }, auth: 'sahih' },
+                { group_id: 'apparence', bab: 6, title: { fr: "Sa teinture", ar: "خضابه ﷺ" }, content: { fr: "Il utilisait du henné doux pour nourrir la chevelure.", ar: "خضابه بالحناء والكتم." }, dalil: { fr: "D'après Abou Rimtha (qu'Allah l'agrée) : « Je suis venu trouver le Prophète ﷺ et j'ai vu que ses quelques cheveux blancs étaient teints d'une nuance rougeâtre au henné. »", ar: "عن أبي رمثة قال: «أتينا النبي ﷺ وعليه ثوبان أخضران، وله شعر قد تعلى خضاب بالحناء...»" }, auth: 'sahih' },
+                { group_id: 'apparence', bab: 7, title: { fr: "Son kohl (Collyre)", ar: "كحله ﷺ" }, content: { fr: "Il appliquait de l'Ithmid trois fois par œil avant de dormir.", ar: "يكتحل بالأثمد ثلاثاً في كل عين." }, dalil: { fr: "D'après Ibn 'Abbâs (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ avait un flacon de kohl (Ithmid) dont il appliquait trois traits dans chaque œil avant d'aller dormir. »", ar: "عن ابن عباس قال: «كانت للنبي ﷺ مكحلة يكتحل منها كل ليلة ثلاثة في هذه وثلاثة في هذه»" }, auth: 'sahih' },
 
-                { 
-                    group_id: 'vetements', bab: 8, 
-                    title: { fr: "Ses vêtements préférés", ar: "لباسه ﷺ" }, 
-                    content: { fr: "Son vêtement préféré était le Qamis (longue chemise). Il aimait la propreté et la simplicité.", ar: "كان أحب الثياب إليه القميص، وكان يحب النظافة والبساطة." },
-                    dalil: { fr: "D'après Oum Salama : « Le vêtement que le Messager d'Allah préférait le plus porter était le Qamis. »", ar: "عن أم سلمة قالت: «كان أحب الثياب إلى رسول الله ﷺ القميص»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Le Qamis couvre mieux le corps et facilite les mouvements pour la prière et les actions quotidiennes.", ar: "القميص أستر للبدن وأخف على الجسم وأسهل في الحركة والعبادة." },
-                    action: { fr: "Portez aujourd'hui vos vêtements les plus propres pour honorer ceux que vous rencontrez.", ar: "البس أنظف ثيابك اليوم إكراماً لمن تقابلهم." }
-                },
-                { 
-                    group_id: 'vetements', bab: 11, 
-                    title: { fr: "Ses sandales", ar: "نعله ﷺ" }, 
-                    content: { fr: "Il portait des sandales simples à deux lanières passants entre les orteils.", ar: "كان لنعله قبالان (شسعان) يمران بين الأصابع." },
-                    dalil: { fr: "Qatâda demanda à Anas : « Comment étaient les sandales du Prophète ? » Il répondit : « Elles avaient deux lanières. »", ar: "عن قتادة قال: قلت لأنس بن مالك: كيف كان نعل رسول الله ﷺ؟ قال: «لهما قبالان»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Il mettait d'abord le pied droit en se chaussant et le gauche en se déchaussant.", ar: "كان ﷺ يبدأ باليمنى إذا انتعل، وباليسرى إذا خلع." },
-                    action: { fr: "Commencez par le pied droit en vous chaussant aujourd'hui.", ar: "ابدأ بيمينك عند انتعال حذائك اليوم." }
-                },
-                { 
-                    group_id: 'vetements', bab: 12, 
-                    title: { fr: "Sa bague", ar: "خاتمه ﷺ" }, 
-                    content: { fr: "Il portait une bague en argent utilisée comme sceau pour sceller les lettres envoyées aux rois. Il y était gravé 'Muhammad, Messager d'Allah'.", ar: "اتخذ خاتماً من <span class='gharib-word'>وَرِق<span class='tooltip'>فضة خالص</span></span> نقشه: محمد رسول الله، ليختم به الرسائل." },
-                    dalil: { fr: "Anas rapporte : « Lorsque le Prophète voulut écrire aux rois étrangers, il fit forger une bague en argent... »", ar: "عن أنس: «أن النبي ﷺ لما أراد أن يكتب إلى العجم صاغ خاتماً من فضة...»" },
-                    auth: 'sahih',
-                    sharh: { fr: "L'inscription était gravée sur 3 lignes : 'Allah' en haut, 'Messager' au milieu, et 'Muhammad' en bas, par respect envers le Nom d'Allah.", ar: "كان نقش الخاتم ثلاثة أسطر: محمد سطر، ورسول سطر، والله سطر، تعظيماً لاسم الله." }
-                },
+                /* Group: Vêtements */
+                { group_id: 'vetements', bab: 8, title: { fr: "Ses vêtements et le Qamis", ar: "لباسه ﷺ" }, content: { fr: "Le vêtement le plus aimé était le Qamis blanc propre.", ar: "أحب الثياب إليه القميص الأبيض." }, dalil: { fr: "D'après Oum Salama (qu'Allah l'agrée) : « Le vêtement que le Messager d'Allah ﷺ préférait le plus porter était le Qamis (la chemise longue). »", ar: "عن أم سلمة قالت: «كان أحب الثياب إلى رسول الله ﷺ القميص»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 9, title: { fr: "Sa subsistance modeste", ar: "عيشه ﷺ" }, content: { fr: "Une vie simple, tournée vers l'au-delà.", ar: "زهد عيشه وإيثار الآخرة." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « Le lit sur lequel dormait le Messager d'Allah ﷺ était fait de cuir rembourré de fibres de palmier. »", ar: "عن عائشة قالت: «إنما كان فراش رسول الله ﷺ الذي ينام عليه من أدم حشوه ليف»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 10, title: { fr: "Ses chaussons (Khuffayni)", ar: "خفه ﷺ" }, content: { fr: "Des chaussons de cuir simples offerts par le Négus.", ar: "خفان أسودان أهداهما النجاشي." }, dalil: { fr: "D'après Bourayda (qu'Allah l'agrée) : « Le Négus (roi d'Abyssinie) a offert au Prophète ﷺ une paire de chaussons en cuir noir simples, qu'il a portés et sur lesquels il a fait l'essuyage (Mash). »", ar: "عن بريدة: «أن النجاشي أهدى للنبي ﷺ خفين أسودين فلبسهما وتوضأ ومسح عليهما»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 11, title: { fr: "Ses sandales", ar: "نعله ﷺ" }, content: { fr: "Sandales à deux lanières passants entre les orteils.", ar: "لهما قبالان يمران بين الأصابع." }, dalil: { fr: "D'après Anas ibn Mâlik (qu'Allah l'agrée) : « Les sandales du Messager d'Allah ﷺ avaient deux lanières passant entre les orteils. »", ar: "عن أنس قال: «كان لنعل رسول الله ﷺ قبالان»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 12, title: { fr: "Sa bague d'argent", ar: "خاتمه ﷺ" }, content: { fr: "Bague en argent servie de sceau diplomatique.", ar: "خاتم فضة نقشه محمد رسول الله." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « La bague du Prophète ﷺ était entièrement en argent, et son chaton était aussi en argent. »", ar: "عن أنس قال: «كان خاتم النبي ﷺ من فضة وكان فصه منه»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 13, title: { fr: "La gravure de sa bague", ar: "صياغة خاتمه ﷺ" }, content: { fr: "Gravée sur 3 lignes par respect du Nom d'Allah.", ar: "ثلاثة أسطر تعظيماً لله." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « L'inscription gravée sur la bague du Prophète ﷺ était : 'Muhammad' sur une ligne, 'Messager' sur une ligne, et 'Allah' sur une ligne. »", ar: "عن أنس قال: «كان نقش الخاتم ثلاثة أسطر: محمد سطر، ورسول سطر، والله سطر»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 14, title: { fr: "Le port de la bague", ar: "لبس الخاتم باليمين" }, content: { fr: "Portée à l'auriculaire de la main droite.", ar: "يختم في خنصره الأيمن." }, dalil: { fr: "D'après Ibn 'Umar (qu'Allah l'agrée) : « Le Prophète ﷺ portait sa bague à la main droite et mettait le chaton du côté de la paume. »", ar: "عن ابن عمر: «أن النبي ﷺ كان يلبس خاتمه في يمينه ويجعل فصه في باطن كفه»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 15, title: { fr: "Son épée", ar: "سيفه ﷺ" }, content: { fr: "La poignée de son épée était incrustée d'argent.", ar: "قبيعة سيفه فضة." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « La pomme de l'épée du Messager d'Allah ﷺ était ornée d'argent. »", ar: "عن أنس قال: «كانت قبيعة سيف رسول الله ﷺ من فضة»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 16, title: { fr: "Son armure", ar: "درعه ﷺ" }, content: { fr: "Deux cotte de mailles superposées lors d'Uhud.", ar: "ظاهر بين درعين يوم أحد." }, dalil: { fr: "D'après Al-Zubayr ibn al-'Awwâm (qu'Allah l'agrée) : « Le Prophète ﷺ portait deux cottes de mailles superposées lors de la bataille d'Uhud. »", ar: "عن الزبير بن العوام قال: «كان على النبي ﷺ يوم أحد درعان، فنهض إلى الصخرة فلم يستطع، فأقعد طلحة تحته فصعد عليه...»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 17, title: { fr: "Son casque (Mighfar)", ar: "مغفره ﷺ" }, content: { fr: "Entré à La Mecque portant un casque de fer.", ar: "دخل مكة وعلى رأسه المغفر." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « Le Prophète ﷺ est entré à La Mecque le jour de la Conquête portant un casque de fer (Mighfar) sur sa tête. »", ar: "عن أنس بن مالك: «أن النبي ﷺ دخل مكة عام الفتح وعلى رأسه المغفر»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 18, title: { fr: "Son turban ('Imama)", ar: "عمامته ﷺ" }, content: { fr: "Turban noir drapé avec l'extrémité tombant entre les épaules.", ar: "عمامة سوداء يرخي طرفها بين كتفيه." }, dalil: { fr: "D'après Ja'far ibn 'Amr (qu'Allah l'agrée) : « J'ai vu le Prophète ﷺ en chaire, coiffé d'un turban noir dont il laissait pendre l'extrémité entre ses épaules. »", ar: "عن جعفر بن عمرو عن أبيه قال: «رأيت النبي ﷺ على المنبر وعليه عمامة سوداء قد أرخى طرفها بين كتفيه»" }, auth: 'sahih' },
+                { group_id: 'vetements', bab: 19, title: { fr: "Son loincloth (Izar)", ar: "إزاره ﷺ" }, content: { fr: "Porté à mi-mollet sans traîner au sol.", ar: "إزاره إلى نصف الساق." }, dalil: { fr: "D'après Abou Hurayra (qu'Allah l'agrée) : « L'Izar (vêtement du bas) du Messager d'Allah ﷺ s'arrêtait à mi-mollet, sans descendre en dessous des chevilles. »", ar: "عن أبي هريرة قال: «كان إزار رسول الله ﷺ إلى نصف الساق»" }, auth: 'sahih' },
 
-                { 
-                    group_id: 'attitude', bab: 19, 
-                    title: { fr: "Sa démarche", ar: "مشيته ﷺ" }, 
-                    content: { fr: "Il marchait avec énergie et sérénité. Il ne traînait pas les pieds, on aurait dit qu'il descendait une pente douce.", ar: "كان يمشي بقوة ونشاط، كأنما ينحدر من صبب." },
-                    dalil: { fr: "D'après Ali : « Quand le Prophète marchait, il s'avançait avec force, comme s'il descendait une pente. »", ar: "عن علي قال: «كان النبي ﷺ إذا مشى <span class='gharib-word'>تكفأ<span class='tooltip'>تمايل إلى الأمام بقوة وهيبة</span></span> تكفؤا كأنما ينحط من صبب»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Sa marche reflétait l'assurance et la modestie sans paresse ni arrogance.", ar: "مشية النبي ﷺ مشية أولي العزم: قوة بلا كبر، وسرعة بلا عجلة." },
-                    action: { fr: "Marchez avec dynamisme aujourd'hui, c'est le signe d'une personne active.", ar: "امش بنشاط وقوة اليوم، فهي من علامات الهمة." }
-                },
-                { 
-                    group_id: 'attitude', bab: 21, 
-                    title: { fr: "Sa façon de s'asseoir", ar: "جلسته ﷺ" }, 
-                    content: { fr: "Il s'asseyait souvent en tailleur ou en entourant ses genoux avec ses arms (Al-Qurfusa), marquant une grande humilité.", ar: "كان يجلس القرفصاء والمتربع تواضعاً." },
-                    dalil: { fr: "Qayla bint Makhrama rapporte : « J'ai vu le Messager d'Allah assis en Qurfusa (les bras entourant les genoux). En voyant son humilité, j'ai tremblé de respect. »", ar: "عن قيلة بنت مخرمة: «أنها رأت رسول الله ﷺ وهو قاعد القرفصاء...»" },
-                    auth: 'hasan',
-                    sharh: { fr: "Cette assise est celle des serviteurs humbles qui ne cherchent pas à s'imposer sur les autres.", ar: "جلسة القرفصاء هي جلسة المتواضعين لله تعالى المستعدين لخدمة الناس." }
-                },
+                /* Group: Attitude */
+                { group_id: 'attitude', bab: 20, title: { fr: "Sa démarche", ar: "مشيته ﷺ" }, content: { fr: "Energique, digne, s'avançant comme en descente.", ar: "تكفأ كأنما ينحط من صبب." }, dalil: { fr: "D'après Ali ibn Abî Tâlib (qu'Allah l'agrée) : « Quand le Prophète ﷺ marchait, il s'avançait avec force et énergie, inclinant son corps vers l'avant comme s'il descendait une pente douce. »", ar: "عن علي بن أبي طالب قال: «كان النبي ﷺ إذا مشى تكفأ تكفؤاً كأنما ينحط من صبب»" }, auth: 'sahih' },
+                { group_id: 'attitude', bab: 21, title: { fr: "Son voile de tête", ar: "تقنعه ﷺ" }, content: { fr: "Il couvrait parfois sa tête d'un tissu léger.", ar: "يكثر التقنع فوق رأسه." }, dalil: { fr: "D'après Anas ibn Mâlik (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ couvrait souvent sa tête d'un tissu léger, au point que ce tissu prenait la couleur de l'huile de ses cheveux. »", ar: "عن أنس بن مالك قال: «كان رسول الله ﷺ يكثر القناع على رأسه حتى كأن ثوبه ثوب زيتّار»" }, auth: 'sahih' },
+                { group_id: 'attitude', bab: 22, title: { fr: "Sa façon de s'asseoir", ar: "جلسته ﷺ" }, content: { fr: "Assis en Qurfusa ou en tailleur par humilité.", ar: "يجلس القرفصاء والمتربع." }, dalil: { fr: "D'après Qayla bint Makhrama (qu'Allah l'agrée) : « J'ai vu le Messager d'Allah ﷺ assis dans la mosquée en posture de Qurfusa (entourant ses genoux avec ses bras). En voyant son humilité profonde, j'ai tremblé de respect. »", ar: "عن قيلة بنت مخرمة قالت: «رأيت رسول الله ﷺ وهو قاعد القرفصاء... فلما رأيت رسول الله ﷺ المتنعم المتواضع أرعدت من الفروق»" }, auth: 'hasan' },
+                { group_id: 'attitude', bab: 23, title: { fr: "Sa posture adossée", ar: "اتكاؤه ﷺ" }, content: { fr: "Adossé à un coussin sur le côté gauche.", ar: "متكئاً على وسادة." }, dalil: { fr: "D'après Jâbir ibn Samoura (qu'Allah l'agrée) : « J'ai vu le Prophète ﷺ adossé à un coussin posé sur son côté gauche. »", ar: "عن جابر بن سمرة قال: «رأيت النبي ﷺ متكئاً على وسادة على يساره»" }, auth: 'sahih' },
+                { group_id: 'attitude', bab: 24, title: { fr: "Son appui sur autrui", ar: "استناده ﷺ" }, content: { fr: "Appuyé sur ses compagnons lorsqu'il était affaibli.", ar: "مستنداً إلى أصحابه في مرضه." }, dalil: { fr: "D'après Al-Fadl ibn 'Abbâs (qu'Allah l'agrée) : « Je suis entré chez le Prophète ﷺ durant sa dernière maladie, il avait la tête bandée et s'est appuyé sur mon bras pour sortir à la mosquée. »", ar: "عن الفضل بن عباس قال: «دخلت على رسول الله ﷺ في مرضه الذي توفي فيه، وعصابة على رأسه، فاستند إليّ حتى دخل المسجد...»" }, auth: 'sahih' },
 
-                { 
-                    group_id: 'nourriture', bab: 24, 
-                    title: { fr: "Sa façon de manger", ar: "أكله ﷺ" }, 
-                    content: { fr: "Il mangeait avec trois doigts (le pouce, l'index et le majeur) et léchait ses doigts après le repas. Il ne mangeait jamais adossé.", ar: "كان يأكل بثلاثة أصابع ويلعقها بعد الفراغ، ولا يأكل متكئاً." },
-                    dalil: { fr: "Ka'b ibn Malik rapporte : « Le Messager d'Allah mangeait avec trois doigts et les léchait avant de les essuyer. »", ar: "عن كعب بن مالك قال: «كان رسول الله ﷺ يأكل بثلاث أصابع، ويلعق يده قبل أن يمسحها»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Manger avec 3 doigts évite la gloutonnerie et enseigne la bénédiction dans les petites portions.", ar: "الأكل بثلاث أصابع يمنع الإسراف والشرَه، وفيه تعليم القناعة." }
-                },
-                { 
-                    group_id: 'nourriture', bab: 25, 
-                    title: { fr: "Le pain du Prophète", ar: "خبزه ﷺ" }, 
-                    content: { fr: "Sa famille et lui n'ont jamais mangé à leur faim du pain de blé fin durant trois jours consécutifs, jusqu'à son décès. Ils mangeaient du pain d'orge.", ar: "ما شبع من خبز بر ثلاثة أيام متوالية حتى مضى لسبيله، وكان غالب طعامه خبز الشعير." },
-                    dalil: { fr: "Aïcha rapporte : « La famille de Muhammad n'a jamais été rassasiée de pain de blé durant trois jours consécutifs... »", ar: "عن عائشة قالت: «ما شبع آل محمد ﷺ من خبز شعير يومين متتابعين حتى قبض»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Ce choix de vie modeste était volontaire de sa part, privilégiant la préparation à l'au-delà plutôt que les conforts mondains.", ar: "كان هذا اختياراً منه ﷺ للزهد في الدنيا وإيثاراً للآخرة رغم قدرته." },
-                    action: { fr: "Remerciez Allah pour la nourriture que vous mangez aujourd'hui.", ar: "احمد الله على النعم والأطعمة التي لديك اليوم." }
-                },
-                { 
-                    group_id: 'nourriture', bab: 32, 
-                    title: { fr: "Sa façon de boire", ar: "شربه ﷺ" }, 
-                    content: { fr: "Il buvait en trois fois (trois gorgées), en éloignant le récipient de sa bouche pour respirer entre chaque gorgée.", ar: "كان يتنفس في الشراب ثلاثا، ويبعد الإناء عن فمه." },
-                    dalil: { fr: "D'après Anas : « Le Prophète respirait trois fois en buvant. »", ar: "عن أنس: «أن النبي ﷺ كان يتنفس في الشراب ثلاثا»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Boire d'un trait fatigue l'estomac. Le Prophète éloignait le verre pour ne pas respirer dedans, par hygiène et respect pour le suivant.", ar: "النهي عن التنفس في الإناء لئلا يتقذر. والشرب على ثلاث دفعات أروى وأمرأ وأبرأ." },
-                    action: { fr: "Aujourd'hui, buvez votre eau en trois petites gorgées en respirant entre chaque.", ar: "اليوم، اشرب الماء على ثلاث دفعات وتأمل هذه السنة." }
-                },
+                /* Group: Nourriture */
+                { group_id: 'nourriture', bab: 25, title: { fr: "Sa façon de manger", ar: "صفة أكله ﷺ" }, content: { fr: "Il mangeait avec trois doigts et les léchait.", ar: "يأكل بثلاث أصابع ويلعقها." }, dalil: { fr: "D'après Ka'b ibn Mâlik (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ mangeait avec trois doigts (le pouce, l'index et le majeur) et les léchait proprement après le repas. »", ar: "عن كعب بن مالك قال: «كان رسول الله ﷺ يأكل بثلاث أصابع ويلعق يده قبل أن يمسحها»" }, auth: 'sahih' },
+                { group_id: 'nourriture', bab: 26, title: { fr: "Son pain d'orge", ar: "خبزه ﷺ" }, content: { fr: "Pain d'orge grossier sans tamisage.", ar: "خبز الشعير غير المنخول." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « La famille de Muhammad ﷺ n'a jamais mangé à sa faim du pain d'orge deux jours consécutifs jusqu'à son décès. »", ar: "عن عائشة قالت: «ما شبع آل محمد ﷺ من خبز شعير يومين متتابعين حتى قبض»" }, auth: 'sahih' },
+                { group_id: 'nourriture', bab: 27, title: { fr: "Ses condiments (Idam)", ar: "إدامه ﷺ" }, content: { fr: "Huile d'olive, vinaigre et la courge (Dubba').", ar: "نعم الإدام الخل والدباء." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « Un tailleur a invité le Prophète ﷺ. J'ai vu le Prophète rechercher les morceaux de courge (Dubba') dans le plat car il les aimait particulièrement. »", ar: "عن أنس قال: «دعَا رسولَ الله ﷺ خَياطٌ... فَرَأَيْتُ النبيَّ ﷺ يَتَتَبَّعُ الدُّبَّاءَ مِنْ حَوَالَيْ الصَّحْفَةِ»" }, auth: 'sahih' },
+                { group_id: 'nourriture', bab: 28, title: { fr: "Lavage des mains au repas", ar: "وضوؤه عند الطعام" }, content: { fr: "Laver les mains avant et après le repas.", ar: "بركة الطعام الوضوء قبله وبعده." }, dalil: { fr: "D'après Salmân al-Fârisi (qu'Allah l'agrée) : « J'ai lu dans la Thora que la bénédiction du repas réside dans le lavage des mains après le repas. J'en ai parlé au Prophète ﷺ qui a dit : 'La bénédiction du repas réside dans le lavage des mains AVANT et APRÈS le repas'. »", ar: "عن سلمان قال: «قريت في التوراة أن بركة الطعام الوضوء بعده، فذكرت ذلك للنبي ﷺ فقال: بركة الطعام الوضوء قبله والوضوء بعده»" }, auth: 'hasan' },
+                { group_id: 'nourriture', bab: 29, title: { fr: "Invocations du repas", ar: "تسميته على الطعام" }, content: { fr: "Dire Bismillah avant et Al-Hamdulillah après.", ar: "التسمية أوله والحمد آخره." }, dalil: { fr: "D'après Abou Umâma (qu'Allah l'agrée) : « Lorsque la table du Prophète ﷺ était débarrassée, il disait : 'Louange à Allah, une louange abondante, pure et bénie, sans pouvoir nous passer de Ses bienfaits'. »", ar: "عن أبي أمامة: «أن النبي ﷺ كان إذا رفعت مائدته قال: الحمد لله حمداً كثيراً طيباً مباركاً فيه...»" }, auth: 'sahih' },
+                { group_id: 'nourriture', bab: 30, title: { fr: "Sa coupe à boire", ar: "قدحه ﷺ" }, content: { fr: "Une coupe en bois cerclée de fer.", ar: "قدح غليظ من خشب فيه حديد." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « J'ai conservé la coupe du Prophète ﷺ. C'était une coupe en bois d'arbre solide, réparée par un cercle de fer qu'Anas avait remplacé par un cerclage d'argent. »", ar: "عن أنس قال: «لقد سقيت رسول الله ﷺ بهذا القدح الشراب كله: الماء والنبيذ والعسل واللبن»" }, auth: 'sahih' },
+                { group_id: 'nourriture', bab: 31, title: { fr: "Ses fruits", ar: "فاكهته ﷺ" }, content: { fr: "Il mangeait du melon frais avec des dattes mûres.", ar: "يأكل البطيخ بالرطب." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ mangeait le melon frais accompagné de dattes mûres et disait : 'La fraîcheur de ceci brise la chaleur de cela'. »", ar: "عن عائشة: «أن النبي ﷺ كان يأكل البطيخ بالرطب فيقول: نكسر حرّ هذا ببرد هذا، وبرد هذا بحرّ هذا»" }, auth: 'sahih' },
+                { group_id: 'nourriture', bab: 32, title: { fr: "Sa boisson préférée", ar: "شرابه ﷺ" }, content: { fr: "L'eau fraîche et adoucie au miel ou au nabidh.", ar: "أحب الشراب إليه الحلو البارد." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « La boisson que le Messager d'Allah ﷺ préférait le plus était l'eau douce et fraîche. »", ar: "عن عائشة قالت: «كان أحب الشراب إلى رسول الله ﷺ الحلو البارد»" }, auth: 'sahih' },
+                { group_id: 'nourriture', bab: 33, title: { fr: "Façon de boire", ar: "صفة شربه ﷺ" }, content: { fr: "Boire en 3 gorgées en respirant hors du verre.", ar: "يتنفس في الشراب ثلاثاً." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ respirait trois fois hors du récipient lorsqu'il buvait, disant que cela était plus désaltérant et meilleur pour la santé. »", ar: "عن أنس: «أن النبي ﷺ كان يتنفس في الشراب ثلاثاً ويقول: هو أروى وأبرأ وأمرأ»" }, auth: 'sahih' },
 
-                { 
-                    group_id: 'parole', bab: 35, 
-                    title: { fr: "Sa façon de parler", ar: "كلامه ﷺ" }, 
-                    content: { fr: "Il ne parlait pas vite de façon ininterrompue. Il parlait de manière claire, de sorte que l'on aurait pu compter ses mots.", ar: "لم يكن يسرد الحديث سرداً، بل كان كلامه فصلاً، لو عده العاد لأحصاه." },
-                    dalil: { fr: "D'après Aïcha : « Le Messager d'Allah ne parlait pas rapidement comme vous le faites. Il parlait de façon distincte... »", ar: "عن عائشة رضي الله عنها قالت: «ما كان رسول الله ﷺ يسرد سردكم هذا، ولكنه كان يتكلم بكلام بين فصل...»" },
-                    auth: 'sahih',
-                    sharh: { fr: "La clarté dans l'élocution permettait à chacun d'assimiler le savoir sans confusion.", ar: "وضوح كلامه ﷺ كان يساعد المستمعين على فهم المقاصد وحفظ العلم." },
-                    action: { fr: "Prenez le temps d'articuler et de parler calmement avec vos proches aujourd'hui.", ar: "تحدث بتمهل ووضوح اليوم مع من حولك." }
-                },
-                { 
-                    group_id: 'parole', bab: 36, 
-                    title: { fr: "Son rire et son sourire", ar: "ضحكه ﷺ" }, 
-                    content: { fr: "Son rire n'était le plus souvent qu'un large sourire. Il n'éclatait jamais de rire de manière bruyante.", ar: "كان جل ضحكه التبسم، ولم يكن يقهقه بصوت مرتفع." },
-                    dalil: { fr: "Abdullah ibn Al-Harith rapporte : « Je n'ai vu personne sourire autant que le Messager d'Allah. »", ar: "عن عبد الله بن الحارث قال: «ما رأيت أحدا أكثر تبسما من رسول الله ﷺ»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Le sourire est une aumône et un baume pour le cœur de ceux qu'on rencontre.", ar: "التبسم صدقة ونور ونشر للمحبة والأنس بين المسلمين." },
-                    action: { fr: "Offrez un sourire sincère aux personnes que vous croisez aujourd'hui.", ar: "ابتسم في وجه كل من تقابله اليوم بنية الصدقة." }
-                },
-                { 
-                    group_id: 'parole', bab: 37, 
-                    title: { fr: "Son humour", ar: "مزاحه ﷺ" }, 
-                    content: { fr: "Il plaisantait avec ses compagnons, mais il ne disait que la vérité même en riant.", ar: "كان يمازح أصحابه، ولا يقول في مزاحه إلا حقاً وصدقاً." },
-                    dalil: { fr: "Abou Hurayra rapporte qu'on lui dit : « Ô Messager d'Allah, tu plaisantes avec nous ? » Il répondit : « Oui, mais je ne dis que la vérité. »", ar: "عن أبي هريرة قال: قالوا يا رسول الله إنك تداعبنا! قال: «إني لا أقول إلا حقا»" },
-                    auth: 'sahih',
-                    sharh: { fr: "L'humour prophétique apporte la joie sans mentir, tromper ni humilier quiconque.", ar: "مزاحه ﷺ فيه إدخال السرور على القلوب من غير كذب ولا إيذاء." }
-                },
+                /* Group: Parole */
+                { group_id: 'parole', bab: 34, title: { fr: "Son amour du parfum", ar: "طيبه ﷺ" }, content: { fr: "Il aimait le parfum et ne le refusait jamais.", ar: "يحب الطيب ولا يرده." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ avait une boîte à parfum (Sukkah) dans laquelle il se parfumait régulièrement, et il ne refusait jamais le parfum offert. »", ar: "عن أنس قال: «كانت لرسول الله ﷺ سُكّة يتطيب منها... وكان لا يرد الطيب»" }, auth: 'sahih' },
+                { group_id: 'parole', bab: 35, title: { fr: "Sa parole claire", ar: "كلامه ﷺ" }, content: { fr: "Parole distincte, rythmée, qu'on pouvait compter.", ar: "كلاماً بيّناً فصلاً لو عده العاد لأحصاه." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ ne parlait pas de manière précipitée comme vous le faites. Il parlait de façon distincte et mesurée, de sorte que quiconque l'écoutait pouvait retenir ses paroles. »", ar: "عن عائشة قالت: «ما كان رسول الله ﷺ يسرد كسرِدِكم هذا، ولكنه كان يتكلم بكلام بيّن فصل يحفظه من سمعه»" }, auth: 'sahih' },
+                { group_id: 'parole', bab: 36, title: { fr: "Son rire et sourire", ar: "ضحكه ﷺ" }, content: { fr: "Son rire était un large sourire bienveillant.", ar: "كان جل ضحكه التبسم." }, dalil: { fr: "D'après Abdullâh ibn al-Hârith (qu'Allah l'agrée) : « Je n'ai vu personne sourire autant que le Messager d'Allah ﷺ. Son rire n'était le plus souvent qu'un large sourire. »", ar: "عن عبد الله بن الحارث قال: «ما رأيت أحداً أكثر تبسماً من رسول الله ﷺ... وما كان ضحكه إلا تبسماً»" }, auth: 'sahih' },
+                { group_id: 'parole', bab: 37, title: { fr: "Son humour sincère", ar: "مزاحه ﷺ" }, content: { fr: "Il plaisantait sans jamais dire de mensonge.", ar: "يمازح ولا يقول إلا حقاً." }, dalil: { fr: "D'après Abou Hurayra (qu'Allah l'agrée) : « Les Compagnons ont dit : 'Ô Messager d'Allah, tu plaisantes avec nous !' Il répondit : 'Oui, mais je ne dis que la vérité stricte'. »", ar: "عن أبي هريرة قال: قالوا: يا رسول الله إنك تداعبنا! قال: «إني لا أقول إلا حقاً»" }, auth: 'sahih' },
+                { group_id: 'parole', bab: 38, title: { fr: "La poésie", ar: "شعره ﷺ" }, content: { fr: "Il écoutait la bonne poésie louant la vérité.", ar: "يسمع الشعر الحسن ويستنشده." }, dalil: { fr: "D'après 'Amr ibn al-Sharîd (qu'Allah l'agrée) : « J'ai récité au Prophète ﷺ cent vers de la poésie d'Omayya ibn Abi al-Salt, et après chaque vers il me disait : 'Continue !' car ses poèmes contenaient des rappels sur l'Unicité d'Allah. »", ar: "عن عمرو بن الشريد عن أبيه قال: «أنشدت النبي ﷺ مائة قافية من شعر أمية بن أبي الصلت، كلما أنشدته بيتاً قال: هيه...»" }, auth: 'sahih' },
+                { group_id: 'parole', bab: 39, title: { fr: "Ses récits nocturnes", ar: "سمره ﷺ" }, content: { fr: "Récits familiaux bienveillants (Hadith Umm Zar').", ar: "حديث أم زرع وسمره مع أهله." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « Le Prophète ﷺ racontait parfois des histoires morales à ses épouses la nuit pour réjouir leur cœur et leur enseigner la sagesse. »", ar: "عن عائشة قالت: «حدث رسول الله ﷺ ذات ليلة نساءه حديثاً... حديث خرافة وأم زرع»" }, auth: 'sahih' },
 
-                { 
-                    group_id: 'caractere', bab: 48, 
-                    title: { fr: "Son humilité", ar: "تواضعه ﷺ" }, 
-                    content: { fr: "Il participait aux tâches ménagères, réparait lui-même ses affaires et s'asseyait avec les pauvres.", ar: "كان يخصف نعله ويرقع ثوبه ويجيب دعوة المملوك ويجلس مع المساكين." },
-                    dalil: { fr: "Anas rapporte : « Une femme en difficulté dit : 'Ô Messager, j'ai besoin de toi'. Il répondit : 'Choisis la rue que tu veux, je t'y accompagnerai pour t'aider'. »", ar: "عن أنس: أن امرأة كان في عقلها شيء فقالت: يا رسول الله إن لي إليك حاجة...»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Son humilité immense faisait qu'aucun besoin humain n'était trop petit à ses yeux.", ar: "من كمال تواضعه قضاء حوائج الضعفاء والصغار والكبار دون كبر." },
-                    action: { fr: "Rendez service spontanément à quelqu'un dans votre entourage aujourd'hui.", ar: "اقضِ حاجة شخص يطلب مساعدتك اليوم بقلب رحب." }
-                },
-                { 
-                    group_id: 'caractere', bab: 49, 
-                    title: { fr: "Son noble caractère", ar: "خلقه ﷺ" }, 
-                    content: { fr: "Il n'était pas grossier. Il ne rendait pas le mal pour le mal, mais pardonnait et excusait les fautes des autres.", ar: "لم يكن فاحشاً ولا متفحشاً، ولا يجزي بالسيئة السيئة، ولكن يعفو ويصفح." },
-                    dalil: { fr: "Aïcha rapporte : « Le Messager d'Allah n'a jamais frappé de sa main ni une femme ni un servant... »", ar: "عن عائشة قالت: «ما ضرب رسول الله ﷺ بيده شيئا قط، لا امرأة ولا خادما...»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Sa patience et sa bienveillance transformaient les ennemis en amis sincères.", ar: "العفو والتغاضي من شيم الأنبياء العظام، يورث المحبة والسلام." }
-                },
+                /* Group: Adoration */
+                { group_id: 'adoration', bab: 40, title: { fr: "Son sommeil", ar: "نومه ﷺ" }, content: { fr: "S'allonger sur le côté droit avec invocations.", ar: "ينام على شقه الأيمن ذاكراً لله." }, dalil: { fr: "D'après Hudhayfa (qu'Allah l'agrée) : « Quand le Prophète ﷺ s'allongeait dans son lit, il posait sa hand droite sous sa joue droite et disait : 'Ô Allah, c'est en Ton nom que je meurs et que je vis'. »", ar: "عن حذيفة قال: «كان النبي ﷺ إذا أوى إلى فراشه وضع يده تحت خده ثم قال: باسمك اللهم أموت وأحيا»" }, auth: 'sahih' },
+                { group_id: 'adoration', bab: 41, title: { fr: "Sa prière nocturne", ar: "عبادته ﷺ" }, content: { fr: "Prier la nuit jusqu'à ce que ses pieds enflent.", ar: "يقوم الليل حتى تتفطر قدماه." }, dalil: { fr: "D'après Al-Mughîra ibn Shu'ba (qu'Allah l'agrée) : « Le Prophète ﷺ priait la nuit jusqu'à ce que ses pieds enflent. On lui dit : 'Pourquoi te peiner ainsi alors qu'Allah t'a tout pardonné ?' Il répondit : 'Ne serais-je pas un serviteur reconnaissant ?' »", ar: "عن المغيرة بن شعبة قال: «قام النبي ﷺ حتى تفطرت قدمَاه، فقيل له: أتكلف هذا وقد غفر الله لك ما تقدم من ذنبك وما تأخر؟ قال: أفلا أكون عبداً شكوراً؟»" }, auth: 'sahih' },
+                { group_id: 'adoration', bab: 42, title: { fr: "La prière du matin (Duha)", ar: "صلاة الضحى" }, content: { fr: "Prier 4 rak'ats ou plus selon sa disponibilité.", ar: "صلاة الضحى أربع ركعات." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ accomplissait la prière du matin (Duha) en quatre rak'ats, et y ajoutait ce qu'Allah voulait. »", ar: "عن عائشة قالت: «كان رسول الله ﷺ يصلي الضحى أربع ركعات ويزيد ما شاء الله»" }, auth: 'sahih' },
+                { group_id: 'adoration', bab: 43, title: { fr: "Prières à la maison", ar: "تطوعه في بيته" }, content: { fr: "Effectuer les Sunnan à la maison.", ar: "صلاة التطوع في بيته نور." }, dalil: { fr: "D'après Ibn 'Umar (qu'Allah l'agrée) : « J'ai accompli avec le Prophète ﷺ deux rak'ats avant le Dhohr, deux après, deux après le Maghrib et deux après l'Isha dans sa demeure. »", ar: "عن ابن عمر قال: «حفظت من النبي ﷺ عشر ركعات: ركعتين قبل الظهر، وركعتين بعدها، وركعتين بعد المغرب في بيته...»" }, auth: 'sahih' },
+                { group_id: 'adoration', bab: 44, title: { fr: "Son jeûne", ar: "صومه ﷺ" }, content: { fr: "Jeûner les lundis, jeudis et jours blancs.", ar: "تحري صوم الاثنين والخميس." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ veillait particulièrement à jeûner les lundis et les jeudis de chaque semaine. »", ar: "عن عائشة قالت: «كان رسول الله ﷺ يتحرى صوم الاثنين والخميس»" }, auth: 'sahih' },
+                { group_id: 'adoration', bab: 45, title: { fr: "Récitation du Coran", ar: "قراءته ﷺ" }, content: { fr: "Récitation lente, tirée et mélodieuse.", ar: "قراءة مدّاً ترتيلاً." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « La récitation du Coran par le Prophète ﷺ était allongée et mélodieuse. Il tirait bien sur les voyelles longues (Al-Madd). »", ar: "عن أنس بن مالك: «أنه سئل عن قراءة رسول الله ﷺ فقال: كانت مدّاً، ثم قرأ: بسم الله الرحمن الرحيم...»" }, auth: 'sahih' },
+                { group_id: 'adoration', bab: 46, title: { fr: "Ses pleurs en prière", ar: "بكاؤه ﷺ" }, content: { fr: "Pleurs discrets (son de marmite en ébullition).", ar: "أزيز كأزيز المرجل من البكاء." }, dalil: { fr: "D'après Abdullâh ibn ash-Shikhkhîr (qu'Allah l'agrée) : « J'ai vu le Messager d'Allah ﷺ prier, et de sa poitrine s'échappait un son semblable au bouillonnement d'une marmite en ébullition tellement il pleurait par crainte d'Allah. »", ar: "عن عبد الله بن الشخير قال: «أتيت رسول الله ﷺ وهو يصلي ولجوفه أزيز كأزيز المرجل من البكاء»" }, auth: 'sahih' },
+                { group_id: 'adoration', bab: 47, title: { fr: "Son lit modeste", ar: "فراشه ﷺ" }, content: { fr: "Matelas de cuir rembourré de fibres de palmier.", ar: "فراش من أدم حشوه ليف." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « Le matelas sur lequel dormait le Messager d'Allah ﷺ était fait d'un cuir souple rembourré de fibres de palmier. »", ar: "عن عائشة قالت: «إنما كان فراش رسول الله ﷺ الذي ينام عليه من أدم حشوه ليف»" }, auth: 'sahih' },
 
-                { 
-                    group_id: 'adoration', bab: 34, 
-                    title: { fr: "Son amour du parfum", ar: "تعطره ﷺ" }, 
-                    content: { fr: "Il aimait se parfumer et ne refusait jamais le parfum qu'on lui offrait. Son odeur naturelle était déjà plus agréable que le musc.", ar: "كان يحب الطيب ولا يرده، وكان ريحه أطيب من المسك." },
-                    dalil: { fr: "Anas rapporte : « Le Prophète (ﷺ) ne refusait jamais le parfum (Al-Tib). »", ar: "عن أنس بن مالك قال: «كان النبي ﷺ لا يرد الطيب»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Le parfum purifie l'air, soulage l'esprit et réjouit les anges.", ar: "الطيب يريح النفس ويسر الخاطر، وهو من أحب الأمور لرسول الله ﷺ." }
-                },
-                { 
-                    group_id: 'adoration', bab: 40, 
-                    title: { fr: "Son sommeil", ar: "نومه ﷺ" }, 
-                    content: { fr: "Il dormait sur le côté droit, posait sa main droite sous sa joue droite et lisait des invocations avant de s'endormir.", ar: "كان ينام على شقه الأيمن ويضع يده اليمنى تحت خده الأيمن." },
-                    dalil: { fr: "Hudhayfa rapporte : « Quand le Prophète s'allongeait dans son lit, il mettait sa hand sous sa joue et disait : 'En Ton nom Allah je vis et je meurs'. »", ar: "عن حذيفة قال: «كان النبي ﷺ إذا أوى إلى فراشه وضع يده تحت خده ثم قال: باسمك اللهم أموت وأحيا»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Dormir sur le côté droit facilite la respiration et la digestion selon la médecine sunnite.", ar: "النوم على الشق الأيمن أنفع للبدن وأسهل للاستيقاظ لصلاة الفجر." }
-                },
-                { 
-                    group_id: 'adoration', bab: 46, 
-                    title: { fr: "Ses pleurs", ar: "بكاؤه ﷺ" }, 
-                    content: { fr: "Ses pleurs n'étaient pas des cris bruyants. C'étaient des larmes qui coulaient par compassion, par crainte d'Allah ou lors de l'écoute du Coran.", ar: "لم يكن بكاؤه بصوت مرتفع، إنما كانت تدمع عيناه رحمة أو خشية من الله." },
-                    dalil: { fr: "Abdullah ibn ash-Shikhkhir rapporte : « J'ai vu le Prophète prier, sa poitrine émettait un bruit comme une marmite en ébullition tellement il pleurait. »", ar: "عن عبد الله بن الشخير قال: «أتيت رسول الله ﷺ وهو يصلي، ولجوفه أزيز كأزيز المرجل من البكاء»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Ses larmes reflétaient la profondeur de sa foi et sa connexion intime avec son Seigneur.", ar: "البكاء من خشية الله دليل حياة القلب وصفاء السريرة." }
-                },
+                /* Group: Caractere */
+                { group_id: 'caractere', bab: 48, title: { fr: "Son humilité", ar: "تواضعه ﷺ" }, content: { fr: "Aider aux tâches et s'asseoir avec les pauvres.", ar: "يخدم أهله ويجلس مع المساكين." }, dalil: { fr: "D'après Anas (qu'Allah l'agrée) : « Le Prophète ﷺ montait un âne, réparait ses propres sandales, ravaudait ses vêtements et répondait à l'invitation du serviteur le plus humble. »", ar: "عن أنس قال: «كان النبي ﷺ يركب الحمار ويخصف النعل ويرقع الثوب ويجيب دعوة العبد»" }, auth: 'sahih' },
+                { group_id: 'caractere', bab: 49, title: { fr: "Son noble caractère", ar: "خلقه ﷺ" }, content: { fr: "Ne rendait pas le mal par le mal, il pardonnait.", ar: "يعفو ويصفح ولا يجزي بالسيئة." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ n'était ni grossier ni vulgaire. Il ne criait pas dans les marchés et ne rendait pas le mal par le mal, mais il pardonnait et effaçait les fautes. »", ar: "عن عائشة قالت: «لم يكن رسول الله ﷺ فاحشاً ولا متفحشاً ولا صخاباً في الأسواق، ولا يجزي بالسيئة السيئة ولكن يعفو ويصفح»" }, auth: 'sahih' },
+                { group_id: 'caractere', bab: 50, title: { fr: "Sa pudeur", ar: "حياؤه ﷺ" }, content: { fr: "Plus pudique qu'une jeune fille dans son giron.", ar: "أشد حياء من العذراء في خدرها." }, dalil: { fr: "D'après Abou Sa'îd al-Khudri (qu'Allah l'agrée) : « Le Prophète ﷺ était plus pudique qu'une jeune fille voilée dans son giron. Lorsqu'une chose lui déplaisait, nous le remarquions immédiatement sur son visage. »", ar: "عن أبي سعيد الخدري قال: «كان النبي ﷺ أشد حياء من العذراء في خدرها، فإذا كره شيئاً عرفناه في وجهه»" }, auth: 'sahih' },
+                { group_id: 'caractere', bab: 51, title: { fr: "Sa Hijama (Ventouses)", ar: "حجامته ﷺ" }, content: { fr: "Pratiquer la Hijama pour la santé du corps.", ar: "احتجم وأعطى الحجام أجره." }, dalil: { fr: "D'après Ibn 'Abbâs (qu'Allah l'agrée) : « Le Prophète ﷺ s'est fait appliquer des ventouses (Hijama) sur la tête et a récompensé le praticien pour son travail. »", ar: "عن ابن عباس: «أن النبي ﷺ احتجم على رأسه وأعطى الحجام أجره»" }, auth: 'sahih' },
 
-                { 
-                    group_id: 'fin', bab: 52, 
-                    title: { fr: "Ses noms", ar: "أسماؤه ﷺ" }, 
-                    content: { fr: "Il possédait plusieurs noms marquant ses rôles : Muhammad, Ahmad (le plus loué), Al-Mahi (celui par qui la mécréance est effacée).", ar: "له أسماء عدة منها: محمد، أحمد، الماحي، الحاشر، والعاقب." },
-                    dalil: { fr: "Jubayr ibn Mut'im rapporte : « Le Messager d'Allah a dit : 'J'ai plusieurs noms : Je suis Muhammad, je suis Ahmad, je suis Al-Mahi...' »", ar: "عن جبير بن مطعم قال: سمعت رسول الله ﷺ يقول: «إن لي أسماء: أنا محمد، وأنا أحمد، وأنا الماحي...»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Chaque nom illustre une facette glorieuse de sa mission universelle.", ar: "أسماؤه الشريفة تشير إلى صفات كماله وعظمة رسالته." }
-                },
-                { 
-                    group_id: 'fin', bab: 55, 
-                    title: { fr: "Son décès et son héritage", ar: "وفاته وما ترك ﷺ" }, 
-                    content: { fr: "Il a quitté ce monde à 63 ans. Les Prophètes ne laissent pas d'héritage matériel (dinar ou dirham), ce qu'ils laissent est le savoir et la guidée.", ar: "توفي وهو ابن ثلاث وستين سنة، ولم يترك ديناراً ولا درهماً بل ترك علماً وهدياً." },
-                    dalil: { fr: "Aïcha rapporte : « Le Messager d'Allah n'a laissé à sa mort ni dinar, ni dirham, ni esclave, ni servante... »", ar: "عن عائشة قالت: «ما ترك رسول الله ﷺ دينارا، ولا درهما، ولا عبدا، ولا أمة، ولا أوصى بشيء»" },
-                    auth: 'sahih',
-                    sharh: { fr: "Le véritable héritage du Prophète est le Coran et la Sunnah transmis à l'humanité.", ar: "ميراث الأنبياء هو العلم والهدى، فمن أخذه فقد أخذ بحظ وافر." }
-                }
+                /* Group: Fin */
+                { group_id: 'fin', bab: 52, title: { fr: "Ses magnifiques noms", ar: "أسماؤه ﷺ" }, content: { fr: "Muhammad, Ahmad, Al-Mahi, Al-Hashir, Al-'Aqib.", ar: "لي أسماء: محمد، أحمد، الماحي..." }, dalil: { fr: "D'après Jubayr ibn Mut'im (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ a dit : 'J'ai plusieurs noms : Je suis Muhammad, je suis Ahmad, je suis Al-Mâhi (par qui Allah efface l'incrédulité), Al-Hâshir et Al-'Âqib'. »", ar: "عن جبير بن مطعم قال: قال رسول الله ﷺ: «إن لي أسماء: أنا محمد، وأنا أحمد، وأنا الماحي الذي يمحو الله بي الكفر...»" }, auth: 'sahih' },
+                { group_id: 'fin', bab: 53, title: { fr: "Son âge béni", ar: "عمره ﷺ" }, content: { fr: "Il a quitté ce monde à l'âge de 63 ans.", ar: "توفي وهو ابن ثلاث وستين سنة." }, dalil: { fr: "D'après Ibn 'Abbâs (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ est décédé à l'âge de soixante-trois ans (63 ans). »", ar: "عن ابن عباس قال: «توفي رسول الله ﷺ وهو ابن ثلاث وستين سنة»" }, auth: 'sahih' },
+                { group_id: 'fin', bab: 54, title: { fr: "Son décès", ar: "وفاته ﷺ" }, content: { fr: "Son départ émouvant à Médine l'an 11 de l'Hégire.", ar: "وفاته الشريفة في ربيع الأول." }, dalil: { fr: "D'après Anas ibn Mâlik (qu'Allah l'agrée) : « Le jour où le Messager d'Allah ﷺ est entré à Médine, toute la ville s'est illuminée. Et le jour où il y est décédé, toute la ville s'est obscurcie de tristesse. »", ar: "عن أنس بن مالك قال: «لما كان اليوم الذي دخل فيه رسول الله ﷺ المدينة أضاء منها كل شيء، فلما كان اليوم الذي مات فيه أظلم منها كل شيء...»" }, auth: 'sahih' },
+                { group_id: 'fin', bab: 55, title: { fr: "Son héritage", ar: "ميراثه ﷺ" }, content: { fr: "L'héritage des prophètes est la science et la guidée.", ar: "الأنبياء لم يورثوا ديناراً ولا درهماً." }, dalil: { fr: "D'après Aïcha (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ n'a laissé à sa mort ni dinar, ni dirham, ni mouton, ni chameau. Il n'a rien laissé en héritage materiel, son héritage est le savoir. »", ar: "عن عائشة قالت: «ما ترك رسول الله ﷺ ديناراً ولا درهماً ولا شاة ولا بعيراً ولا أوصى بشيء»" }, auth: 'sahih' },
+                { group_id: 'fin', bab: 56, title: { fr: "La vision en rêve", ar: "رؤيته في المنام" }, content: { fr: "Celui qui le voit en rêve l'a réellement vu.", ar: "من رآني في المنام فقد رآني حقاً." }, dalil: { fr: "D'après Abou Hurayra (qu'Allah l'agrée) : « Le Messager d'Allah ﷺ a dit : 'Celui qui me voit en rêve m'a réellement vu, car le Diable ne peut pas prendre mon apparence'. »", ar: "عن أبي هريرة قال: قال رسول الله ﷺ: «من رآني في المنام فقد رآني، فإن الشيطان لا يتمثل بي»" }, auth: 'sahih' }
             ],
 
             dictionary: [
@@ -532,35 +410,18 @@
                 { word: "بالسبط", type: "adjectif", def: { fr: "Cheveux raides et complètement lisses.", ar: "المسترسل شديد النعومة." }, chapterKey: "apparence-3" },
                 { word: "بالجعد القطط", type: "adjectif", def: { fr: "Cheveux très crépus ou très frisés.", ar: "شديد التلوي والالتواء." }, chapterKey: "apparence-3" },
                 { word: "وَرِق", type: "nom", def: { fr: "Argent pur (métal précieux).", ar: "فضة الخالصة." }, chapterKey: "vetements-12" },
-                { word: "تكفأ", type: "verbe", def: { fr: "S'avancer avec inclinaison et énergie comme en descente.", ar: "تمايل إلى الأمام بقوة وهيبة." }, chapterKey: "attitude-19" },
-                { word: "القرفصاء", type: "nom", def: { fr: "Posture assise en entourant ses genoux avec ses bras par humilité.", ar: "جلسة المتواضعين ضم الركبتين بالذراعين." }, chapterKey: "attitude-21" },
+                { word: "تكفأ", type: "verbe", def: { fr: "S'avancer avec inclinaison et énergie comme en descente.", ar: "تمايل إلى الأمام بقوة وهيبة." }, chapterKey: "attitude-20" },
+                { word: "القرفصاء", type: "nom", def: { fr: "Posture assise en entourant ses genoux avec ses bras par humilité.", ar: "جلسة المتواضعين ضم الركبتين بالذراعين." }, chapterKey: "attitude-22" },
                 { word: "أزيز المرجل", type: "expression", def: { fr: "Le bouillonnement d'une marmite en ébullition (son des pleurs de crainte d'Allah).", ar: "صوت القدر تغلي من شدة الخشية." }, chapterKey: "adoration-46" },
                 { word: "الماحي", type: "nom prophétique", def: { fr: "Celui par qui Allah efface l'incrédulité.", ar: "الذي يمحو الله به الكفر." }, chapterKey: "fin-52" }
             ],
 
             quiz: [
+                { q: { fr: "Combien de chapitres compte l'ouvrage complet des Shamâ'il ?", ar: "كم باباً يحتوي كتاب الشمائل المحمدية؟" }, a: { fr: "Exactement 56 chapitres thématiques.", ar: "٥٦ باباً جامعاً لصفات النبي ﷺ." } },
                 { q: { fr: "Quelle était la taille physique du Prophète ﷺ ?", ar: "كيف كانت قامة النبي ﷺ؟" }, a: { fr: "De taille moyenne (ni trop grand ni trop petit), avec de larges épaules.", ar: "مربوعاً (ليس بالطويل ولا بالقصير)، بعيد ما بين المنكبين." } },
                 { q: { fr: "À quoi était comparée la lumière de son visage ?", ar: "بماذا شُبِّه ضياء وجهه ﷺ؟" }, a: { fr: "À la lumière douce de la pleine lune.", ar: "بالقمر ليلة البدر لجماله وضياء وجهه." } },
                 { q: { fr: "À quoi ressemblait le Sceau de la Prophétie entre ses épaules ?", ar: "ما شكل خاتم النبوة بين كتفيه ﷺ؟" }, a: { fr: "À une petite excroissance de la taille d'un œuf de pigeon.", ar: "غدة حمراء مثل بيضة الحمامة." } },
-                { q: { fr: "Comment étaient les cheveux du Prophète ﷺ ?", ar: "صفة شعر النبي ﷺ؟" }, a: { fr: "Légèrement ondulés, atteignant le lobe des oreilles.", ar: "رجلاً ليس بالسبط ولا الجعد، يبلغ شحمة أذنيه." } },
-                { q: { fr: "Combien de cheveux blancs avait-il environ dans sa barbe et sa tête ?", ar: "كم شعرة بيضاء كانت في رأسه ولحيته تقريباً؟" }, a: { fr: "Seulement une vingtaine (environ 14 à 20 cheveux).", ar: "أقل من عشرين (حوالي ١٤ إلى ٢٠ شعرة)." } },
-                { q: { fr: "Quel était son vêtement préféré ?", ar: "ما هو أحب الثياب إلى رسول الله ﷺ؟" }, a: { fr: "Le Qamis (longue chemise propre et simple).", ar: "القميص" } },
-                { q: { fr: "Combien de lanières avaient les sandales du Prophète ﷺ ?", ar: "كم قبالاً (شسعاً) كان لنعل النبي ﷺ؟" }, a: { fr: "Deux lanières (قبالان) passant entre les orteils.", ar: "قبالان (شسعان) يمران بين الأصابع." } },
-                { q: { fr: "Que contenait l'inscription gravée sur la bague du Prophète ﷺ ?", ar: "ماذا كان النقش على خاتم النبي ﷺ؟" }, a: { fr: "'Muhammad Messager d'Allah' gravé sur trois lignes.", ar: "محمد رسول الله (على ثلاثة أسطر)." } },
-                { q: { fr: "En quelle matière était faite sa bague ?", ar: "مما صُنِع خاتم النبي ﷺ؟" }, a: { fr: "En argent pur (Wariq / وَرِق).", ar: "من الفضة الخالصة." } },
-                { q: { fr: "Comment était la démarche du Prophète ﷺ ?", ar: "كيف كانت مشية النبي ﷺ؟" }, a: { fr: "Énergique et digne, comme s'il descendait une pente douce.", ar: "بنشاط وقوة، كأنما ينحدر من صبب." } },
-                { q: { fr: "Comment s'asseyait-il souvent par humilité ?", ar: "كيف كان يجلس ﷺ تواضعاً؟" }, a: { fr: "En Qurfusa (les bras entourant les genoux) ou en tailleur.", ar: "جلسة القرفصاء (ضم الركبتين بالذراعين) والمتربع." } },
-                { q: { fr: "Avec combien de doigts le Prophète ﷺ mangeait-il ?", ar: "بكم إصبع كان يأكل النبي ﷺ؟" }, a: { fr: "Avec trois doigts (pouce, index, majeur) qu'il léchait après le repas.", ar: "بثلاث أصابع ويلعقها بعد الطعام." } },
-                { q: { fr: "De quel pain se nourrissait principalement sa famille ?", ar: "ما هو غالب خبز آل محمد ﷺ؟" }, a: { fr: "Du pain d'orge (خبز الشعير).", ar: "خبز الشعير." } },
-                { q: { fr: "En combien de gorgées buvait-il un verre d'eau ?", ar: "على كم دفعة كان يشرب الماء ﷺ؟" }, a: { fr: "En trois gorgées en éloignant le verre pour respirer.", ar: "على ثلاث دفعات ويبعد الإناء عن فمه." } },
-                { q: { fr: "Comment était la parole du Prophète ﷺ ?", ar: "كيف كان كلام النبي ﷺ؟" }, a: { fr: "Claire et distincte, telle qu'on aurait pu compter ses mots.", ar: "كلاماً بيّناً فصلاً، لو عده العاد لأحصاه." } },
-                { q: { fr: "Comment était le rire du Prophète ﷺ ?", ar: "كيف كان ضحك النبي ﷺ؟" }, a: { fr: "Un large sourire sincère sans rire bruyant.", ar: "كان جل ضحكه التبسم من غير قهقهة." } },
-                { q: { fr: "Que respectait le Prophète ﷺ en plaisantant ?", ar: "ماذا كان يراعي النبي ﷺ في مزاحه؟" }, a: { fr: "Il ne disait que la vérité stricte.", ar: "كان لا يقول في مزاحه إلا حقاً وصدقاً." } },
-                { q: { fr: "Quelle était son attitude face au parfum offered ?", ar: "ما كان موقف النبي ﷺ إذا أُهدي إليه طيب؟" }, a: { fr: "Il aimait le parfum et ne le refusait jamais.", ar: "كان يحب الطيب ولا يرده." } },
-                { q: { fr: "Sur quel côté s'allongeait-il pour dormir ?", ar: "على أي شق كان ينام النبي ﷺ؟" }, a: { fr: "Sur le côté droit, la main droite sous la joue.", ar: "على شقه الأيمن واضعاً يده تحت خده الأيمن." } },
-                { q: { fr: "À quoi ressemblait le son de ses pleurs en prière ?", ar: "بماذا شُبِّه صوت بكائه ﷺ في الصلاة؟" }, a: { fr: "Au bouillonnement d'une marmite (أزيز المرجل) dans sa poitrine.", ar: "كأزيز المرجل (القدر تغلي) من شدة الخشية." } },
-                { q: { fr: "Que signifie son nom 'Al-Mahi' (الماحي) ?", ar: "ما معنى اسم 'الماحي' من أسماء النبي ﷺ؟" }, a: { fr: "Celui par qui Allah efface l'incrédulité.", ar: "الذي يمحو الله به الكفر." } },
-                { q: { fr: "Qu'a laissé le Prophète ﷺ en héritage à sa mort ?", ar: "ماذا ترك النبي ﷺ عند وفاته؟" }, a: { fr: "Ni dinar ni dirham, mais le savoir et la guidée.", ar: "لم يترك ديناراً ولا درهماً، بل ترك العلم والهدى." } }
+                { q: { fr: "Quel était son vêtement préféré ?", ar: "ما هو أحب الثياب إلى رسول الله ﷺ؟" }, a: { fr: "Le Qamis (longue chemise propre et simple).", ar: "القميص" } }
             ]
         };
 
@@ -587,7 +448,7 @@
             }
         };
 
-        const totalChapters = 56;
+        const totalChapters = appData.chapters.length;
 
         function getEl(id) { return document.getElementById(id); }
 
@@ -789,7 +650,9 @@
                     c.title.fr.toLowerCase().includes(state.searchQuery) || 
                     c.title.ar.includes(state.searchQuery) ||
                     c.content.fr.toLowerCase().includes(state.searchQuery) ||
-                    c.content.ar.includes(state.searchQuery)
+                    c.content.ar.includes(state.searchQuery) ||
+                    c.dalil.fr.toLowerCase().includes(state.searchQuery) ||
+                    c.dalil.ar.includes(state.searchQuery)
                 );
             }
 
@@ -806,16 +669,30 @@
                     container.innerHTML = `<div class="text-center py-10 text-slate-400"><i data-lucide="search-x" class="w-10 h-10 mx-auto mb-2 opacity-40"></i><p class="font-medium text-sm">${appData.ui.noResults[state.lang]}</p></div>`;
                 }
             } else {
+                /* 8 THEME CARDS WITH PROGRESS COUNTERS */
                 let html = `<div class="grid grid-cols-2 gap-3.5">`;
                 appData.groups.forEach((group, idx) => {
+                    const groupChapters = appData.chapters.filter(c => c.group_id === group.id);
+                    const readCount = groupChapters.filter(c => state.readChapters.includes(`${c.group_id}-${c.bab}`)).length;
+                    
                     html += `
-                        <button onclick="setView('group', '${group.id}')" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-4 rounded-2xl premium-shadow border border-slate-100 dark:border-slate-700/70 hover:-translate-y-0.5 active:scale-95 transition-all text-left flex flex-col h-full group relative overflow-hidden" style="animation-delay: ${idx * 30}ms; ${isRtl ? 'text-align: right;' : 'text-align: left;'}">
+                        <button onclick="setView('group', '${group.id}')" class="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl p-4 rounded-2xl premium-shadow border border-slate-100 dark:border-slate-700/70 hover:-translate-y-0.5 active:scale-95 transition-all text-left flex flex-col justify-between h-full group relative overflow-hidden" style="animation-delay: ${idx * 30}ms; ${isRtl ? 'text-align: right;' : 'text-align: left;'}">
                             <div class="absolute inset-0 bg-gradient-to-br ${group.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
-                            <div class="w-11 h-11 rounded-xl bg-gradient-to-br ${group.gradient} flex items-center justify-center shadow-md mb-3 transform group-hover:scale-105 transition-transform duration-300">
-                                <i data-lucide="${group.icon}" class="w-5 h-5 text-white"></i>
+                            
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br ${group.gradient} flex items-center justify-center shadow-md transform group-hover:scale-105 transition-transform duration-300">
+                                        <i data-lucide="${group.icon}" class="w-5 h-5 text-white"></i>
+                                    </div>
+                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300">${readCount}/${groupChapters.length} Bâb</span>
+                                </div>
+                                <h3 class="font-bold text-sm text-slate-800 dark:text-white mb-0.5 font-arabic">${group.title[state.lang]}</h3>
+                                <p class="text-[11px] text-slate-500 dark:text-slate-400 leading-tight font-medium line-clamp-2">${group.desc[state.lang]}</p>
                             </div>
-                            <h3 class="font-bold text-base text-slate-800 dark:text-white mb-0.5 font-arabic">${group.title[state.lang]}</h3>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-snug font-medium line-clamp-2">${group.desc[state.lang]}</p>
+
+                            <div class="w-full bg-slate-100 dark:bg-slate-700 h-1 rounded-full overflow-hidden mt-3">
+                                <div class="bg-madinah-500 h-full transition-all duration-500" style="width: ${groupChapters.length > 0 ? (readCount / groupChapters.length) * 100 : 0}%"></div>
+                            </div>
                         </button>
                     `;
                 });
@@ -863,7 +740,7 @@
                         <div class="flex items-center justify-between gap-3">
                             <div class="flex-1 min-w-0">
                                 <h2 class="text-2xl font-extrabold text-slate-800 dark:text-white font-arabicTitle tracking-tight leading-tight">Shamâ'il</h2>
-                                <p class="text-xs sm:text-sm text-madinah-600 dark:text-madinah-400 font-medium truncate">${appData.ui.subtitle[state.lang]}</p>
+                                <p class="text-xs sm:text-sm text-madinah-600 dark:text-madinah-400 font-medium truncate">${appData.ui.subtitle[state.lang]} (56 Bâb)</p>
                             </div>
 
                             <!-- Circular Progress Ring (48px) -->
@@ -912,13 +789,12 @@
 
                     <!-- SEARCH & FILTER ROW -->
                     <div class="space-y-2">
-                        <!-- Search Bar -->
                         <div class="relative">
                             <i data-lucide="search" class="absolute ${isRtl ? 'right-3.5' : 'left-3.5'} top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
                             <input id="search-input" type="text" oninput="handleSearch(event)" value="${state.searchQuery}" placeholder="${appData.ui.searchPlaceholder[state.lang]}" class="w-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 rounded-2xl py-2.5 ${isRtl ? 'pr-10 pl-3' : 'pl-10 pr-3'} text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-madinah-500 transition-all font-medium placeholder-slate-400 shadow-sm">
                         </div>
 
-                        <!-- Compact Filter Pills Menu (No Scrollbar) -->
+                        <!-- Compact Filter Pills Menu -->
                         <div class="flex gap-1.5 overflow-x-auto no-scrollbar py-0.5">
                             <button onclick="setFilter('all')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${state.activeFilter === 'all' ? 'bg-madinah-600 text-white shadow-sm' : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60'}">Tous</button>
                             <button onclick="setFilter('sharh')" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${state.activeFilter === 'sharh' ? 'bg-madinah-600 text-white shadow-sm' : 'bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60'}">💡 Sharh</button>
@@ -948,7 +824,8 @@
                             <i data-lucide="${group.icon}" class="w-8 h-8 text-white"></i>
                         </div>
                         <h2 class="text-2xl font-black text-slate-800 dark:text-white font-arabicTitle mb-1">${group.title[state.lang]}</h2>
-                        <p class="text-slate-500 dark:text-slate-400 font-medium text-xs">${group.desc[state.lang]}</p>
+                        <p class="text-slate-500 dark:text-slate-400 font-medium text-xs mb-2">${group.desc[state.lang]}</p>
+                        <span class="inline-block px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-600 dark:text-slate-300">${chapters.length} Chapitres inclus</span>
                     </div>
                     <div class="space-y-4">
             `;
@@ -1077,7 +954,6 @@
                         <p class="text-slate-500 dark:text-slate-400 font-medium text-xs">Le dictionnaire des termes rares et complexes</p>
                     </div>
 
-                    <!-- Search Dict Input -->
                     <div class="relative mb-5">
                         <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
                         <input type="text" oninput="handleDictSearch(event)" value="${state.dictQuery}" placeholder="Rechercher un mot (ex: الممغط, القرفصاء...)" class="w-full bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-700/80 rounded-2xl py-2.5 pl-10 pr-4 text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-madinah-500 shadow-sm">
@@ -1130,41 +1006,34 @@
             canvas.height = 1080;
             const ctx = canvas.getContext('2d');
 
-            // Background Gradient
             const grad = ctx.createLinearGradient(0, 0, 1080, 1080);
             grad.addColorStop(0, '#064e3b');
             grad.addColorStop(1, '#022c22');
             ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 1080, 1080);
 
-            // Inner Gold Border
             ctx.strokeStyle = '#fbbf24';
             ctx.lineWidth = 10;
             ctx.strokeRect(40, 40, 1000, 1000);
 
-            // Calligraphy Salawat Header
             ctx.fillStyle = '#f59e0b';
             ctx.font = 'bold 44px Amiri, serif';
             ctx.textAlign = 'center';
             ctx.fillText('ﷺ اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَآلِهِ وَسَلِّمْ', 540, 130);
 
-            // Chapter Title
             ctx.fillStyle = '#ffffff';
             ctx.font = 'bold 48px Amiri, serif';
             ctx.fillText(chapter.title.fr, 540, 220);
 
-            // Hadith Content (Word wrapped)
             ctx.fillStyle = '#ecfdf5';
             ctx.font = '34px Cairo, sans-serif';
             wrapCanvasText(ctx, chapter.content.fr, 540, 330, 900, 50);
 
-            // Hadith Dalil Quote
             let dalilClean = chapter.dalil.fr.replace(/<[^>]*>?/gm, '');
             ctx.fillStyle = '#fbbf24';
             ctx.font = 'italic 28px Inter, sans-serif';
             wrapCanvasText(ctx, dalilClean, 540, 680, 880, 42);
 
-            // Footer Branding
             ctx.fillStyle = '#94a3b8';
             ctx.font = 'bold 26px Inter, sans-serif';
             ctx.fillText("— Shamâ'il Muhammadiyya", 540, 980);
@@ -1334,7 +1203,7 @@
             
             if (state.quizFinished) {
                 let celebrateMsg = "Excellent travail ! Vous maîtrisez les Shamâ'il prophétiques.";
-                if (state.quizScore < 12) celebrateMsg = "Bon effort ! Continuez votre lecture pour enrichir vos connaissances.";
+                if (state.quizScore < 3) celebrateMsg = "Bon effort ! Continuez votre lecture pour enrichir vos connaissances.";
 
                 let html = `
                     <div class="animate-fade-in flex flex-col items-center justify-center min-h-[65vh] py-4 text-center">
